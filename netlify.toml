@@ -1,0 +1,4 @@
+export default {
+  functions: { "chat-func": "netlify/functions/chat.mjs" },
+  build: { command: "npm run build", publish: "dist" },
+};

@@ -1,0 +1,39 @@
+# Wisnotech
+
+> Wisnotech helps businesses and ambitious people use AI and modern technology to build smarter, automate faster and grow with confidence. We deliver AI solutions, software, websites, AI video content and hands-on AI training for clients in Nigeria and beyond.
+
+## About
+
+- Name: Wisnotech
+- Focus: AI & Automation, AI Video Content Creation, Software Development, Web & Mobile, AI Education, AI Consulting
+- Based: Forest Guard Street, Uromi, Edo State, Nigeria (serves clients across Nigeria and internationally)
+- Contact: wisnotech@gmail.com | +234 915 354 1297
+- Website: https://wisnotech.vercel.app/
+
+## Services
+
+1. AI & Automation — intelligent workflows, AI assistants and automated business systems that remove repetitive work.
+2. AI Video Content Creation — scripts, AI avatars, editing and motion graphics that produce studio-grade videos without a studio.
+3. Software Development — custom web applications, SaaS platforms and business software engineered to scale.
+4. Web & Mobile — modern websites and mobile applications designed around real users and real results.
+5. AI Education — practical AI training for businesses, creators, professionals and ambitious entrepreneurs (Wisnotech Academy).
+6. AI Consulting — clear guidance on where AI creates real value in a business and how to get there.
+
+## FAQ
+
+- Q: What does Wisnotech do?
+  A: Wisnotech helps businesses and ambitious people use AI and modern technology to build smarter, automate faster and grow. Services include AI & automation, AI video content creation, software development, web & mobile apps, AI education and AI consulting.
+- Q: Where is Wisnotech located?
+  A: Wisnotech is based at Forest Guard Street, Uromi, Edo State, Nigeria, and serves clients across Nigeria and beyond.
+- Q: How much do AI videos cost?
+  A: Pricing reflects scope and the project goal. The first step to an accurate, no-obligation quote is a short discovery call.
+- Q: How do I start a project with Wisnotech?
+  A: Contact via the website contact section, email wisnotech@gmail.com, call +234 915 354 1297, or ask the Wisnotech AI assistant on the site for a tailored plan.
+- Q: Does Wisnotech offer AI training?
+  A: Yes. Wisnotech Academy delivers hands-on training in AI, automation, content creation and software for businesses, creators and professionals.
+
+## Contact
+
+- Email: wisnotech@gmail.com
+- Phone: +234 915 354 1297
+- Address: Forest Guard Street, Uromi, Edo State, Nigeria

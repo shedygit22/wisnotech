@@ -1,0 +1,11 @@
+# Secrets — never upload
+.env
+.env.*
+!.env.example
+
+# Local & build artifacts
+node_modules
+dist
+.git
+.vercel
+*.log

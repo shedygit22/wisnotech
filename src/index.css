@@ -1,0 +1,107 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #080808;
+  --color-surface: #111111;
+  --color-card: #151515;
+  --color-muted: #a1a1aa;
+  --color-accent: #3b7bff;
+  --color-neon: #3b7bff;
+  --color-line: rgba(255, 255, 255, 0.1);
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: #ffffff;
+    font-family: var(--font-sans);
+    background-image:
+      radial-gradient(60% 40% at 15% 0%, rgba(80, 140, 255, 0.07) 0%, transparent 60%),
+      radial-gradient(50% 35% at 85% 30%, rgba(80, 140, 255, 0.05) 0%, transparent 60%);
+  }
+
+  ::selection {
+    background: rgba(80, 140, 255, 0.35);
+    color: #ffffff;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #080808;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #2a2a2a;
+    border-radius: 8px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #3a3a3a;
+  }
+
+  :focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.7);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+}
+
+@layer components {
+  .container-wide {
+    @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3.5 text-[15px] font-medium
+      transition-all duration-300;
+  }
+
+  .btn-primary {
+    @apply bg-white text-[#080808] hover:scale-[1.02] hover:bg-zinc-100 active:scale-[0.98]
+      focus-visible:outline-2 focus-visible:outline-white/70;
+  }
+
+  .btn-secondary {
+    @apply border border-white/15 text-white hover:border-white/35 hover:bg-white/5 active:scale-[0.98]
+      focus-visible:outline-2 focus-visible:outline-white/70;
+  }
+
+  .section {
+    @apply py-24 md:py-32;
+  }
+
+  .card {
+    @apply relative rounded-2xl border border-white/10 bg-white/[0.04] p-7 shadow-[0_0_0_0_rgba(80,140,255,0)] backdrop-blur-xl transition-all duration-300 sm:p-8;
+  }
+
+  .card:hover {
+    border-color: rgba(80, 140, 255, 0.35);
+    box-shadow: 0 0 30px -12px rgba(80, 140, 255, 0.45),
+      0 8px 40px -20px rgba(0, 0, 0, 0.8);
+  }
+
+  .eyebrow {
+    @apply text-xs font-semibold uppercase tracking-[0.25em] text-muted;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

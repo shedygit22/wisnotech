@@ -1,0 +1,33 @@
+# Wisnotech robots.txt
+# Classic crawlers
+User-agent: *
+Allow: /
+
+# AI answer engines + AI crawlers — allowed and encouraged
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+# Avoid crawling heavy media files
+User-agent: *
+Disallow: /videos/
+Disallow: /assets/ai-images/
+
+Sitemap: https://wisnotech.vercel.app/sitemap.xml
