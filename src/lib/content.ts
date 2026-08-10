@@ -89,6 +89,24 @@ export const VIDEOS = [
     src: "/videos/showreel-7.mp4",
     poster: "/assets/video-thumb-7.jpg",
   },
+  {
+    title: "Showreel 08",
+    category: "AI Video",
+    src: "/videos/showreel-8.mp4",
+    poster: "/assets/video-thumb-8.jpg",
+  },
+  {
+    title: "Showreel 09",
+    category: "AI Video",
+    src: "/videos/showreel-9.mp4",
+    poster: "/assets/video-thumb-9.jpg",
+  },
+  {
+    title: "Showreel 10",
+    category: "AI Video",
+    src: "/videos/showreel-10.mp4",
+    poster: "/assets/video-thumb-10.jpg",
+  },
 ] as const;
 
 export const AI_IMAGES: { src: string; title: string; caption?: string }[] = Array.from(
