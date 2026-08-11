@@ -1,29 +1,34 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Send, Sparkles, X, ArrowUpRight } from "lucide-react";
+import { Send, Sparkles, X, ArrowUpRight, History as HistoryIcon, Plus, Trash2, MessageSquareText } from "lucide-react";
 import { askServerWithFallback } from "../lib/api";
+import { sendLead } from "../lib/leadSink";
+import { speakText, stopSpeaking, useVoice, useVoiceConversation } from "../lib/useVoice";
+import { useAutoSpeech } from "../lib/useAutoSpeech";
+import { useLiveCall } from "../hooks/useLiveCall";
+import { useChatSessions } from "../lib/chatStore";
+import { MicButton, SpeakButton, AutoSpeakToggle, VoiceCallButton, LiveCallButton } from "./VoiceControls";
+import { LiveVoiceCall } from "./LiveVoiceCall";
 import {
   createInitialState,
   contextMessage,
   openingLine,
   exitIntentMessage,
+  liveVoiceInstruction,
+  liveVoiceGreeting,
   quickReplies,
   type AssistState,
 } from "../lib/assistant";
-
-interface Message {
-  role: "assistant" | "user";
-  text: string;
-  href?: string;
-}
 
 const SECTION_IDS = [
   { id: "home", label: "home" },
   { id: "services", label: "services" },
   { id: "showreel", label: "showreel" },
   { id: "creations", label: "creations" },
+  { id: "testimonials", label: "testimonials" },
   { id: "about", label: "about" },
   { id: "solutions", label: "solutions" },
+  { id: "process", label: "process" },
   { id: "academy", label: "academy" },
   { id: "assistant", label: "assistant" },
   { id: "contact", label: "contact" },
@@ -31,7 +36,6 @@ const SECTION_IDS = [
 
 export default function AiAssistant() {
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [thinking, setThinking] = useState(false);
   const [state, setState] = useState<AssistState>(() => createInitialState());
@@ -39,9 +43,18 @@ export default function AiAssistant() {
   stateRef.current = state;
   const [currentSection, setCurrentSection] = useState<string | null>(null);
   const [attention, setAttention] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const promptedRef = useRef(false);
+  const voice = useVoice();
+  const { enabled: autoSpeak, enabledRef: autoSpeakRef, toggle: toggleAutoSpeak } = useAutoSpeech();
+
+  /* Multi-session chat with persisted history (localStorage). */
+  const chat = useChatSessions({
+    welcome: () => [{ role: "assistant", text: openingLine(stateRef.current) }],
+  });
+  const messages = chat.messages;
 
   /* User sensing — scroll spy (what the visitor is looking at) */
   useEffect(() => {
@@ -90,10 +103,7 @@ export default function AiAssistant() {
           ...s,
           stage: s.stage === "intro" ? "need" : s.stage,
         }));
-        setMessages((m) => [
-          ...m,
-          { role: "assistant", text: exitIntentMessage(state.name) },
-        ]);
+        chat.add({ role: "assistant", text: exitIntentMessage(state.name) });
         setOpen(true);
       }
     };
@@ -109,29 +119,21 @@ export default function AiAssistant() {
     const t = setTimeout(() => {
       if (!open && !promptedRef.current) {
         // Attach the section context to the opening greeting
-        setMessages((m) =>
-          m.length > 0 ? m : [{ role: "assistant", text: msg }]
-        );
+        chat.commit(chat.messages.length > 0 ? chat.messages : [{ role: "assistant", text: msg }]);
         setAttention(true);
       }
     }, 1200);
     return () => clearTimeout(t);
-  }, [currentSection, open]);
-
-  const push = useCallback((m: Message) => {
-    setMessages((prev) => [...prev, m]);
-  }, []);
+  }, [currentSection, open, chat.messages.length]);
 
   const openChat = useCallback(() => {
     setOpen(true);
     setAttention(false);
-    setMessages((m) => {
-      if (m.length === 0) {
-        return [{ role: "assistant", text: openingLine(state) }];
-      }
-      return m;
-    });
-  }, [state]);
+    setShowHistory(false);
+    if (chat.messages.length === 0) {
+      chat.commit([{ role: "assistant", text: openingLine(state) }]);
+    }
+  }, [chat, state]);
 
   useEffect(() => {
     if (open && inputRef.current) inputRef.current.focus();
@@ -141,37 +143,92 @@ export default function AiAssistant() {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, thinking]);
 
-  const submit = useCallback(
-    async (raw: string) => {
+  const ask = useCallback(
+    async (raw: string): Promise<string | null> => {
       const question = raw.trim();
-      if (!question || thinking) return;
-      push({ role: "user", text: question });
+      if (!question || thinking) return null;
+      chat.add({ role: "user", text: question });
       setInput("");
       setThinking(true);
 
       // Build the conversation history sent to the LLM backend.
-      const history = messages
+      const history = chat.messages
         .map((m) => ({ role: m.role, content: m.text }))
         .concat([{ role: "user" as const, content: question }]);
 
       const reply = await askServerWithFallback(question, stateRef.current, history.slice(0, -1));
-      setMessages((m) => [
-        ...m,
-        { role: "assistant", text: reply.text, href: reply.href },
-      ]);
+      chat.add({ role: "assistant", text: reply.text, href: reply.href });
       setThinking(false);
+
+      // Capture a qualified lead the moment an email appears in the chat.
+      const emailMatch = question.match(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i);
+      if (emailMatch) {
+        void sendLead({
+          name: stateRef.current.name,
+          email: emailMatch[0],
+          interest: stateRef.current.interest,
+          timeline: stateRef.current.timeline,
+          budget: stateRef.current.budget,
+          source: "ai-assistant",
+        });
+      }
+      return reply.text;
     },
-    [thinking, push, messages]
+    [thinking, chat, stateRef]
   );
+
+  const submit = useCallback(
+    async (raw: string) => {
+      const reply = await ask(raw);
+      if (reply && autoSpeakRef.current) void speakText(reply);
+    },
+    [ask, autoSpeakRef]
+  );
+
+  /* Hands-free voice conversation: listen → ask → speak reply → repeat. */
+  const voiceConversation = useVoiceConversation(ask);
+
+  /* Real-time phone-call style voice via Gemini Live (fallback to loop above). */
+  const liveCall = useLiveCall();
+  const startLiveCall = useCallback(() => {
+    setOpen(true);
+    void liveCall.start(liveVoiceInstruction(), liveVoiceGreeting());
+  }, [liveCall]);
+
+  /* If the live call can't start (mic/token issue), gracefully drop back to the loop. */
+  const liveErrorRef = useRef<boolean>(false);
+  useEffect(() => {
+    if (liveCall.error && !liveErrorRef.current) {
+      liveErrorRef.current = true;
+      voiceConversation.start();
+    }
+    if (!liveCall.error) liveErrorRef.current = false;
+  }, [liveCall.error, voiceConversation]);
 
   /* Esc closes chat */
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") {
+        setOpen(false);
+        stopSpeaking();
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, []);
+
+  /* Stop speech when the chat closes */
+  useEffect(() => {
+    if (!open) stopSpeaking();
+  }, [open]);
+
+  const handleTranscript = useCallback(
+    (t: string) => {
+      setInput(t);
+      submit(t);
+    },
+    [submit]
+  );
 
   return (
     <>
@@ -228,8 +285,97 @@ export default function AiAssistant() {
                 <span className="h-1.5 w-1.5 rounded-full bg-neon" />
                 Live
               </span>
+              <button
+                type="button"
+                onClick={() => setShowHistory((v) => !v)}
+                aria-label="Chat history"
+                className={`flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs font-medium transition-colors ${
+                  showHistory
+                    ? "border-neon/40 bg-neon/15 text-neon"
+                    : "border-white/10 text-white/60 hover:border-white/25 hover:text-white"
+                }`}
+              >
+                <HistoryIcon className="h-3.5 w-3.5" aria-hidden />
+                History
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowHistory(false);
+                  chat.newChat();
+                }}
+                aria-label="New conversation"
+                title="New conversation"
+                className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 text-white/60 transition-colors hover:border-white/25 hover:text-white"
+              >
+                <Plus className="h-4 w-4" aria-hidden />
+              </button>
+              <AutoSpeakToggle enabled={autoSpeak} onToggle={toggleAutoSpeak} />
             </div>
 
+            {/* Messages or history */}
+            {showHistory ? (
+              <div className="flex h-[380px] flex-col px-3 py-4">
+                <div className="mb-2 flex items-center justify-between px-2">
+                  <p className="text-sm font-semibold text-white/90">Chat history</p>
+                  <span className="rounded-full border border-white/10 bg-white/[0.04] px-2 py-0.5 text-[11px] text-white/50">
+                    {chat.sessions.length} {chat.sessions.length === 1 ? "conversation" : "conversations"}
+                  </span>
+                </div>
+                <div className="flex-1 overflow-y-auto">
+                {chat.sessions.length === 0 && (
+                  <p className="px-2 py-6 text-center text-sm text-white/40">No conversations yet.</p>
+                )}
+                {chat.sessions.map((s) => (
+                  <button
+                    key={s.id}
+                    type="button"
+                    onClick={() => {
+                      chat.open(s.id);
+                      setShowHistory(false);
+                    }}
+                    className={`group mb-1.5 flex items-center gap-3 rounded-xl border px-3 py-3 text-left transition-colors ${
+                      s.id === chat.activeId
+                        ? "border-neon/40 bg-neon/10"
+                        : "border-white/10 bg-white/[0.03] hover:border-white/25"
+                    }`}
+                  >
+                    <MessageSquareText className="h-4 w-4 shrink-0 text-neon" aria-hidden />
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-[13px] font-medium text-white/90">{s.title}</span>
+                      <span className="block text-[11px] text-white/40">
+                        {new Date(s.updatedAt).toLocaleString(undefined, {
+                          month: "short",
+                          day: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </span>
+                    </span>
+                    <span
+                      role="button"
+                      tabIndex={0}
+                      aria-label="Delete conversation"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        chat.deleteChat(s.id);
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.stopPropagation();
+                          chat.deleteChat(s.id);
+                        }
+                      }}
+                      className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-white/30 opacity-0 transition-opacity group-hover:opacity-100 hover:text-red-300"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" aria-hidden />
+                    </span>
+                  </button>
+                ))}
+                </div>
+              </div>
+            ) : (
+              <>
             {/* Messages */}
             <div ref={scrollRef} className="flex h-[380px] flex-col gap-3 overflow-y-auto px-4 py-4">
               {messages.map((m, i) => (
@@ -255,6 +401,9 @@ export default function AiAssistant() {
                         <ArrowUpRight className="h-3.5 w-3.5" aria-hidden />
                       </a>
                     )}
+                    {m.role === "assistant" && (
+                      <SpeakButton onSpeak={() => speakText(m.text)} />
+                    )}
                   </div>
                 </div>
               ))}
@@ -274,6 +423,8 @@ export default function AiAssistant() {
                 </div>
               )}
             </div>
+              </>
+            )}
 
             {/* Quick replies adapt to stage */}
             <div className="flex gap-2 overflow-x-auto border-t border-white/[0.08] px-4 py-3 [scrollbar-width:none]">
@@ -304,6 +455,9 @@ export default function AiAssistant() {
                 placeholder={state.stage === "close" ? "Drop your email to get a plan…" : "Tell me your goal…"}
                 className="min-w-0 flex-1 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white placeholder:text-white/35 focus:border-neon/50 focus:outline-none"
               />
+              <MicButton voice={voice} onTranscript={handleTranscript} disabled={thinking} />
+              <LiveCallButton supported={liveCall.supported} onStart={startLiveCall} />
+              <VoiceCallButton voice={voiceConversation} />
               <button
                 type="submit"
                 disabled={!input.trim() || thinking}
@@ -314,6 +468,21 @@ export default function AiAssistant() {
               </button>
             </form>
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Real-time live voice call overlay */}
+      <AnimatePresence>
+        {liveCall.active && liveCall.status !== "off" && (
+          <LiveVoiceCall
+            status={liveCall.status}
+            energy={liveCall.energy}
+            userTranscript={liveCall.userTranscript}
+            assistantTranscript={liveCall.assistantTranscript}
+            bookingLink={liveCall.bookingLink}
+            error={liveCall.error}
+            onStop={liveCall.stop}
+          />
         )}
       </AnimatePresence>
     </>

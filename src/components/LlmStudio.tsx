@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import {
   Send,
   Sparkles,
@@ -7,14 +7,16 @@ import {
   Bot,
   ArrowUpRight,
   Zap,
+  Trash2,
 } from "lucide-react";
 import { askServerWithFallback } from "../lib/api";
-import { createInitialState } from "../lib/assistant";
-
-interface Message {
-  role: "assistant" | "user";
-  text: string;
-}
+import { createInitialState, liveVoiceInstruction, liveVoiceGreeting } from "../lib/assistant";
+import { useChatSessions } from "../lib/chatStore";
+import { speakText, useVoice, useVoiceConversation } from "../lib/useVoice";
+import { useAutoSpeech } from "../lib/useAutoSpeech";
+import { useLiveCall } from "../hooks/useLiveCall";
+import { MicButton, SpeakButton, AutoSpeakToggle, VoiceCallButton, LiveCallButton } from "./VoiceControls";
+import { LiveVoiceCall } from "./LiveVoiceCall";
 
 const STARTERS = [
   "I'm a business owner — where do I start?",
@@ -29,42 +31,83 @@ const WELCOME =
   "Hey there! I'm Wisne — the Wisnotech AI assistant. Ask me anything about our services, pricing, videos, or what to build first. I can even draft a plan for you.";
 
 export default function LlmStudio() {
-  const [messages, setMessages] = useState<Message[]>([
-    { role: "assistant", text: WELCOME },
-  ]);
   const [input, setInput] = useState("");
   const [thinking, setThinking] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const voice = useVoice();
+  const { enabled: autoSpeak, enabledRef: autoSpeakRef, toggle: toggleAutoSpeak } = useAutoSpeech();
+
+  /* Multi-session chat with persisted history (localStorage). */
+  const chat = useChatSessions({
+    welcome: () => [{ role: "assistant", text: WELCOME }],
+  });
+  const messages = chat.messages;
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, thinking]);
 
-  const send = useCallback(
-    async (raw: string) => {
+  const ask = useCallback(
+    async (raw: string): Promise<string | null> => {
       const question = raw.trim();
-      if (!question || thinking) return;
-      setMessages((m) => [...m, { role: "user", text: question }]);
+      if (!question || thinking) return null;
+      chat.add({ role: "user", text: question });
       setInput("");
       setThinking(true);
-      const history = messages
+      const history = chat.messages
         .map((m) => ({ role: m.role, content: m.text }))
         .concat([{ role: "user", content: question }]);
       const reply = await askServerWithFallback(question, createInitialState(), history.slice(0, -1));
-      setMessages((m) => [...m, { role: "assistant", text: reply.text }]);
+      chat.add({ role: "assistant", text: reply.text });
       setThinking(false);
+      return reply.text;
     },
-    [thinking, messages]
+    [thinking, chat]
+  );
+
+  const send = useCallback(
+    async (raw: string) => {
+      const reply = await ask(raw);
+      if (reply && autoSpeakRef.current) void speakText(reply);
+    },
+    [ask, autoSpeakRef]
+  );
+
+  /* Hands-free voice conversation: listen → ask → speak reply → repeat. */
+  const voiceConversation = useVoiceConversation(ask);
+
+  /* Real-time phone-call style voice via Gemini Live (fallback to loop above). */
+  const liveCall = useLiveCall();
+  const startLiveCall = useCallback(() => {
+    void liveCall.start(liveVoiceInstruction(), liveVoiceGreeting());
+  }, [liveCall]);
+
+  const liveErrorRef = useRef<boolean>(false);
+  useEffect(() => {
+    if (liveCall.error && !liveErrorRef.current) {
+      liveErrorRef.current = true;
+      voiceConversation.start();
+    }
+    if (!liveCall.error) liveErrorRef.current = false;
+  }, [liveCall.error, voiceConversation]);
+
+  const handleTranscript = useCallback(
+    (t: string) => {
+      setInput(t);
+      send(t);
+    },
+    [send]
   );
 
   const reset = () => {
-    setMessages([{ role: "assistant", text: WELCOME }]);
+    chat.newChat();
     setInput("");
   };
 
   return (
-    <section id="assistant" className="section">
+    <>
+      <section id="assistant" className="section">
       <div className="container-wide">
         <div className="max-w-2xl">
           <p className="eyebrow">AI Studio</p>
@@ -120,6 +163,51 @@ export default function LlmStudio() {
                 </li>
               </ul>
             </div>
+
+            {/* Chat history */}
+            <div className="card">
+              <div className="flex items-center gap-2 text-sm font-medium text-white">
+                <RefreshCw className="h-4 w-4 text-neon" aria-hidden />
+                Recent conversations
+              </div>
+              <div className="mt-4 flex max-h-[260px] flex-col gap-1.5 overflow-y-auto pr-1">
+                {chat.sessions.length === 0 && (
+                  <p className="text-sm text-white/40">Nothing here yet — start a chat below.</p>
+                )}
+                {chat.sessions.slice(0, 8).map((s) => (
+                  <button
+                    key={s.id}
+                    type="button"
+                    onClick={() => chat.open(s.id)}
+                    className={`group flex items-center gap-2 rounded-lg border px-3 py-2 text-left transition-colors ${
+                      s.id === chat.activeId
+                        ? "border-neon/40 bg-neon/10"
+                        : "border-white/10 bg-white/[0.02] hover:border-white/25"
+                    }`}
+                  >
+                    <span className="min-w-0 flex-1 truncate text-[13px] text-white/80">{s.title}</span>
+                    <span
+                      role="button"
+                      tabIndex={0}
+                      aria-label="Delete conversation"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        chat.deleteChat(s.id);
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.stopPropagation();
+                          chat.deleteChat(s.id);
+                        }
+                      }}
+                      className="flex h-6 w-6 shrink-0 items-center justify-center rounded text-white/30 opacity-0 transition-opacity group-hover:opacity-100 hover:text-red-300"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" aria-hidden />
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
 
           {/* Chat console */}
@@ -133,6 +221,7 @@ export default function LlmStudio() {
                 <p className="text-sm font-semibold text-white">Wisne — AI Studio</p>
                 <p className="text-xs text-white/50">Connected to a live AI model</p>
               </div>
+              <AutoSpeakToggle enabled={autoSpeak} onToggle={toggleAutoSpeak} />
               <button
                 type="button"
                 onClick={reset}
@@ -156,6 +245,9 @@ export default function LlmStudio() {
                       }`}
                     >
                       {m.text}
+                      {m.role === "assistant" && (
+                        <SpeakButton onSpeak={() => speakText(m.text)} />
+                      )}
                     </div>
                   </div>
                 ))}
@@ -191,6 +283,9 @@ export default function LlmStudio() {
                 placeholder="Ask about services, pricing, or a plan for your business…"
                 className="min-w-0 flex-1 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white placeholder:text-white/35 focus:border-neon/50 focus:outline-none"
               />
+              <MicButton voice={voice} onTranscript={handleTranscript} disabled={thinking} />
+              <LiveCallButton supported={liveCall.supported} onStart={startLiveCall} />
+              <VoiceCallButton voice={voiceConversation} />
               <button
                 type="submit"
                 disabled={!input.trim() || thinking}
@@ -204,5 +299,21 @@ export default function LlmStudio() {
         </div>
       </div>
     </section>
+
+      {/* Real-time live voice call overlay */}
+      <AnimatePresence>
+        {liveCall.active && liveCall.status !== "off" && (
+          <LiveVoiceCall
+            status={liveCall.status}
+            energy={liveCall.energy}
+            userTranscript={liveCall.userTranscript}
+            assistantTranscript={liveCall.assistantTranscript}
+            bookingLink={liveCall.bookingLink}
+            error={liveCall.error}
+            onStop={liveCall.stop}
+          />
+        )}
+      </AnimatePresence>
+    </>
   );
 }

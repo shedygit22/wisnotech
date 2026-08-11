@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { MapPin, Mail, Phone, ArrowUpRight, ArrowRight, Send } from "lucide-react";
+import { sendLead } from "../lib/leadSink";
 
 const EMAIL = "wisnotech@gmail.com";
 
@@ -44,10 +45,18 @@ export default function Contact() {
   const [sent, setSent] = useState(false);
   const [openMap, setOpenMap] = useState(false);
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     const subject = `Project inquiry from ${form.name || "the website"}`;
     const body = `${form.message}\n\n— ${form.name}\n${form.email}`;
+    // Push to the lead sheet when the webhook is configured (never blocks).
+    await sendLead({
+      name: form.name,
+      email: form.email,
+      interest: "General inquiry",
+      message: form.message,
+      source: "contact-form",
+    });
     window.open(gmailHref(subject, body), "_blank", "noopener,noreferrer");
     setSent(true);
   };

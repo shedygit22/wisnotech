@@ -27,6 +27,29 @@ async function readBody(req) {
   return data;
 }
 
+/** Wrap 16-bit little-endian PCM samples in a WAV container. */
+function wrapWav(pcm, sampleRate, channels) {
+  const bitsPerSample = 16;
+  const byteRate = (sampleRate * channels * bitsPerSample) / 8;
+  const blockAlign = (channels * bitsPerSample) / 8;
+  const dataSize = pcm.length;
+  const header = Buffer.alloc(44);
+  header.write("RIFF", 0);
+  header.writeUInt32LE(36 + dataSize, 4);
+  header.write("WAVE", 8);
+  header.write("fmt ", 12);
+  header.writeUInt32LE(16, 16);
+  header.writeUInt16LE(1, 20);
+  header.writeUInt16LE(channels, 22);
+  header.writeUInt32LE(sampleRate, 24);
+  header.writeUInt32LE(byteRate, 28);
+  header.writeUInt16LE(blockAlign, 32);
+  header.writeUInt16LE(bitsPerSample, 34);
+  header.write("data", 36);
+  header.writeUInt32LE(dataSize, 40);
+  return Buffer.concat([header, pcm]);
+}
+
 const server = createServer(async (req, res) => {
   const url = new URL(req.url, `http://localhost:${PORT}`);
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -39,9 +62,40 @@ const server = createServer(async (req, res) => {
     return;
   }
 
-  if (req.method !== "POST" || url.pathname !== "/chat") {
+  if (req.method !== "POST" || (url.pathname !== "/chat" && url.pathname !== "/tts" && url.pathname !== "/live-token")) {
     res.writeHead(404, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ error: "Not found" }));
+    return;
+  }
+
+  if (url.pathname === "/live-token") {
+    try {
+      const apiKey = process.env.GOOGLE_AI_API_KEY;
+      if (!apiKey) throw new Error("GOOGLE_AI_API_KEY is not set");
+      const now = new Date();
+      const mint = await fetch("https://generativelanguage.googleapis.com/v1beta/auth_tokens", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
+        body: JSON.stringify({
+          uses: 1,
+          expireTime: new Date(now.getTime() + 30 * 60 * 1000).toISOString(),
+          newSessionExpireTime: new Date(now.getTime() + 60 * 1000).toISOString(),
+        }),
+      });
+      if (!mint.ok) {
+        const body = await mint.text().catch(() => "");
+        throw new Error(`auth_tokens ${mint.status}: ${body.slice(0, 300)}`);
+      }
+      const json = await mint.json();
+      const tokenName = json?.name ?? json?.token?.name;
+      if (!tokenName) throw new Error("auth_tokens returned no token");
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ token: json.token.name }));
+    } catch (err) {
+      console.error("live-token error:", err.message);
+      res.writeHead(500, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: err.message }));
+    }
     return;
   }
 
@@ -51,6 +105,173 @@ const server = createServer(async (req, res) => {
   } catch {
     res.writeHead(400, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ error: "Invalid JSON body" }));
+    return;
+  }
+
+  if (url.pathname === "/tts") {
+    const text = String(payload?.text ?? "").trim();
+    if (!text) {
+      res.writeHead(400, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "text is required" }));
+      return;
+    }
+    const provider = (process.env.TTS_PROVIDER || "gemini").toLowerCase();
+    let result = null;
+    if (provider === "gemini") {
+      try {
+        const apiKey = process.env.GOOGLE_AI_API_KEY;
+        if (apiKey) {
+          const model = process.env.GEMINI_TTS_MODEL || "gemini-3.1-flash-tts-preview";
+          const voice = process.env.GEMINI_TTS_VOICE || "Kore";
+          const tts = await fetch(
+            `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "x-goog-api-key": apiKey,
+              },
+              body: JSON.stringify({
+                contents: [{ parts: [{ text }] }],
+                generationConfig: {
+                  responseModalities: ["AUDIO"],
+                  speechConfig: {
+                    voiceConfig: { prebuiltVoiceConfig: { voiceName: voice } },
+                  },
+                },
+              }),
+            }
+          );
+          if (!tts.ok) {
+            const body = await tts.text().catch(() => "");
+            throw new Error(`Gemini TTS ${tts.status}: ${body.slice(0, 300)}`);
+          }
+          const json = await tts.json();
+          const part = json?.candidates?.[0]?.content?.parts?.find((p) => p?.inlineData?.data);
+          if (!part?.inlineData?.data) throw new Error("Gemini TTS returned no audio");
+          let buf = Buffer.from(part.inlineData.data, "base64");
+          let type = part.inlineData.mimeType || "audio/wav";
+          // Gemini streams raw PCM (audio/l16), which <audio> can't play — wrap in WAV.
+          if (type.startsWith("audio/l16")) {
+            const rate = Number((type.match(/rate=(\d+)/) || [])[1]) || 24000;
+            const channels = Number((type.match(/channels=(\d+)/) || [])[1]) || 1;
+            buf = wrapWav(buf, rate, channels);
+            type = "audio/wav";
+          }
+          result = { buf, type };
+        }
+      } catch (err) {
+        console.error("TTS error:", err.message);
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ error: err.message }));
+        return;
+      }
+    } else if (provider === "elevenlabs") {
+      try {
+        const apiKey = process.env.ELEVENLABS_API_KEY;
+        if (apiKey) {
+          const voice = process.env.ELEVENLABS_VOICE_ID || "21m00Tcm4TlvDq8ikWAM";
+          const model = process.env.ELEVENLABS_MODEL || "eleven_multilingual_v2";
+          const tts = await fetch(
+            `https://api.elevenlabs.io/v1/text-to-speech/${voice}`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "xi-api-key": apiKey,
+                Accept: "audio/mpeg",
+              },
+              body: JSON.stringify({
+                text,
+                model_id: model,
+                voice_settings: { stability: 0.5, similarity_boost: 0.75 },
+              }),
+            }
+          );
+          if (!tts.ok) {
+            const body = await tts.text().catch(() => "");
+            throw new Error(`ElevenLabs TTS ${tts.status}: ${body.slice(0, 300)}`);
+          }
+          result = { buf: Buffer.from(await tts.arrayBuffer()), type: "audio/mpeg" };
+        }
+      } catch (err) {
+        console.error("TTS error:", err.message);
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ error: err.message }));
+        return;
+      }
+    } else if (provider === "openai") {
+      try {
+        const apiKey = process.env.OPENAI_API_KEY;
+        if (apiKey) {
+          const model = process.env.OPENAI_TTS_MODEL || "gpt-4o-mini-tts";
+          const voice = process.env.OPENAI_TTS_VOICE || "nova";
+          const tts = await fetch("https://api.openai.com/v1/audio/speech", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${apiKey}`,
+            },
+            body: JSON.stringify({ model, voice, input: text, response_format: "mp3" }),
+          });
+          if (!tts.ok) {
+            const body = await tts.text().catch(() => "");
+            throw new Error(`OpenAI TTS ${tts.status}: ${body.slice(0, 300)}`);
+          }
+          result = { buf: Buffer.from(await tts.arrayBuffer()), type: "audio/mpeg" };
+        }
+      } catch (err) {
+        console.error("TTS error:", err.message);
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ error: err.message }));
+        return;
+      }
+    } else {
+      // Voicebox — local-first backend.
+      try {
+        const base = (process.env.VOICEBOX_URL || "http://localhost:17493").replace(/\/$/, "");
+        const profileId = process.env.VOICEBOX_PROFILE_ID || "default";
+        const engine = process.env.VOICEBOX_ENGINE || "kokoro";
+        const language = process.env.VOICEBOX_LANGUAGE || "en";
+        const gen = await fetch(`${base}/generate`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ profile_id: profileId, text, language, engine }),
+        });
+        if (!gen.ok) {
+          const body = await gen.text().catch(() => "");
+          throw new Error(`Voicebox /generate ${gen.status}: ${body.slice(0, 300)}`);
+        }
+        const meta = await gen.json();
+        const id = meta?.id;
+        if (!id) throw new Error("Voicebox /generate returned no id");
+        let audio = null;
+        for (let i = 0; i < 40 && !audio; i++) {
+          const a = await fetch(`${base}/audio/${id}`).catch(() => null);
+          if (a && a.ok) {
+            audio = {
+              buf: Buffer.from(await a.arrayBuffer()),
+              type: a.headers.get("content-type") || "audio/wav",
+            };
+          } else {
+            await new Promise((r) => setTimeout(r, 500));
+          }
+        }
+        if (audio) result = audio;
+      } catch (err) {
+        console.error("TTS error:", err.message);
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ error: err.message }));
+        return;
+      }
+    }
+    if (!result) {
+      res.writeHead(503, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "No TTS provider key configured" }));
+      return;
+    }
+    res.writeHead(200, { "Content-Type": result.type, "Content-Length": result.buf.length });
+    res.end(result.buf);
     return;
   }
 
