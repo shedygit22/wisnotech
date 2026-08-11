@@ -2,103 +2,7 @@ import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, BookOpen, Clock, Check, GraduationCap, Users } from "lucide-react";
 import Logo from "./Logo";
-
-interface Course {
-  title: string;
-  tagline: string;
-  duration: string;
-  level: string;
-  format: string;
-  usd: number;
-  naira: number;
-  topics: string[];
-  featured?: boolean;
-}
-
-const COURSES: Course[] = [
-  {
-    title: "AI Fundamentals",
-    tagline: "The zero-to-one foundation in artificial intelligence for complete beginners.",
-    duration: "4 weeks",
-    level: "Beginner",
-    format: "Live + recorded",
-    usd: 199,
-    naira: 350000,
-    topics: ["How AI actually works", "Using the best AI tools", "Prompting essentials", "Your first AI workflow"],
-  },
-  {
-    title: "Automation & Workflow Specialist",
-    tagline: "Automate repetitive business tasks with no-code tools, workflows and AI agents.",
-    duration: "5 weeks",
-    level: "Beginner–Intermediate",
-    format: "Live + recorded",
-    usd: 299,
-    naira: 520000,
-    topics: ["No-code automation tools", "Business process mapping", "AI customer support bots", "Workflow SOPs"],
-  },
-  {
-    title: "AI Content Creation Pro",
-    tagline: "Produce studio-grade videos, images and campaign content with AI.",
-    duration: "5 weeks",
-    level: "Beginner–Intermediate",
-    format: "Live + recorded",
-    usd: 249,
-    naira: 430000,
-    topics: ["AI video generation", "Avatars & talking heads", "AI image creation", "Content repurposing"],
-  },
-  {
-    title: "Prompt Engineering & AI Agents",
-    tagline: "Master advanced prompting and build autonomous AI agents that do real work.",
-    duration: "4 weeks",
-    level: "Intermediate",
-    format: "Live + recorded",
-    usd: 279,
-    naira: 490000,
-    topics: ["Advanced prompt design", "Chain-of-thought patterns", "Building AI agents", "Agent tooling & APIs"],
-  },
-  {
-    title: "No-Code & App Building",
-    tagline: "Build and launch functional web apps without writing code.",
-    duration: "6 weeks",
-    level: "Beginner",
-    format: "Live + recorded",
-    usd: 299,
-    naira: 520000,
-    topics: ["No-code platforms", "Databases & logic", "Launching your first app", "Monetization basics"],
-  },
-  {
-    title: "AI for Business Growth",
-    tagline: "A practical roadmap to apply AI across marketing, sales, operations and service.",
-    duration: "5 weeks",
-    level: "All levels",
-    format: "Live + recorded",
-    usd: 349,
-    naira: 610000,
-    topics: ["AI growth strategy", "Sales & marketing automation", "Customer experience", "ROI measurement"],
-    featured: true,
-  },
-  {
-    title: "Web Development Bootcamp",
-    tagline: "From zero to building modern, production-ready websites that actually ship.",
-    duration: "8 weeks",
-    level: "Beginner",
-    format: "Live + recorded",
-    usd: 399,
-    naira: 700000,
-    topics: ["HTML, CSS & JavaScript", "React fundamentals", "Responsive design", "Deploying to production"],
-  },
-  {
-    title: "Full-Stack Software Engineering",
-    tagline: "A complete program covering front-end, back-end, APIs and AI integration.",
-    duration: "12 weeks",
-    level: "Intermediate",
-    format: "Live + recorded",
-    usd: 599,
-    naira: 1050000,
-    topics: ["Front-end with React", "Back-end & databases", "REST & GraphQL APIs", "Integrating AI features"],
-    featured: true,
-  },
-];
+import { COURSES } from "../lib/courses";
 
 function formatNaira(n: number): string {
   return "₦" + n.toLocaleString("en-NG");
@@ -210,10 +114,10 @@ export default function AcademyPage() {
                       </p>
                     </div>
                     <a
-                      href="#contact"
+                      href={`#/courses/${c.slug}`}
                       className="btn-primary group/btn whitespace-nowrap"
                     >
-                      Enquire / Enrol
+                      View course
                       <ArrowRight
                         className="h-4 w-4 transition-transform group-hover/btn:translate-x-0.5"
                         aria-hidden

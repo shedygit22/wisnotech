@@ -15,6 +15,7 @@ import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import AiAssistant from "./components/AiAssistant";
 import AcademyPage from "./components/AcademyPage";
+import CoursePage from "./components/CoursePage";
 
 function useHashRoute(): string {
   const [hash, setHash] = useState(() => window.location.hash);
@@ -30,6 +31,11 @@ export default function App() {
   const hash = useHashRoute();
 
   /* Lightweight hash routing — "#/academy" opens the dedicated courses page. */
+  if (hash.startsWith("#/courses/")) {
+    const slug = hash.slice("#/courses/".length).split("/")[0];
+    return <CoursePage slug={slug} />;
+  }
+
   if (hash.startsWith("#/academy")) {
     return <AcademyPage />;
   }
