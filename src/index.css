@@ -9,6 +9,7 @@
   --color-neon: #3b7bff;
   --color-line: rgba(255, 255, 255, 0.1);
   --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
 }
 
 @layer base {
@@ -90,6 +91,81 @@
 
   .eyebrow {
     @apply text-xs font-semibold uppercase tracking-[0.25em] text-muted;
+  }
+
+  .prose-wisnotech {
+    @apply text-[16px] leading-[1.85] text-white/80;
+  }
+
+  .prose-wisnotech h1,
+  .prose-wisnotech h2,
+  .prose-wisnotech h3,
+  .prose-wisnotech h4 {
+    @apply mt-10 mb-4 font-display font-semibold tracking-tight text-white first:mt-0;
+  }
+
+  .prose-wisnotech h1 {
+    @apply text-3xl;
+  }
+
+  .prose-wisnotech h2 {
+    @apply text-2xl;
+  }
+
+  .prose-wisnotech h3 {
+    @apply text-xl;
+  }
+
+  .prose-wisnotech p {
+    @apply mt-4 leading-[1.85];
+  }
+
+  .prose-wisnotech a {
+    @apply font-medium text-neon underline decoration-neon/30 underline-offset-4 transition-colors hover:decoration-neon;
+  }
+
+  .prose-wisnotech ul {
+    @apply mt-5 list-disc space-y-2 pl-6;
+  }
+
+  .prose-wisnotech ol {
+    @apply mt-5 list-decimal space-y-2 pl-6;
+  }
+
+  .prose-wisnotech li {
+    @apply leading-relaxed;
+  }
+
+  .prose-wisnotech li::marker {
+    @apply text-neon;
+  }
+
+  .prose-wisnotech blockquote {
+    @apply mt-6 border-l-2 border-neon/40 bg-neon/[0.06] px-5 py-4 text-white/70;
+  }
+
+  .prose-wisnotech blockquote p {
+    @apply mt-0;
+  }
+
+  .prose-wisnotech code {
+    @apply rounded-md border border-white/10 bg-white/[0.06] px-1.5 py-0.5 text-[0.875em] text-neon;
+  }
+
+  .prose-wisnotech pre {
+    @apply mt-6 overflow-x-auto rounded-xl border border-white/10 bg-[#0d0d0f] p-5;
+  }
+
+  .prose-wisnotech pre code {
+    @apply border-0 bg-transparent p-0 text-white/80;
+  }
+
+  .prose-wisnotech hr {
+    @apply my-10 border-white/10;
+  }
+
+  .prose-wisnotech strong {
+    @apply font-semibold text-white;
   }
 }
 

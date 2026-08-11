@@ -17,6 +17,7 @@ import {
 import Logo from "./Logo";
 import { getCourseBySlug } from "../lib/courses";
 import { sendLead } from "../lib/leadSink";
+import { applyPageMeta, orgSchema, breadcrumbSchema, courseSchema } from "../lib/seo";
 
 const EMAIL = "wisnotech@gmail.com";
 
@@ -67,6 +68,31 @@ export default function CoursePage({ slug }: CoursePageProps) {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
   }, [slug]);
+
+  useEffect(() => {
+    if (!course) return;
+    applyPageMeta({
+      title: `${course.title} — Wisnotech Academy`,
+      description: course.tagline,
+      path: `/courses/${course.slug}`,
+      type: "product",
+      jsonLd: [
+        orgSchema(),
+        breadcrumbSchema([
+          { name: "Home", path: "/" },
+          { name: "Academy", path: "/#/academy" },
+          { name: course.title, path: `/courses/${course.slug}` },
+        ]),
+        courseSchema({
+          name: course.title,
+          description: course.tagline,
+          path: `/courses/${course.slug}`,
+          duration: course.duration,
+          priceUsd: course.usd,
+        }),
+      ],
+    });
+  }, [course]);
 
   if (!course) {
     return (

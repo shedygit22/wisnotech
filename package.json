@@ -7,7 +7,7 @@
     "dev": "vite",
     "dev:all": "concurrently -k \"npm:chat:dev\" \"vite\"",
     "chat:dev": "node server/chat.mjs",
-    "build": "tsc --noEmit && vite build",
+    "build": "tsc --noEmit && vite build && node scripts/prerender-blog.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

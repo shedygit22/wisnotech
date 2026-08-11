@@ -16,6 +16,8 @@ import Footer from "./components/Footer";
 import AiAssistant from "./components/AiAssistant";
 import AcademyPage from "./components/AcademyPage";
 import CoursePage from "./components/CoursePage";
+import BlogPage from "./components/BlogPage";
+import BlogPostPage from "./components/BlogPostPage";
 
 function useHashRoute(): string {
   const [hash, setHash] = useState(() => window.location.hash);
@@ -27,8 +29,29 @@ function useHashRoute(): string {
   return hash;
 }
 
+function usePathRoute(): string {
+  const [path, setPath] = useState(() => window.location.pathname);
+  useEffect(() => {
+    const onPath = () => setPath(window.location.pathname);
+    window.addEventListener("popstate", onPath);
+    return () => window.removeEventListener("popstate", onPath);
+  }, []);
+  return path;
+}
+
 export default function App() {
   const hash = useHashRoute();
+  const path = usePathRoute();
+
+  /* SEO-friendly real URLs for the blog. */
+  if (path.startsWith("/blog/")) {
+    const slug = path.slice("/blog/".length).split("/")[0];
+    return <BlogPostPage slug={slug} />;
+  }
+
+  if (path === "/blog") {
+    return <BlogPage />;
+  }
 
   /* Lightweight hash routing — "#/academy" opens the dedicated courses page. */
   if (hash.startsWith("#/courses/")) {

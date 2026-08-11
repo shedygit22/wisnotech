@@ -14,7 +14,7 @@ const FOOTER_GROUPS = [
     links: [
       { label: "Home", href: "#home" },
       { label: "About", href: "#about" },
-      { label: "Academy", href: "#academy" },
+      { label: "Blog", href: "/blog" },
       { label: "Contact", href: "#contact" },
     ],
   },
@@ -30,10 +30,10 @@ const FOOTER_GROUPS = [
   {
     heading: "Academy",
     links: [
-      { label: "Courses", href: "#academy" },
-      { label: "Curriculum", href: "#academy" },
+      { label: "Courses", href: "#/academy" },
+      { label: "Curriculum", href: "#/academy" },
       { label: "Waitlist", href: "#contact" },
-      { label: "FAQs", href: "#contact" },
+      { label: "FAQs", href: "#/academy" },
     ],
   },
 ];
