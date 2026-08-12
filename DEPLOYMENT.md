@@ -9,9 +9,9 @@ automatically builds and deploys to production.
 ## Environment variables (set in Vercel → Settings → Environment Variables)
 | Name | Value |
 |---|---|
-| `LLM_PROVIDER` | `nvidia` |
-| `NVIDIA_API_KEY` | your nvapi-... key |
-| `NVIDIA_MODEL` | `google/gemma-4-31b-it` |
+| `LLM_PROVIDER` | `google` |
+| `GOOGLE_AI_API_KEY` | your AI Studio key |
+| `GOOGLE_AI_MODEL` | `gemini-3.5-flash` |
 
 ## Local development
 ```bash

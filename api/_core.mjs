@@ -4,11 +4,11 @@
  * runs in serverless functions (Vercel/Netlify) and the local dev server.
  *
  * Env vars (never ship these to the browser):
- *   LLM_PROVIDER        "deepseek" (default) | "google" | "nvidia"
+ *   LLM_PROVIDER        "google" (default) | "deepseek" | "nvidia"
+ *   GOOGLE_AI_API_KEY    AIza... from Google AI Studio
+ *   GOOGLE_AI_MODEL      default gemini-3.5-flash (or a gemma model id)
  *   DEEPSEEK_API_KEY     sk-... for api.deepseek.com
  *   DEEPSEEK_MODEL       default deepseek-chat
- *   GOOGLE_AI_API_KEY    AIza... from Google AI Studio
- *   GOOGLE_AI_MODEL      default gemini-2.0-flash (or a gemma model id)
  *   NVIDIA_API_KEY       nvapi-... from build.nvidia.com / NVIDIA API Catalog
  *   NVIDIA_MODEL         default google/gemma-4-31b-it
  */
@@ -80,7 +80,7 @@ async function callDeepSeek(messages, env) {
 async function callGoogle(messages, env) {
   const apiKey = env.GOOGLE_AI_API_KEY;
   if (!apiKey) throw new Error("GOOGLE_AI_API_KEY is not set. Add it to env (see .env.example).");
-  const model = env.GOOGLE_AI_MODEL ?? "gemini-2.0-flash";
+  const model = env.GOOGLE_AI_MODEL ?? "gemini-3.5-flash";
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
   const systemText = messages
@@ -162,7 +162,7 @@ async function callNvidia(messages, env) {
 }
 
 export async function runChat(payload, env) {
-  const provider = (env.LLM_PROVIDER ?? "deepseek").toLowerCase();
+  const provider = (env.LLM_PROVIDER ?? "google").toLowerCase();
   const messages = [{ role: "system", content: systemPrompt() }, ...payload.messages];
 
   if (provider === "google") {
