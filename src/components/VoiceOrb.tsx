@@ -15,14 +15,14 @@ interface VoiceOrbProps {
 
 type RGB = [number, number, number];
 
-interface Palette {
+export interface VoicePalette {
   core: RGB;
   glow: RGB;
   accent: RGB;
   rim: RGB;
 }
 
-const PALETTES: Record<LiveStatus, Palette> = {
+export const VOICE_PALETTES: Record<LiveStatus, VoicePalette> = {
   off: {
     core: [22, 38, 74],
     glow: [70, 120, 235],
@@ -117,7 +117,7 @@ export function VoiceOrb({
     let tick = 0;
 
     // Current blended palette — slides towards the target status palette.
-    let cur: Palette = { ...PALETTES[status] };
+    let cur: VoicePalette = { ...VOICE_PALETTES[status] };
     // Smoothed detection so animation responds with presence (fast attack, slow release).
     let smLevel = 0;
     let waveHold = 0;
@@ -132,7 +132,7 @@ export function VoiceOrb({
       const seconds = now / 1000;
 
       const curStatus = statusRef.current;
-      const target = PALETTES[curStatus];
+      const target = VOICE_PALETTES[curStatus];
 
       // Seamless palette fade between states.
       const fade = 0.035;
