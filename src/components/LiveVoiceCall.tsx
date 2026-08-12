@@ -1,11 +1,14 @@
 import { motion } from "framer-motion";
-import { PhoneOff, MicOff, Sparkles, Calendar } from "lucide-react";
+import { PhoneOff, Sparkles } from "lucide-react";
 import type { LiveStatus } from "../lib/liveCall";
-import { LiquidOrb } from "./LiquidOrb";
+import { VoiceOrb } from "./VoiceOrb";
 
 interface LiveVoiceCallProps {
   status: LiveStatus;
+  /** 0..1 user (mic) energy — real-time analyser value. */
   energy: number;
+  /** 0..1 AI (playback) energy — real-time analyser value. */
+  aiEnergy: number;
   userTranscript: string;
   assistantTranscript: string;
   bookingLink: string | null;
@@ -15,130 +18,117 @@ interface LiveVoiceCallProps {
 
 const STATUS_TEXT: Record<LiveStatus, string> = {
   off: "Voice conversation ended",
-  connecting: "Connecting…",
-  listening: "I'm listening — go ahead",
+  connecting: "Connecting to Wisne…",
+  listening: "I'm listening",
   thinking: "Thinking…",
   speaking: "Wisne is speaking",
 };
 
 /**
- * Fullscreen "phone call" voice mode — ChatGPT-style hands-free conversation
- * with a glowing liquid orb that comes alive when the call is active.
+ * Fullscreen "phone call" voice mode — a living, voice-reactive orb is the
+ * single hero element. Everything else stays in the background so the user's
+ * attention stays on the breathing intelligence in front of them.
  */
 export function LiveVoiceCall({
   status,
   energy,
+  aiEnergy,
   userTranscript,
   assistantTranscript,
   bookingLink,
   error,
   onStop,
 }: LiveVoiceCallProps) {
-  const active = status !== "off";
+  const live = status !== "off" && status !== "connecting";
+  const transcript = assistantTranscript || userTranscript;
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.3 }}
-      className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#05070c]/92 backdrop-blur-2xl"
+      transition={{ duration: 0.35 }}
+      className="fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden bg-[#030409]"
       role="dialog"
       aria-label="Live voice conversation"
     >
-      {/* Ambient glow */}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(50%_45%_at_50%_40%,rgba(59,123,255,0.12),transparent_70%)]" />
+      {/* Ambient atmosphere */}
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(55% 42% at 50% 46%, rgba(70,120,255,0.10), transparent 72%), radial-gradient(120% 90% at 50% 110%, rgba(80,150,255,0.08), transparent 60%)",
+        }}
+      />
 
-      <div className="relative z-10 flex flex-col items-center gap-8 px-6 text-center">
-        {/* Orbs */}
-        <div className="relative">
-          <LiquidOrb status={status} energy={energy} size={280} />
-          <div className="absolute -right-6 top-4 animate-pulse">
-            <span
-              className={`flex gap-1 rounded-full border px-3 py-1 text-[11px] font-semibold tracking-widest uppercase ${
-                active
-                  ? "border-neon/40 bg-neon/10 text-neon"
-                  : "border-white/10 bg-white/5 text-white/40"
-              }`}
-            >
-              <span className="h-1.5 w-1.5 rounded-full bg-current" />
-              Live
-            </span>
-          </div>
-        </div>
+      {/* Hero orb — sized to viewport, centered */}
+      <VoiceOrb
+        status={status}
+        energy={energy}
+        aiEnergy={aiEnergy}
+        size={Math.min(window.innerWidth, window.innerHeight) * 0.62}
+        className="relative z-10 drop-shadow-[0_0_80px_rgba(90,150,255,0.25)]"
+      />
 
-        {/* Status */}
-        <div className="min-h-[6rem]">
-          <p className="text-lg font-medium text-white sm:text-xl">{STATUS_TEXT[status]}</p>
+      {/* Status — kept minimal, below the orb */}
+      <div className="relative z-10 mt-5 flex flex-col items-center gap-2 px-6 text-center">
+        <p className="text-sm font-medium tracking-wide text-white/85 sm:text-base">
+          {STATUS_TEXT[status]}
+        </p>
 
-          {(userTranscript || assistantTranscript) && !error && (
-            <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-white/50">
-              {assistantTranscript || userTranscript}
-            </p>
-          )}
-
-          {error && (
-            <p className="mx-auto mt-3 max-w-md text-sm text-red-300/90">{error}</p>
-          )}
-        </div>
-
-        {/* Transcript */}
-        {(userTranscript || assistantTranscript) && !error && (
-          <div className="flex w-full max-w-md flex-col gap-1.5 text-left">
-            {userTranscript && (
-              <p className="text-[13px] text-neon/80">
-                <span className="font-semibold text-neon">You:</span> {userTranscript}
-              </p>
-            )}
-            {assistantTranscript && (
-              <p className="text-[13px] text-white/60">
-                <span className="font-semibold text-white/80">Wisne:</span> {assistantTranscript}
-              </p>
-            )}
-          </div>
+        {error ? (
+          <p className="max-w-md text-xs text-red-300/90">{error}</p>
+        ) : (
+          transcript &&
+          live && (
+            <p className="max-w-md text-xs leading-relaxed text-white/40">{transcript}</p>
+          )
         )}
 
+        {/* Booking link surfaces only when Wisne offers it */}
         {bookingLink && !error && (
           <motion.a
             href={bookingLink}
             target="_blank"
             rel="noopener noreferrer"
-            initial={{ opacity: 0, y: 8 }}
+            initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex items-center gap-3 rounded-2xl border border-neon/30 bg-neon/10 px-5 py-3.5 text-left transition-colors hover:bg-neon/20"
+            className="mt-1 rounded-full border border-neon/30 bg-neon/10 px-4 py-2 text-xs font-medium text-neon backdrop-blur transition-colors hover:bg-neon/20"
           >
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-neon/20 text-neon">
-              <Calendar className="h-5 w-5" aria-hidden />
-            </span>
-            <span>
-              <span className="block text-sm font-semibold text-white">Book your call</span>
-              <span className="block text-xs text-white/60">Pick a Thursday slot — 30 minutes</span>
-            </span>
+            Book your call — pick a slot
           </motion.a>
         )}
-
-        {/* Hang up */}
-        <motion.button
-          type="button"
-          onClick={onStop}
-          whileTap={{ scale: 0.94 }}
-          aria-label="End voice conversation"
-          title="End call"
-          className="mt-2 flex h-16 w-16 items-center justify-center rounded-full border border-red-400/40 bg-red-500/20 text-red-300 transition-colors hover:bg-red-500/30"
-        >
-          <PhoneOff className="h-7 w-7" aria-hidden />
-        </motion.button>
-
-        <p className="flex items-center gap-1.5 text-xs text-white/35">
-          <MicOff className="h-3.5 w-3.5" aria-hidden />
-          Tap to end the live conversation
-        </p>
       </div>
 
+      {/* Gentle pulsing live indicator */}
+      {live && (
+        <div className="relative z-10 mt-4 flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 backdrop-blur">
+          <span className="relative flex h-2 w-2">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-neon opacity-60" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-neon" />
+          </span>
+          <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/60">
+            Live
+          </span>
+        </div>
+      )}
+
+      {/* Hang up — the only action control */}
+      <motion.button
+        type="button"
+        onClick={onStop}
+        whileTap={{ scale: 0.92 }}
+        aria-label="End voice conversation"
+        title="End call"
+        className="relative z-10 mt-8 flex h-14 w-14 items-center justify-center rounded-full border border-white/15 bg-white/[0.04] text-white/70 backdrop-blur transition-colors hover:border-red-400/50 hover:bg-red-500/20 hover:text-red-300"
+      >
+        <PhoneOff className="h-6 w-6" aria-hidden />
+      </motion.button>
+
       {/* Brand mark */}
-      <div className="absolute bottom-6 flex items-center gap-2 text-white/25">
-        <Sparkles className="h-4 w-4" aria-hidden />
-        <span className="text-xs tracking-wide">Wisne — Live Voice</span>
+      <div className="absolute bottom-5 left-1/2 flex -translate-x-1/2 items-center gap-1.5 text-white/20">
+        <Sparkles className="h-3.5 w-3.5" aria-hidden />
+        <span className="text-[11px] tracking-wide">Wisne — Live Voice</span>
       </div>
     </motion.div>
   );

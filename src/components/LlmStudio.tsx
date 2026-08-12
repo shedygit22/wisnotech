@@ -306,6 +306,7 @@ export default function LlmStudio() {
           <LiveVoiceCall
             status={liveCall.status}
             energy={liveCall.energy}
+            aiEnergy={liveCall.aiEnergy}
             userTranscript={liveCall.userTranscript}
             assistantTranscript={liveCall.assistantTranscript}
             bookingLink={liveCall.bookingLink}

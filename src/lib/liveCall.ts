@@ -14,6 +14,11 @@ export interface LiveCallHandlers {
 export interface LiveCallController {
   stop: () => void;
   sendText: (text: string) => void;
+  /** Real-time Web Audio taps: mic input and AI (playback) output. */
+  analysers?: {
+    mic: AnalyserNode;
+    output: AnalyserNode;
+  };
 }
 
 const WS_BASE = "wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContentConstrained";
@@ -52,10 +57,16 @@ class PcmPlayer {
   private ctx: AudioContext;
   private sources: AudioBufferSourceNode[] = [];
   private nextStart = 0;
+  /** Taps the AI's live audio so the visualization can move in sync with speech. */
+  readonly analyser: AnalyserNode;
 
   constructor(ctx: AudioContext, startDelay = 0.06) {
     this.ctx = ctx;
     this.nextStart = ctx.currentTime + startDelay;
+    this.analyser = ctx.createAnalyser();
+    this.analyser.fftSize = 1024;
+    this.analyser.smoothingTimeConstant = 0.6;
+    this.analyser.connect(ctx.destination);
   }
 
   enqueue(pcm: Uint8Array, rate: number): void {
@@ -70,7 +81,8 @@ class PcmPlayer {
 
     const src = this.ctx.createBufferSource();
     src.buffer = buf;
-    src.connect(this.ctx.destination);
+    // Route through the analyser so the orb can hear what the AI is saying.
+    src.connect(this.analyser);
     const when = Math.max(this.ctx.currentTime + 0.01, this.nextStart);
     src.start(when);
     this.nextStart = when + buf.duration;
@@ -229,6 +241,7 @@ export async function startLiveCall(
   let audioCtx: AudioContext | null = null;
   let workletNode: AudioWorkletNode | null = null;
   let micGain: GainNode | null = null;
+  let micAnalyser: AnalyserNode | null = null;
 
   const startMic = async (): Promise<AudioContext> => {
     audioStream = await navigator.mediaDevices.getUserMedia({
@@ -248,6 +261,12 @@ export async function startLiveCall(
     const source = ctx.createMediaStreamSource(audioStream);
     workletNode = new AudioWorkletNode(ctx, "wisne-pcm");
     source.connect(workletNode);
+
+    // Tap the raw mic signal so the orb can react to the user's voice.
+    micAnalyser = ctx.createAnalyser();
+    micAnalyser.fftSize = 512;
+    micAnalyser.smoothingTimeConstant = 0.35;
+    source.connect(micAnalyser);
 
     workletNode.port.onmessage = (ev: MessageEvent<ArrayBuffer>) => {
       const all = new Float32Array(new Int16Array(ev.data));
@@ -397,10 +416,12 @@ export async function startLiveCall(
   const stopMic = async () => {
     workletNode?.port.close();
     workletNode?.disconnect();
+    micAnalyser?.disconnect();
     micGain?.disconnect();
     audioStream?.getTracks().forEach((t) => t.stop());
     await audioCtx?.close().catch(() => undefined);
     workletNode = null;
+    micAnalyser = null;
     micGain = null;
     audioStream = null;
     audioCtx = null;
@@ -420,6 +441,10 @@ export async function startLiveCall(
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(JSON.stringify({ realtimeInput: { text } }));
       }
+    },
+    analysers: {
+      mic: micAnalyser ?? ctx.createAnalyser(),
+      output: player.analyser,
     },
   };
 }
