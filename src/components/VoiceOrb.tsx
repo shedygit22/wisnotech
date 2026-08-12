@@ -382,5 +382,17 @@ export function VoiceOrb({
     };
   }, [size]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  return <canvas ref={canvasRef} className={className} style={{ width: size, height: size }} aria-hidden />;
+  return (
+    <canvas
+      ref={canvasRef}
+      className={className}
+      style={{
+        width: size,
+        height: size,
+        maskImage: "radial-gradient(circle, #000 58%, transparent 76%)",
+        WebkitMaskImage: "radial-gradient(circle, #000 58%, transparent 76%)",
+      }}
+      aria-hidden
+    />
+  );
 }

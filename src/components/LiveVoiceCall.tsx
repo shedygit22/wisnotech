@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { motion } from "framer-motion";
 import { PhoneOff, Sparkles } from "lucide-react";
 import type { LiveStatus } from "../lib/liveCall";
@@ -26,94 +25,10 @@ const STATUS_TEXT: Record<LiveStatus, string> = {
   speaking: "Wisne is speaking",
 };
 
-const SEGMENTS = 72;
-
-/** Spans a single arc segment as an SVG path on a centered circle. */
-function segmentPath(cx: number, cy: number, r: number, from: number, to: number): string {
-  const a = (from * Math.PI) / 180 - Math.PI / 2;
-  const b = (to * Math.PI) / 180 - Math.PI / 2;
-  const x1 = cx + r * Math.cos(a);
-  const y1 = cy + r * Math.sin(a);
-  const x2 = cx + r * Math.cos(b);
-  const y2 = cy + r * Math.sin(b);
-  return `M ${x1.toFixed(2)} ${y1.toFixed(2)} A ${r} ${r} 0 0 1 ${x2.toFixed(2)} ${y2.toFixed(2)}`;
-}
-
-/** Circular voice-activity meter — segments light up with audio energy. */
-function ActivityRing({
-  size,
-  level,
-  active,
-}: {
-  size: number;
-  level: number; // 0..1
-  active: boolean;
-}) {
-  const cx = size / 2;
-  const cy = size / 2;
-  const r = size / 2 - 6;
-  const seg = (360 - SEGMENTS * 2) / SEGMENTS;
-  const segments = useMemo(
-    () =>
-      Array.from({ length: SEGMENTS }, (_, i) => {
-        const from = i * (seg + 2);
-        return { path: segmentPath(cx, cy, r, from, from + seg), i };
-      }),
-    [cx, cy, r, seg]
-  );
-  const lit = Math.round(level * SEGMENTS);
-
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox={`0 0 ${size} ${size}`}
-      className="absolute inset-0 overflow-visible"
-      aria-hidden
-    >
-      {segments.map((s) => {
-        const on = s.i < lit;
-        const hot = on && s.i >= lit - Math.min(6, lit);
-        return (
-          <path
-            key={s.i}
-            d={s.path}
-            fill="none"
-            stroke={on ? "#3b7bff" : "rgba(255,255,255,0.09)"}
-            strokeWidth={on ? 3.2 : 1.6}
-            strokeLinecap="round"
-            opacity={on ? (hot ? 1 : 0.65) : 0.5}
-            style={
-              on
-                ? {
-                    filter: `drop-shadow(0 0 ${hot ? 8 : 4}px rgba(59,123,255,${hot ? 0.9 : 0.5}))`,
-                  }
-                : undefined
-            }
-          />
-        );
-      })}
-      {active && (
-        <motion.circle
-          cx={cx}
-          cy={cy}
-          r={r - 4}
-          fill="none"
-          stroke="rgba(59,123,255,0.25)"
-          strokeWidth={1}
-          initial={{ opacity: 0, scale: 0.98 }}
-          animate={{ opacity: [0.2, 0.45, 0.2], scale: [0.99, 1.01, 0.99] }}
-          transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
-        />
-      )}
-    </svg>
-  );
-}
-
 /**
- * Fullscreen "phone call" voice mode. The orb floats in a breathing blue aura
- * wrapped by a circular voice-activity meter; controls sit in a quiet glass
- * dock. Colours match the site's neon-blue (#3b7bff) language.
+ * Fullscreen "phone call" voice mode. The orb floats freely in deep space,
+ * wrapped in soft blurred light — no hard edges, no boxes. Everything recedes
+ * behind a single living point of light in the site's neon blue.
  */
 export function LiveVoiceCall({
   status,
@@ -128,8 +43,7 @@ export function LiveVoiceCall({
   const live = status !== "off" && status !== "connecting";
   const transcript = assistantTranscript || userTranscript;
   const base = Math.min(window.innerWidth, window.innerHeight);
-  const orbSize = Math.max(220, base * 0.46);
-  const ringSize = orbSize + 56;
+  const orbSize = Math.max(200, base * 0.5);
   const level = Math.max(energy, aiEnergy);
 
   return (
@@ -163,25 +77,81 @@ export function LiveVoiceCall({
         </motion.div>
       </div>
 
-      {/* Hero stage: orb wrapped by the activity meter */}
+      {/* Hero stage — open space, soft light, no box around the orb */}
       <div className="relative z-10 flex items-center justify-center">
-        <div className="relative" style={{ width: ringSize, height: ringSize }}>
-          <ActivityRing size={ringSize} level={level} active={live} />
+        {/* Widescreen soft bloom that breathes with the voice */}
+        <motion.div
+          aria-hidden
+          className="absolute rounded-full"
+          animate={{ scale: 1 + level * 0.18 }}
+          transition={{ type: "spring", stiffness: 40, damping: 12 }}
+          style={{
+            width: orbSize * 2.2,
+            height: orbSize * 2.2,
+            background:
+              "radial-gradient(circle, rgba(59,123,255,0.20) 0%, rgba(59,123,255,0.08) 42%, transparent 72%)",
+            filter: "blur(46px)",
+          }}
+        />
+
+        {/* Fine counter-rotating light rings — thin, blurred, ethereal */}
+        <motion.div
+          aria-hidden
+          className="absolute rounded-full"
+          style={{ width: orbSize * 1.42, height: orbSize * 1.42, filter: "blur(0.4px)" }}
+          animate={{ rotate: 360 }}
+          transition={{ duration: 90, repeat: Infinity, ease: "linear" }}
+        >
           <div
-            className="absolute"
+            className="absolute inset-0 rounded-full"
             style={{
-              inset: (ringSize - orbSize) / 2,
+              border: "1px solid rgba(120,170,255,0.16)",
+              maskImage:
+                "conic-gradient(transparent 0deg, transparent 260deg, rgba(0,0,0,0.5) 300deg, transparent 360deg)",
+              WebkitMaskImage:
+                "conic-gradient(transparent 0deg, transparent 260deg, rgba(0,0,0,0.5) 300deg, transparent 360deg)",
             }}
-          >
-            <VoiceOrb
-              status={status}
-              energy={energy}
-              aiEnergy={aiEnergy}
-              size={orbSize}
-              className="h-full w-full"
-            />
-          </div>
-        </div>
+          />
+        </motion.div>
+        <motion.div
+          aria-hidden
+          className="absolute rounded-full"
+          style={{ width: orbSize * 1.24, height: orbSize * 1.24 }}
+          animate={{ rotate: -360 }}
+          transition={{ duration: 130, repeat: Infinity, ease: "linear" }}
+        >
+          <div
+            className="absolute inset-0 rounded-full"
+            style={{
+              border: "1px solid rgba(120,170,255,0.10)",
+              maskImage:
+                "conic-gradient(transparent 0deg, rgba(0,0,0,0.6) 90deg, transparent 160deg)",
+              WebkitMaskImage:
+                "conic-gradient(transparent 0deg, rgba(0,0,0,0.6) 90deg, transparent 160deg)",
+            }}
+          />
+        </motion.div>
+
+        {/* Breathing containment glow just beyond the orb */}
+        <div
+          aria-hidden
+          className="absolute rounded-full"
+          style={{
+            width: orbSize,
+            height: orbSize,
+            background:
+              "radial-gradient(circle, rgba(59,123,255,0.10) 0%, transparent 62%)",
+            filter: "blur(14px)",
+          }}
+        />
+
+        <VoiceOrb
+          status={status}
+          energy={energy}
+          aiEnergy={aiEnergy}
+          size={orbSize}
+          className="relative"
+        />
       </div>
 
       {/* Status + transcript */}
