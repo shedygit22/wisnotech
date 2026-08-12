@@ -24,31 +24,31 @@ export interface VoicePalette {
 
 export const VOICE_PALETTES: Record<LiveStatus, VoicePalette> = {
   off: {
-    core: [22, 38, 74],
-    glow: [70, 120, 235],
+    core: [18, 30, 60],
+    glow: [59, 123, 255],
     accent: [120, 165, 255],
     rim: [150, 185, 255],
   },
   connecting: {
-    core: [34, 36, 96],
-    glow: [140, 110, 255],
+    core: [30, 42, 96],
+    glow: [59, 123, 255],
+    accent: [150, 170, 255],
+    rim: [180, 195, 255],
+  },
+  listening: {
+    core: [10, 56, 118],
+    glow: [59, 150, 255],
+    accent: [120, 190, 255],
+    rim: [150, 205, 255],
+  },
+  thinking: {
+    core: [36, 32, 110],
+    glow: [125, 115, 255],
     accent: [180, 160, 255],
     rim: [200, 185, 255],
   },
-  listening: {
-    core: [8, 84, 66],
-    glow: [52, 215, 160],
-    accent: [110, 235, 190],
-    rim: [150, 250, 215],
-  },
-  thinking: {
-    core: [54, 26, 110],
-    glow: [165, 110, 255],
-    accent: [200, 160, 255],
-    rim: [215, 185, 255],
-  },
   speaking: {
-    core: [12, 60, 138],
+    core: [10, 58, 132],
     glow: [80, 165, 255],
     accent: [130, 200, 255],
     rim: [165, 215, 255],
