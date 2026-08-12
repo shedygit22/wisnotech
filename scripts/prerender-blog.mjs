@@ -43,6 +43,11 @@ const ASSET_INJECT = `
     ${assets.links.join("\n    ")}
 `;
 
+/** Third-party embed shown on every page (kept in sync with index.html). */
+const WIDGET_SCRIPT = `
+    <script src="https://cdn.wisnotech.ai/widget.js" data-team="demo" data-employee="emp_i29t887aij" data-name="Shedy" data-greeting="Hi, I'm Shedy. How can I help?"></script>
+`;
+
 function escapeAttr(s) {
   return s.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
 }
@@ -71,6 +76,7 @@ ${ASSET_INJECT}
   <body>
     ${body}
     ${assets.scripts.join("\n    ")}
+    ${WIDGET_SCRIPT}
   </body>
 </html>`;
 }
