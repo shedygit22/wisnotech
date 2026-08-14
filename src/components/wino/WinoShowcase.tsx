@@ -116,7 +116,8 @@ export function VideoCard({ item }: { item: WinoMediaItem }) {
         </span>
         <p className="mt-4 text-[15px] font-medium text-white">{item.title}</p>
         <p className="mt-1.5 max-w-[260px] text-sm leading-relaxed text-muted">
-          Add a video URL in <code className="text-white/70">src/lib/wino.ts</code> to play it here.
+          Add a video to <code className="text-white/70">public/wino/videos</code> and update{" "}
+          <code className="text-white/70">src/lib/wino.ts</code>.
         </p>
       </figure>
     );
@@ -207,7 +208,7 @@ function PendingCard({ item }: { item: WinoMediaItem }) {
       </div>
       <div className="w-full px-5 py-4 text-left">
         <p className="text-[15px] font-semibold text-white">{item.title}</p>
-        <p className="text-xs text-muted">Sample pending — add media in the WINO config.</p>
+        <p className="text-xs text-muted">Sample pending — add media in {`public/wino/`}.</p>
       </div>
     </figure>
   );

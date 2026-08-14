@@ -63,7 +63,10 @@ export const WINO_CATEGORIES: { id: WinoCategory; label: string }[] = [
 /**
  * SHOWCASE MEDIA
  * --------------
- * Replace `src` / `poster` values with real WINO-generated sample URLs.
+ * Upload your real WINO videos to public/wino/videos/, thumbnails to
+ * public/wino/thumbs/ and images to public/wino/images/, then point the
+ * entries below at them (e.g. src: "/wino/videos/my-clip.mp4").
+ *
  * `placeholder: true` items are marked with a "Demo" badge so they are never
  * mistaken for real WINO output. When you have real samples, drop the flag.
  *
@@ -78,8 +81,8 @@ export const WINO_SHOWCASE: WinoMediaItem[] = [
     title: "Lagos at Golden Hour",
     description: "Text-to-video street scene with hand-held camera feel.",
     category: "text-to-video",
-    src: "/videos/showreel-1.mp4",
-    poster: "/assets/video-thumb-1.jpg",
+    src: "/wino/videos/showreel-1.mp4",
+    poster: "/wino/thumbs/video-thumb-1.jpg",
     featured: true,
     published: true,
     order: 1,
@@ -90,8 +93,8 @@ export const WINO_SHOWCASE: WinoMediaItem[] = [
     title: "Product Launch — 15s Ad",
     description: "Short-form advertising spot built from a single prompt.",
     category: "advertising",
-    src: "/videos/showreel-2.mp4",
-    poster: "/assets/video-thumb-2.jpg",
+    src: "/wino/videos/showreel-2.mp4",
+    poster: "/wino/thumbs/video-thumb-2.jpg",
     featured: true,
     published: true,
     order: 2,
@@ -102,8 +105,8 @@ export const WINO_SHOWCASE: WinoMediaItem[] = [
     title: "Cinematic Portrait Study",
     description: "Image-to-video camera push on a still portrait.",
     category: "image-to-video",
-    src: "/videos/showreel-3.mp4",
-    poster: "/assets/video-thumb-3.jpg",
+    src: "/wino/videos/showreel-3.mp4",
+    poster: "/wino/thumbs/video-thumb-3.jpg",
     featured: true,
     published: true,
     order: 3,
@@ -114,8 +117,8 @@ export const WINO_SHOWCASE: WinoMediaItem[] = [
     title: "Character Moment",
     description: "Consistent character, expressive motion.",
     category: "character",
-    src: "/videos/showreel-4.mp4",
-    poster: "/assets/video-thumb-4.jpg",
+    src: "/wino/videos/showreel-4.mp4",
+    poster: "/wino/thumbs/video-thumb-4.jpg",
     published: true,
     order: 4,
   },
@@ -125,8 +128,8 @@ export const WINO_SHOWCASE: WinoMediaItem[] = [
     title: "Social Loop",
     description: "Vertical-format loop built for social feeds.",
     category: "social-media",
-    src: "/videos/showreel-5.mp4",
-    poster: "/assets/video-thumb-5.jpg",
+    src: "/wino/videos/showreel-5.mp4",
+    poster: "/wino/thumbs/video-thumb-5.jpg",
     published: true,
     order: 5,
   },
@@ -136,7 +139,7 @@ export const WINO_SHOWCASE: WinoMediaItem[] = [
     title: "Still Frame — Neon Market",
     description: "AI image generated in WINO.",
     category: "ai-image",
-    src: "/assets/ai-images/1.jpeg",
+    src: "/wino/images/1.jpeg",
     published: true,
     order: 6,
   },
@@ -146,7 +149,7 @@ export const WINO_SHOWCASE: WinoMediaItem[] = [
     title: "Still Frame — Portrait",
     description: "AI image generated in WINO.",
     category: "ai-image",
-    src: "/assets/ai-images/2.jpeg",
+    src: "/wino/images/2.jpeg",
     published: true,
     order: 7,
   },
@@ -156,7 +159,7 @@ export const WINO_SHOWCASE: WinoMediaItem[] = [
     title: "Still Frame — Landscape",
     description: "AI image generated in WINO.",
     category: "ai-image",
-    src: "/assets/ai-images/3.jpeg",
+    src: "/wino/images/3.jpeg",
     published: true,
     order: 8,
   },
@@ -166,8 +169,8 @@ export const WINO_SHOWCASE: WinoMediaItem[] = [
     title: "Film Style — Teaser",
     description: "Narrative teaser with filmic grading.",
     category: "film",
-    src: "/videos/showreel-6.mp4",
-    poster: "/assets/video-thumb-6.jpg",
+    src: "/wino/videos/showreel-6.mp4",
+    poster: "/wino/thumbs/video-thumb-6.jpg",
     published: true,
     order: 9,
   },
