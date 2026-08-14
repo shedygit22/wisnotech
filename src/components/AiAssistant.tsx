@@ -7,7 +7,8 @@ import { speakText, stopSpeaking, useVoice, useVoiceConversation } from "../lib/
 import { useAutoSpeech } from "../lib/useAutoSpeech";
 import { useLiveCall } from "../hooks/useLiveCall";
 import { useChatSessions } from "../lib/chatStore";
-import { MicButton, SpeakButton, AutoSpeakToggle, VoiceCallButton, LiveCallButton } from "./VoiceControls";
+import { LIVE_VOICES } from "../lib/liveCall";
+import { MicButton, SpeakButton, AutoSpeakToggle, VoiceCallButton, LiveCallButton, LiveVoiceSelect } from "./VoiceControls";
 import { LiveVoiceCall } from "./LiveVoiceCall";
 import {
   createInitialState,
@@ -456,6 +457,7 @@ export default function AiAssistant() {
                 className="min-w-0 flex-1 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white placeholder:text-white/35 focus:border-neon/50 focus:outline-none"
               />
               <MicButton voice={voice} onTranscript={handleTranscript} disabled={thinking} />
+              <LiveVoiceSelect value={liveCall.voice} onChange={liveCall.setVoice} />
               <LiveCallButton supported={liveCall.supported} onStart={startLiveCall} />
               <VoiceCallButton voice={voiceConversation} />
               <button
@@ -482,6 +484,7 @@ export default function AiAssistant() {
             assistantTranscript={liveCall.assistantTranscript}
             bookingLink={liveCall.bookingLink}
             error={liveCall.error}
+            voiceLabel={LIVE_VOICES.find((v) => v.id === liveCall.voice)?.label}
             onStop={liveCall.stop}
           />
         )}

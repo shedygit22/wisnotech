@@ -15,7 +15,8 @@ import { useChatSessions } from "../lib/chatStore";
 import { speakText, useVoice, useVoiceConversation } from "../lib/useVoice";
 import { useAutoSpeech } from "../lib/useAutoSpeech";
 import { useLiveCall } from "../hooks/useLiveCall";
-import { MicButton, SpeakButton, AutoSpeakToggle, VoiceCallButton, LiveCallButton } from "./VoiceControls";
+import { LIVE_VOICES } from "../lib/liveCall";
+import { MicButton, SpeakButton, AutoSpeakToggle, VoiceCallButton, LiveCallButton, LiveVoiceSelect } from "./VoiceControls";
 import { LiveVoiceCall } from "./LiveVoiceCall";
 
 const STARTERS = [
@@ -284,6 +285,7 @@ export default function LlmStudio() {
                 className="min-w-0 flex-1 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white placeholder:text-white/35 focus:border-neon/50 focus:outline-none"
               />
               <MicButton voice={voice} onTranscript={handleTranscript} disabled={thinking} />
+              <LiveVoiceSelect value={liveCall.voice} onChange={liveCall.setVoice} />
               <LiveCallButton supported={liveCall.supported} onStart={startLiveCall} />
               <VoiceCallButton voice={voiceConversation} />
               <button
@@ -311,6 +313,7 @@ export default function LlmStudio() {
             assistantTranscript={liveCall.assistantTranscript}
             bookingLink={liveCall.bookingLink}
             error={liveCall.error}
+            voiceLabel={LIVE_VOICES.find((v) => v.id === liveCall.voice)?.label}
             onStop={liveCall.stop}
           />
         )}

@@ -14,6 +14,8 @@ interface LiveVoiceCallProps {
   assistantTranscript: string;
   bookingLink: string | null;
   error: string | null;
+  /** Human label of the voice Wisne is using (e.g. "Wisne — main voice"). */
+  voiceLabel?: string;
   onStop: () => void;
 }
 
@@ -38,6 +40,7 @@ export function LiveVoiceCall({
   assistantTranscript,
   bookingLink,
   error,
+  voiceLabel,
   onStop,
 }: LiveVoiceCallProps) {
   const live = status !== "off" && status !== "connecting";
@@ -72,7 +75,7 @@ export function LiveVoiceCall({
         >
           <Sparkles className="h-4 w-4 text-neon" aria-hidden />
           <span className="text-[13px] font-medium tracking-wide text-white/80">
-            Wisne — Live Voice
+            Wisne — Live Voice{voiceLabel ? ` · ${voiceLabel}` : ""}
           </span>
         </motion.div>
       </div>

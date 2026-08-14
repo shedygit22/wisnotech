@@ -1,9 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { startLiveCall, type LiveCallController, type LiveStatus } from "../lib/liveCall";
+import { startLiveCall, DEFAULT_LIVE_VOICE, type LiveCallController, type LiveStatus } from "../lib/liveCall";
 
 export interface UseLiveCall {
   active: boolean;
   status: LiveStatus;
+  /** Currently selected Gemini Live voice id (defaults to Wisne's Kore). */
+  voice: string;
+  setVoice: (id: string) => void;
   /** 0..1 smoothed user (mic) energy — real-time from the live call analyser. */
   energy: number;
   /** 0..1 smoothed AI (playback) energy — in sync with Wisne's voice audio. */
@@ -46,6 +49,12 @@ export function useLiveCall(): UseLiveCall {
   const [assistantTranscript, setAssistantTranscript] = useState("");
   const [bookingLink, setBookingLink] = useState<string | null>(null);
   const [lastError, setLastError] = useState<string | null>(null);
+  const [voice, setVoice] = useState<string>(DEFAULT_LIVE_VOICE);
+  const voiceRef = useRef(voice);
+  const selectVoice = useCallback((id: string) => {
+    voiceRef.current = id;
+    setVoice(id);
+  }, []);
 
   const ctrlRef = useRef<LiveCallController | null>(null);
   const activeRef = useRef(false);
@@ -101,7 +110,8 @@ export function useLiveCall(): UseLiveCall {
             },
           },
           systemInstruction,
-          greeting
+          greeting,
+          voiceRef.current
         );
         if (!activeRef.current) {
           ctrl.stop();
@@ -153,6 +163,8 @@ export function useLiveCall(): UseLiveCall {
   return {
     active,
     status,
+    voice,
+    setVoice: selectVoice,
     energy,
     aiEnergy,
     userTranscript,

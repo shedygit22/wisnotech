@@ -1,4 +1,5 @@
-import { Mic, PhoneCall, Square, Volume2, Radio } from "lucide-react";
+import { Mic, PhoneCall, Square, Volume2, Radio, ChevronDown } from "lucide-react";
+import { LIVE_VOICES } from "../lib/liveCall";
 import { stopSpeaking, type UseVoice, type UseVoiceConversation } from "../lib/useVoice";
 
 interface MicProps {
@@ -141,6 +142,31 @@ export function VoiceCallButton({ voice }: ConversationProps) {
 interface LiveButtonProps {
   supported: boolean;
   onStart: () => void;
+}
+
+/** Pick which Gemini Live voice Wisne uses for the call (Wisne main by default). */
+export function LiveVoiceSelect({ value, onChange }: { value: string; onChange: (id: string) => void }) {
+  return (
+    <label
+      className="group relative flex h-11 items-center gap-1.5 rounded-xl border border-white/10 bg-white/[0.04] pl-3 pr-2 text-xs text-white/60 transition-all duration-200 hover:border-neon/40 hover:text-neon"
+      title="Choose the voice Wisne speaks with on live calls"
+    >
+      <Volume2 className="h-4 w-4 shrink-0 text-neon/70" aria-hidden />
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        aria-label="Live voice"
+        className="cursor-pointer appearance-none bg-transparent py-2 text-xs font-medium text-white/85 focus:outline-none"
+      >
+        {LIVE_VOICES.map((v) => (
+          <option key={v.id} value={v.id} className="bg-[#0b0b13] text-white">
+            {v.label}
+          </option>
+        ))}
+      </select>
+      <ChevronDown className="h-3.5 w-3.5 shrink-0 text-white/40 transition-transform duration-200 group-focus-within:rotate-180" aria-hidden />
+    </label>
+  );
 }
 
 /** One-tap entry into the real-time (phone-call style) voice mode. */

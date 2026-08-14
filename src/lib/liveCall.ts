@@ -23,7 +23,17 @@ export interface LiveCallController {
 
 const WS_BASE = "wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContentConstrained";
 const MODEL = "gemini-3.1-flash-live-preview";
-const VOICE = "Kore";
+
+/** Gemini Live prebuilt voices. The first is Wisne's default voice. */
+export const LIVE_VOICES: { id: string; label: string; blurb: string }[] = [
+  { id: "Kore", label: "Wisne — main voice", blurb: "Warm, bright and professional" },
+  { id: "Puck", label: "Puck", blurb: "Lively, youthful and playful" },
+  { id: "Charon", label: "Charon", blurb: "Deep, calm and steady" },
+  { id: "Fenrir", label: "Fenrir", blurb: "Bold, gravelled and rugged" },
+  { id: "Aoede", label: "Aoede", blurb: "Lyrical, expressive and soft" },
+  { id: "Leda", label: "Leda", blurb: "Smooth, elegant and clear" },
+];
+export const DEFAULT_LIVE_VOICE = "Kore";
 
 /** Calendly scheduling link Wisne hands out when a caller wants to book a call. */
 const BOOKING_URL = "https://calendly.com/shedyhillzton77/30min";
@@ -168,7 +178,8 @@ registerProcessor('wisne-pcm', PcmProcessor);
 export async function startLiveCall(
   handlers: LiveCallHandlers = {},
   systemInstruction?: string,
-  greeting?: string
+  greeting?: string,
+  voiceName: string = DEFAULT_LIVE_VOICE
 ): Promise<LiveCallController> {
   const fire = <K extends keyof LiveCallHandlers>(k: K, ...args: Parameters<NonNullable<LiveCallHandlers[K]>>) => {
     (handlers[k] as ((...a: unknown[]) => void) | undefined)?.(...args);
@@ -211,7 +222,7 @@ export async function startLiveCall(
         responseModalities: ["AUDIO"],
         temperature: 0.9,
         speechConfig: {
-          voiceConfig: { prebuiltVoiceConfig: { voiceName: VOICE } },
+          voiceConfig: { prebuiltVoiceConfig: { voiceName } },
         },
       },
       systemInstruction: systemInstruction ? { parts: [{ text: systemInstruction }] } : undefined,
