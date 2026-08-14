@@ -107,6 +107,7 @@ export function VideoCard({ item }: { item: WinoMediaItem }) {
   const [playing, setPlaying] = useState(false);
   const [failed, setFailed] = useState(false);
   const poster = item.poster || "";
+  const ratio = `${item.width} / ${item.height}`;
 
   if (failed) {
     return (
@@ -129,7 +130,7 @@ export function VideoCard({ item }: { item: WinoMediaItem }) {
 
   return (
     <figure className="card group flex h-full flex-col overflow-hidden p-0">
-      <div className="relative aspect-video w-full overflow-hidden bg-[#0b0b0b]">
+      <div className="relative w-full overflow-hidden bg-[#0b0b0b]" style={{ aspectRatio: ratio }}>
         {!playing ? (
           <button
             type="button"
@@ -175,6 +176,7 @@ export function VideoCard({ item }: { item: WinoMediaItem }) {
 /** Lazy-loaded AI image with caption. */
 export function ImageCard({ item }: { item: WinoMediaItem }) {
   const [failed, setFailed] = useState(false);
+  const ratio = `${item.width} / ${item.height}`;
 
   if (!item.src || failed) {
     return <PendingCard item={item} />;
@@ -182,7 +184,7 @@ export function ImageCard({ item }: { item: WinoMediaItem }) {
 
   return (
     <figure className="card group flex h-full flex-col overflow-hidden p-0">
-      <div className="relative aspect-video w-full overflow-hidden bg-[#0b0b0b]">
+      <div className="relative w-full overflow-hidden bg-[#0b0b0b]" style={{ aspectRatio: ratio }}>
         <img
           src={item.src}
           alt={item.title}
