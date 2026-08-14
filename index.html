@@ -312,28 +312,28 @@
     <script>
       (function () {
         var loader = document.getElementById("wis-loader");
-        var started = Date.now();
-        var minMs = 5000;
-        function reveal() {
-          var elapsed = Date.now() - started;
-          var wait = Math.max(0, minMs - elapsed);
+        var revealed = false;
+        function hide() {
+          if (revealed) return;
+          revealed = true;
+          loader.classList.add("hide");
+          document.body.style.overflow = "";
           setTimeout(function () {
-            loader.classList.add("hide");
-            document.body.style.overflow = "";
-            setTimeout(function () { loader.remove(); }, 700);
-          }, wait);
+            if (loader && loader.parentNode) loader.parentNode.removeChild(loader);
+          }, 700);
         }
         document.body.style.overflow = "hidden";
-        window.addEventListener("load", reveal);
-        setTimeout(reveal, minMs);
+        window.addEventListener("load", hide);
+        document.addEventListener("DOMContentLoaded", hide);
+        var maxMs = 2200;
+        var t = setTimeout(hide, maxMs);
+        document.addEventListener("visibilitychange", function () {
+          if (document.visibilityState === "visible" && document.readyState === "complete") {
+            clearTimeout(t);
+            hide();
+          }
+        });
       })();
     </script>
-    <script
-      src="https://cdn.wisnotech.ai/widget.js"
-      data-team="demo"
-      data-employee="emp_i29t887aij"
-      data-name="Shedy"
-      data-greeting="Hi, I'm Shedy. How can I help?"
-    ></script>
   </body>
 </html>
