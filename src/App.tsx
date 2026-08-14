@@ -5,6 +5,7 @@ import StatsBar from "./components/StatsBar";
 import Services from "./components/Services";
 import Showreel from "./components/Showreel";
 import AiGallery from "./components/AiGallery";
+import Wino from "./components/Wino";
 import Testimonials from "./components/Testimonials";
 import Process from "./components/Process";
 import About from "./components/About";
@@ -78,6 +79,7 @@ export default function App() {
         <Services />
         <Showreel />
         <AiGallery />
+        <Wino />
         <Testimonials />
         <About />
         <Solutions />
