@@ -258,7 +258,7 @@ export const WINO_SHOWCASE: WinoMediaItem[] = [
     width: 1280,
     height: 720,
     published: true,
-    order: 14,
+    order: 16,
   },
   {
     id: "w15",
@@ -271,7 +271,7 @@ export const WINO_SHOWCASE: WinoMediaItem[] = [
     width: 1280,
     height: 720,
     published: true,
-    order: 15,
+    order: 17,
   },
   {
     id: "w16",
@@ -285,7 +285,7 @@ export const WINO_SHOWCASE: WinoMediaItem[] = [
     height: 720,
     featured: true,
     published: true,
-    order: 16,
+    order: 18,
   },
   {
     id: "w17",
@@ -298,7 +298,7 @@ export const WINO_SHOWCASE: WinoMediaItem[] = [
     width: 1280,
     height: 548,
     published: true,
-    order: 17,
+    order: 19,
   },
   {
     id: "w18",
@@ -312,7 +312,7 @@ export const WINO_SHOWCASE: WinoMediaItem[] = [
     height: 1920,
     featured: true,
     published: true,
-    order: 18,
+    order: 14,
   },
   {
     id: "w19",
@@ -325,7 +325,7 @@ export const WINO_SHOWCASE: WinoMediaItem[] = [
     width: 1280,
     height: 720,
     published: true,
-    order: 19,
+    order: 15,
   },
 ];
 
