@@ -290,7 +290,7 @@ export const WINO_SHOWCASE: WinoMediaItem[] = [
   {
     id: "w17",
     type: "video",
-    title: "Seedance 2.0 Demo",
+    title: "Cinematic Text-to-Video",
     description: "Text-to-video generation sample at wide aspect.",
     category: "text-to-video",
     src: "/wino/videos/seedance-demo.mp4",
