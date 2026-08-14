@@ -81,7 +81,7 @@ export const WINO_SHOWCASE: WinoMediaItem[] = [
   {
     id: "w1",
     type: "video",
-    title: "Lagos at Golden Hour",
+    title: "Sample 1",
     description: "Text-to-video street scene with hand-held camera feel.",
     category: "text-to-video",
     src: "/wino/videos/showreel-1.mp4",
@@ -95,7 +95,7 @@ export const WINO_SHOWCASE: WinoMediaItem[] = [
   {
     id: "w2",
     type: "video",
-    title: "Product Launch — 15s Ad",
+    title: "Sample 2",
     description: "Short-form advertising spot built from a single prompt.",
     category: "advertising",
     src: "/wino/videos/showreel-2.mp4",
@@ -109,7 +109,7 @@ export const WINO_SHOWCASE: WinoMediaItem[] = [
   {
     id: "w3",
     type: "video",
-    title: "Cinematic Portrait Study",
+    title: "Sample 3",
     description: "Image-to-video camera push on a still portrait.",
     category: "image-to-video",
     src: "/wino/videos/showreel-3.mp4",
@@ -123,7 +123,7 @@ export const WINO_SHOWCASE: WinoMediaItem[] = [
   {
     id: "w4",
     type: "video",
-    title: "Character Moment",
+    title: "Sample 4",
     description: "Consistent character, expressive motion.",
     category: "character",
     src: "/wino/videos/showreel-4.mp4",
@@ -136,7 +136,7 @@ export const WINO_SHOWCASE: WinoMediaItem[] = [
   {
     id: "w5",
     type: "video",
-    title: "Social Loop",
+    title: "Sample 5",
     description: "Vertical-format loop built for social feeds.",
     category: "social-media",
     src: "/wino/videos/showreel-5.mp4",
@@ -149,7 +149,7 @@ export const WINO_SHOWCASE: WinoMediaItem[] = [
   {
     id: "w6",
     type: "image",
-    title: "Still Frame — Neon Market",
+    title: "Sample 6",
     description: "AI image generated in WINO.",
     category: "ai-image",
     src: "/wino/images/1.jpeg",
@@ -161,7 +161,7 @@ export const WINO_SHOWCASE: WinoMediaItem[] = [
   {
     id: "w7",
     type: "image",
-    title: "Still Frame — Portrait",
+    title: "Sample 7",
     description: "AI image generated in WINO.",
     category: "ai-image",
     src: "/wino/images/2.jpeg",
@@ -173,7 +173,7 @@ export const WINO_SHOWCASE: WinoMediaItem[] = [
   {
     id: "w8",
     type: "image",
-    title: "Still Frame — Landscape",
+    title: "Sample 8",
     description: "AI image generated in WINO.",
     category: "ai-image",
     src: "/wino/images/3.jpeg",
@@ -185,7 +185,7 @@ export const WINO_SHOWCASE: WinoMediaItem[] = [
   {
     id: "w9",
     type: "video",
-    title: "Film Style — Teaser",
+    title: "Sample 9",
     description: "Narrative teaser with filmic grading.",
     category: "film",
     src: "/wino/videos/showreel-6.mp4",
@@ -198,7 +198,7 @@ export const WINO_SHOWCASE: WinoMediaItem[] = [
   {
     id: "w10",
     type: "video",
-    title: "Vertical Street Clip 01",
+    title: "Sample 10",
     description: "9:16 text-to-video loop built for portrait feeds.",
     category: "social-media",
     src: "/wino/videos/vertical-01.mp4",
@@ -211,7 +211,7 @@ export const WINO_SHOWCASE: WinoMediaItem[] = [
   {
     id: "w11",
     type: "video",
-    title: "Vertical Street Clip 02",
+    title: "Sample 11",
     description: "9:16 text-to-video loop built for portrait feeds.",
     category: "social-media",
     src: "/wino/videos/vertical-02.mp4",
@@ -224,7 +224,7 @@ export const WINO_SHOWCASE: WinoMediaItem[] = [
   {
     id: "w12",
     type: "video",
-    title: "Vertical Street Clip 03",
+    title: "Sample 12",
     description: "9:16 text-to-video loop built for portrait feeds.",
     category: "social-media",
     src: "/wino/videos/vertical-03.mp4",
@@ -237,7 +237,7 @@ export const WINO_SHOWCASE: WinoMediaItem[] = [
   {
     id: "w13",
     type: "video",
-    title: "Portrait Moment",
+    title: "Sample 13",
     description: "Vertical cinematic study with shallow depth of field.",
     category: "cinematic",
     src: "/wino/videos/portrait-moment.mp4",
@@ -250,7 +250,7 @@ export const WINO_SHOWCASE: WinoMediaItem[] = [
   {
     id: "w14",
     type: "video",
-    title: "Cinematic Scene 01",
+    title: "Sample 16",
     description: "16:9 narrative shot with filmic grading.",
     category: "cinematic",
     src: "/wino/videos/cinematic-01.mp4",
@@ -263,7 +263,7 @@ export const WINO_SHOWCASE: WinoMediaItem[] = [
   {
     id: "w15",
     type: "video",
-    title: "Cinematic Scene 02",
+    title: "Sample 17",
     description: "16:9 narrative shot with filmic grading.",
     category: "cinematic",
     src: "/wino/videos/cinematic-02.mp4",
@@ -276,7 +276,7 @@ export const WINO_SHOWCASE: WinoMediaItem[] = [
   {
     id: "w16",
     type: "video",
-    title: "Showcase Matrix",
+    title: "Sample 18",
     description: "Wide montage of Seedance 2.0 output in one frame.",
     category: "ai-video",
     src: "/wino/videos/showcase-matrix.mp4",
@@ -290,7 +290,7 @@ export const WINO_SHOWCASE: WinoMediaItem[] = [
   {
     id: "w17",
     type: "video",
-    title: "Cinematic Text-to-Video",
+    title: "Sample 19",
     description: "Text-to-video generation sample at wide aspect.",
     category: "text-to-video",
     src: "/wino/videos/seedance-demo.mp4",
@@ -303,7 +303,7 @@ export const WINO_SHOWCASE: WinoMediaItem[] = [
   {
     id: "w18",
     type: "video",
-    title: "Character Action",
+    title: "Sample 14",
     description: "Extended vertical character sequence with quick cuts.",
     category: "character",
     src: "/wino/videos/johnwick-character.mp4",
@@ -317,7 +317,7 @@ export const WINO_SHOWCASE: WinoMediaItem[] = [
   {
     id: "w19",
     type: "video",
-    title: "Factory Ninja",
+    title: "Sample 15",
     description: "Cinematic character vignette set in a workshop.",
     category: "character",
     src: "/wino/videos/factory-ninja.mp4",
