@@ -18,6 +18,7 @@ import AcademyPage from "./components/AcademyPage";
 import CoursePage from "./components/CoursePage";
 import BlogPage from "./components/BlogPage";
 import BlogPostPage from "./components/BlogPostPage";
+import WinoPage from "./components/WinoPage";
 
 function useHashRoute(): string {
   const [hash, setHash] = useState(() => window.location.hash);
@@ -51,6 +52,11 @@ export default function App() {
 
   if (path === "/blog") {
     return <BlogPage />;
+  }
+
+  /* WINO — dedicated AI video product page. */
+  if (path === "/wino") {
+    return <WinoPage />;
   }
 
   /* Lightweight hash routing — "#/academy" opens the dedicated courses page. */

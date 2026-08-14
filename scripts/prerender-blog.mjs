@@ -259,6 +259,7 @@ const now = new Date().toISOString().slice(0, 10);
 const urls = [
   { loc: `${SITE_URL}/`, lastmod: now, priority: 1.0 },
   { loc: `${SITE_URL}/blog`, lastmod: now, priority: 0.9 },
+  { loc: `${SITE_URL}/wino`, lastmod: now, priority: 0.9 },
   ...posts.map((p) => ({
     loc: `${SITE_URL}/blog/${p.slug}`,
     lastmod: String(p.data.date || now),
