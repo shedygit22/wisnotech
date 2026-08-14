@@ -316,6 +316,7 @@
         function hide() {
           if (revealed) return;
           revealed = true;
+          if (!loader) return;
           loader.classList.add("hide");
           document.body.style.overflow = "";
           setTimeout(function () {

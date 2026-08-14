@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import StatsBar from "./components/StatsBar";
@@ -15,11 +15,13 @@ import LlmStudio from "./components/LlmStudio";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import AiAssistant from "./components/AiAssistant";
-import AcademyPage from "./components/AcademyPage";
-import CoursePage from "./components/CoursePage";
-import BlogPage from "./components/BlogPage";
-import BlogPostPage from "./components/BlogPostPage";
-import WinoPage from "./components/WinoPage";
+import { PageFallback } from "./components/PageFallback";
+
+const AcademyPage = lazy(() => import("./components/AcademyPage"));
+const CoursePage = lazy(() => import("./components/CoursePage"));
+const BlogPage = lazy(() => import("./components/BlogPage"));
+const BlogPostPage = lazy(() => import("./components/BlogPostPage"));
+const WinoPage = lazy(() => import("./components/WinoPage"));
 
 function useHashRoute(): string {
   const [hash, setHash] = useState(() => window.location.hash);
@@ -48,26 +50,46 @@ export default function App() {
   /* SEO-friendly real URLs for the blog. */
   if (path.startsWith("/blog/")) {
     const slug = path.slice("/blog/".length).split("/")[0];
-    return <BlogPostPage slug={slug} />;
+    return (
+      <Suspense fallback={<PageFallback />}>
+        <BlogPostPage slug={slug} />
+      </Suspense>
+    );
   }
 
   if (path === "/blog") {
-    return <BlogPage />;
+    return (
+      <Suspense fallback={<PageFallback />}>
+        <BlogPage />
+      </Suspense>
+    );
   }
 
   /* WINO — dedicated AI video product page. */
   if (path === "/wino") {
-    return <WinoPage />;
+    return (
+      <Suspense fallback={<PageFallback />}>
+        <WinoPage />
+      </Suspense>
+    );
   }
 
   /* Lightweight hash routing — "#/academy" opens the dedicated courses page. */
   if (hash.startsWith("#/courses/")) {
     const slug = hash.slice("#/courses/".length).split("/")[0];
-    return <CoursePage slug={slug} />;
+    return (
+      <Suspense fallback={<PageFallback />}>
+        <CoursePage slug={slug} />
+      </Suspense>
+    );
   }
 
   if (hash.startsWith("#/academy")) {
-    return <AcademyPage />;
+    return (
+      <Suspense fallback={<PageFallback />}>
+        <AcademyPage />
+      </Suspense>
+    );
   }
 
   return (

@@ -55,7 +55,7 @@ export function WinoShowcase() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
+          className="mt-12 grid items-start gap-5 sm:grid-cols-2 lg:grid-cols-3"
         >
           {visible.map((item) =>
             item.type === "video" ? (
@@ -129,7 +129,7 @@ export function VideoCard({ item }: { item: WinoMediaItem }) {
   }
 
   return (
-    <figure className="card group flex h-full flex-col overflow-hidden p-0">
+    <figure className="card group flex flex-col overflow-hidden p-0">
       <div className="relative w-full overflow-hidden bg-[#0b0b0b]" style={{ aspectRatio: ratio }}>
         {!playing ? (
           <button
@@ -183,7 +183,7 @@ export function ImageCard({ item }: { item: WinoMediaItem }) {
   }
 
   return (
-    <figure className="card group flex h-full flex-col overflow-hidden p-0">
+    <figure className="card group flex flex-col overflow-hidden p-0">
       <div className="relative w-full overflow-hidden bg-[#0b0b0b]" style={{ aspectRatio: ratio }}>
         <img
           src={item.src}
