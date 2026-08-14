@@ -84,37 +84,52 @@
       }
       .wis-stage {
         position: relative;
-        width: 168px;
-        height: 168px;
+        width: 176px;
+        height: 176px;
+      }
+      .wis-disc {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: radial-gradient(circle at 50% 35%, #12141f 0%, #0a0a12 55%, #07070d 100%);
+        border: 1px solid rgba(59, 123, 255, 0.35);
+        box-shadow:
+          inset 0 0 28px rgba(0, 0, 0, 0.55),
+          0 0 0 6px rgba(255, 255, 255, 0.02),
+          0 0 32px rgba(59, 123, 255, 0.18);
       }
       .wis-ring {
         position: absolute;
-        inset: 0;
+        inset: -10px;
         border-radius: 50%;
         border: 2px solid transparent;
         border-top-color: #3b7bff;
         border-right-color: rgba(59, 123, 255, 0.45);
         animation: wis-spin 1.1s linear infinite;
       }
-      .wis-ring.outer { inset: -14px; border-width: 2px; border-top-color: rgba(255, 255, 255, 0.22); border-right-color: rgba(59, 123, 255, 0.35); animation-duration: 2s; animation-direction: reverse; }
+      .wis-ring.outer { inset: -22px; border-width: 2px; border-top-color: rgba(255, 255, 255, 0.22); border-right-color: rgba(59, 123, 255, 0.35); animation-duration: 2s; animation-direction: reverse; }
       .wis-ring.dot::after {
         content: "";
         position: absolute;
-        top: -5px;
+        top: -6px;
         left: 50%;
         width: 10px;
         height: 10px;
+        margin-left: -5px;
         border-radius: 50%;
         background: #3b7bff;
         box-shadow: 0 0 14px 3px rgba(59, 123, 255, 0.85);
       }
       @keyframes wis-spin { to { transform: rotate(360deg); } }
       .wis-logo {
-        position: absolute;
-        inset: 34px;
+        width: 78%;
+        height: 78%;
         object-fit: contain;
         animation: wis-breathe 2s ease-in-out infinite;
-        filter: drop-shadow(0 0 18px rgba(59, 123, 255, 0.55));
+        filter: drop-shadow(0 0 12px rgba(59, 123, 255, 0.45));
       }
       @keyframes wis-breathe {
         0%, 100% { transform: scale(1); }
@@ -284,8 +299,10 @@
       <div class="wis-stage">
         <div class="wis-ring outer"></div>
         <div class="wis-ring"></div>
+        <div class="wis-disc">
+          <img class="wis-logo" src="/assets/wisnotech-logo.png" alt="" />
+        </div>
         <div class="wis-ring dot"></div>
-        <img class="wis-logo" src="/assets/wisnotech-logo.png" alt="" />
       </div>
       <div class="wis-word">Wisnotech</div>
       <div class="wis-bar"><i></i></div>
