@@ -53,8 +53,8 @@ export const PORTFOLIO_SAMPLES: PortfolioSample[] = [
   {
     id: "p1",
     type: "video",
-    title: "The City at Golden Hour",
-    description: "A hand-held text-to-video street scene in warm dusk light — atmosphere that makes any brand feel alive.",
+    title: "Fresh at Golden Hour",
+    description: "Hand-held UGC for a healthy drink brand — warm dusk street energy that makes the product feel alive, not advertised.",
     category: "text-to-video",
     src: "/wino/videos/showreel-1.mp4",
     poster: "/wino/thumbs/video-thumb-1.jpg",
