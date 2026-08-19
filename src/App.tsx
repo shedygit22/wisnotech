@@ -22,6 +22,7 @@ const CoursePage = lazy(() => import("./components/CoursePage"));
 const BlogPage = lazy(() => import("./components/BlogPage"));
 const BlogPostPage = lazy(() => import("./components/BlogPostPage"));
 const WinoPage = lazy(() => import("./components/WinoPage"));
+const PortfolioPage = lazy(() => import("./components/PortfolioPage"));
 
 function useHashRoute(): string {
   const [hash, setHash] = useState(() => window.location.hash);
@@ -70,6 +71,15 @@ export default function App() {
     return (
       <Suspense fallback={<PageFallback />}>
         <WinoPage />
+      </Suspense>
+    );
+  }
+
+  /* Personal AI video samples portfolio. */
+  if (path === "/portfolio") {
+    return (
+      <Suspense fallback={<PageFallback />}>
+        <PortfolioPage />
       </Suspense>
     );
   }

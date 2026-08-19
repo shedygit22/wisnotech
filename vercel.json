@@ -1,3 +1,6 @@
 {
-  "rewrites": [{ "source": "/wino", "destination": "/index.html" }]
+  "rewrites": [
+    { "source": "/wino", "destination": "/index.html" },
+    { "source": "/portfolio", "destination": "/index.html" }
+  ]
 }

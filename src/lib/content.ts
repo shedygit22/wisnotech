@@ -3,6 +3,7 @@ export const NAV_LINKS = [
   { label: "Services", href: "#services" },
   { label: "About", href: "#about" },
   { label: "WINO App", href: "/wino" },
+  { label: "Samples", href: "/portfolio" },
   { label: "Courses", href: "#/academy" },
   { label: "AI Studio", href: "#assistant" },
   { label: "Blog", href: "/blog" },

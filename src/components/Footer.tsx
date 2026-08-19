@@ -15,6 +15,7 @@ const FOOTER_GROUPS = [
       { label: "Home", href: "#home" },
       { label: "About", href: "#about" },
       { label: "WINO App", href: "/wino" },
+      { label: "Samples", href: "/portfolio" },
       { label: "Blog", href: "/blog" },
       { label: "Contact", href: "#contact" },
     ],
