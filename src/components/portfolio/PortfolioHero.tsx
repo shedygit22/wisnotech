@@ -1,6 +1,21 @@
-import { motion } from "framer-motion";
-import { ArrowDown, Clapperboard, Layers, Sparkles } from "lucide-react";
+import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import {
+  ArrowDown,
+  ChevronLeft,
+  ChevronRight,
+  Clapperboard,
+  Layers,
+  Sparkles,
+} from "lucide-react";
 import { PORTFOLIO_SAMPLES } from "../../lib/portfolio";
+import { cn } from "../../lib/utils";
+
+const SLIDES = [
+  { src: "/portfolio/videos/dune-trailer.mp4", poster: "/portfolio/thumbs/dune-trailer.jpg", label: "Dune Trailer" },
+  { src: "/wino/videos/seedance-demo.mp4", poster: "/wino/thumbs/seedance-demo.jpg", label: "Seedance 2.0 Demo" },
+  { src: "/portfolio/videos/web-demo.mp4", poster: "/portfolio/thumbs/web-demo.jpg", label: "Wide Demo" },
+];
 
 const container = {
   hidden: {},
@@ -15,21 +30,50 @@ const item = {
 export function PortfolioHero() {
   const videos = PORTFOLIO_SAMPLES.filter((s) => s.type === "video").length;
   const categories = new Set(PORTFOLIO_SAMPLES.map((s) => s.category)).size;
+  const [index, setIndex] = useState(0);
+  const [progress, setProgress] = useState(0);
+  const total = SLIDES.length;
+
+  const go = (next: number) => {
+    setIndex(((next % total) + total) % total);
+    setProgress(0);
+  };
+
+  const onTime = (e: React.SyntheticEvent<HTMLVideoElement>) => {
+    const el = e.currentTarget;
+    if (el.dataset.slide !== String(index)) return;
+    setProgress(el.duration ? el.currentTime / el.duration : 0);
+  };
+
+  const onEnded = (e: React.SyntheticEvent<HTMLVideoElement>) => {
+    if (e.currentTarget.dataset.slide === String(index)) go(index + 1);
+  };
 
   return (
     <section className="relative overflow-hidden pt-36 pb-20 sm:pt-40">
-      {/* Ambient background video — muted, looping, heavily dimmed */}
-      <video
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="metadata"
-        aria-hidden
-        className="absolute inset-0 h-full w-full object-cover opacity-45"
-      >
-        <source src="/wino/videos/showcase-matrix.mp4" type="video/mp4" />
-      </video>
+      {/* Ambient hero slider — crossfades between featured clips */}
+      <div aria-hidden className="absolute inset-0 opacity-45">
+        <AnimatePresence initial={false}>
+          <motion.video
+            key={index}
+            data-slide={index}
+            autoPlay
+            muted
+            playsInline
+            preload="auto"
+            src={SLIDES[index].src}
+            poster={SLIDES[index].poster}
+            onTimeUpdate={onTime}
+            onEnded={onEnded}
+            initial={{ opacity: 0, scale: 1.04 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ opacity: { duration: 0.9, ease: "easeInOut" }, scale: { duration: 6, ease: "linear" } }}
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+        </AnimatePresence>
+      </div>
+
       {/* Overlays keep the copy readable */}
       <div aria-hidden className="absolute inset-0 bg-[#080808]/50" />
       <div
@@ -67,7 +111,7 @@ export function PortfolioHero() {
         className="container-wide relative z-10 mx-auto max-w-3xl text-center"
       >
         <motion.div variants={item} className="flex justify-center">
-          <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-4 py-1.5 text-xs font-medium uppercase tracking-[0.22em] text-white/70">
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-4 py-1.5 text-xs font-medium uppercase tracking-[0.22em] text-white/70 backdrop-blur">
             <Sparkles className="h-3.5 w-3.5 text-neon" aria-hidden />
             AI Video Portfolio
           </span>
@@ -85,7 +129,7 @@ export function PortfolioHero() {
         <motion.p variants={item} className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-muted">
           A personal collection of AI-generated videos and stills — text-to-video,
           image-to-video and character work. Every clip generated, curated and
-                          graded for the story it tells.
+          graded for the story it tells.
         </motion.p>
 
         <motion.div variants={item} className="mt-10 flex flex-wrap items-center justify-center gap-4">
@@ -106,13 +150,68 @@ export function PortfolioHero() {
         </motion.div>
       </motion.div>
 
+      {/* Slider controls */}
+      <div className="absolute inset-x-0 bottom-16 z-20 flex flex-col items-center gap-3 sm:bottom-20">
+        <div className="flex items-center gap-3 rounded-full border border-white/10 bg-black/40 px-2 py-2 backdrop-blur">
+          <button
+            type="button"
+            onClick={() => go(index - 1)}
+            aria-label="Previous video"
+            className="flex h-9 w-9 items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/10 hover:text-white"
+          >
+            <ChevronLeft className="h-4 w-4" aria-hidden />
+          </button>
+
+          <div className="flex items-center gap-2" role="tablist" aria-label="Hero slides">
+            {SLIDES.map((s, i) => (
+              <button
+                key={s.src}
+                type="button"
+                role="tab"
+                aria-selected={i === index}
+                aria-label={s.label}
+                onClick={() => go(i)}
+                className={cn(
+                  "h-1.5 rounded-full transition-all duration-300",
+                  i === index ? "w-6 bg-white" : "w-1.5 bg-white/35 hover:bg-white/60"
+                )}
+              />
+            ))}
+          </div>
+
+          <button
+            type="button"
+            onClick={() => go(index + 1)}
+            aria-label="Next video"
+            className="flex h-9 w-9 items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/10 hover:text-white"
+          >
+            <ChevronRight className="h-4 w-4" aria-hidden />
+          </button>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <p className="text-xs text-white/70">
+            {SLIDES[index].label}
+            <span className="text-white/40"> · {index + 1}/{total}</span>
+          </p>
+        </div>
+
+        {/* Playback progress */}
+        <div className="h-0.5 w-44 overflow-hidden rounded-full bg-white/15">
+          <div
+            className="h-full rounded-full bg-neon transition-[width] duration-200"
+            style={{ width: `${Math.min(100, Math.max(0, progress * 100))}%` }}
+          />
+        </div>
+      </div>
+
       <motion.a
         href="#work"
         aria-label="Scroll to samples"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1, duration: 0.8 }}
-        className="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/40 transition-colors hover:text-white"
+        className="absolute bottom-6 left-1/2 z-20 -translate-x-1/2 text-white/40 transition-colors hover:text-white"
       >
         <motion.span
           animate={{ y: [0, 6, 0] }}

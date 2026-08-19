@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { X, ChevronLeft, ChevronRight, Download, Share2, Check } from "lucide-react";
+import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import {
   aspectLabel,
   categoryById,
@@ -18,15 +18,14 @@ interface LightboxProps {
 
 /**
  * Fullscreen sample viewer. Videos autoplay on open; images render full size.
- * Includes a thumbnail filmstrip, download + share buttons, and hidden
- * preload tags for the previous/next clips so navigation feels instant.
+ * Includes a thumbnail filmstrip and hidden preload tags for the previous/next
+ * clips so navigation feels instant.
  * Keyboard: Esc closes, ←/→ navigate. Body scroll is locked while open.
  */
 export function SampleLightbox({ samples, index, onClose, onNavigate }: LightboxProps) {
   const sample = samples[index];
   const videoRef = useRef<HTMLVideoElement>(null);
   const [failed, setFailed] = useState(false);
-  const [copied, setCopied] = useState(false);
   const total = samples.length;
 
   useEffect(() => {
@@ -48,7 +47,6 @@ export function SampleLightbox({ samples, index, onClose, onNavigate }: Lightbox
 
   useEffect(() => {
     setFailed(false);
-    setCopied(false);
     if (sample?.type === "video") {
       const t = setTimeout(() => videoRef.current?.play().catch(() => undefined), 120);
       return () => clearTimeout(t);
@@ -60,35 +58,6 @@ export function SampleLightbox({ samples, index, onClose, onNavigate }: Lightbox
   const cat = categoryById(sample.category);
   const accent = cat?.accent ?? "#3b7bff";
   const ratio = `${sample.width} / ${sample.height}`;
-  const shareUrl = `${window.location.origin}/portfolio?sample=${sample.id}`;
-
-  const copyLink = async () => {
-    try {
-      await navigator.clipboard.writeText(shareUrl);
-    } catch {
-      // Fallback: select via a temp input.
-      const tmp = document.createElement("textarea");
-      tmp.value = shareUrl;
-      document.body.appendChild(tmp);
-      tmp.select();
-      document.execCommand("copy");
-      tmp.remove();
-    }
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1600);
-  };
-
-  const share = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: `${sample.title} — Wisnotech AI samples`, url: shareUrl });
-        return;
-      } catch {
-        /* user cancelled */
-      }
-    }
-    copyLink();
-  };
 
   const next = samples[(index + 1) % total];
   const prev = samples[(index - 1 + total) % total];
@@ -207,37 +176,16 @@ export function SampleLightbox({ samples, index, onClose, onNavigate }: Lightbox
           </h3>
           <p className="mt-2 text-[15px] leading-relaxed text-muted">{sample.description}</p>
 
-          <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
-            <a
-              href={sample.src}
-              download
-              className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/[0.05] px-4 py-2 text-[13px] font-medium text-white/80 transition-colors hover:border-white/40 hover:text-white"
-            >
-              <Download className="h-3.5 w-3.5" aria-hidden />
-              Download
-            </a>
-            <button
-              type="button"
-              onClick={share}
-              className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/[0.05] px-4 py-2 text-[13px] font-medium text-white/80 transition-colors hover:border-white/40 hover:text-white"
-            >
-              {copied ? <Check className="h-3.5 w-3.5 text-emerald-400" aria-hidden /> : <Share2 className="h-3.5 w-3.5" aria-hidden />}
-              {copied ? "Link copied" : "Share"}
-            </button>
-          </div>
-
-          {sample.tags.length > 0 && (
-            <div className="mt-4 flex flex-wrap justify-center gap-2">
-              {sample.tags.map((t) => (
-                <span
-                  key={t}
-                  className="rounded-md border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[11px] text-white/60"
-                >
-                  {t}
-                </span>
-              ))}
-            </div>
-          )}
+          <p className="mt-4 flex flex-wrap items-center justify-center gap-2">
+            {sample.tags.map((t) => (
+              <span
+                key={t}
+                className="rounded-md border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[11px] text-white/60"
+              >
+                {t}
+              </span>
+            ))}
+          </p>
         </div>
 
         {/* Filmstrip */}
