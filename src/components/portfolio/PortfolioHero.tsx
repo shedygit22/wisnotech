@@ -18,6 +18,29 @@ export function PortfolioHero() {
 
   return (
     <section className="relative overflow-hidden pt-36 pb-20 sm:pt-40">
+      {/* Ambient background video — muted, looping, heavily dimmed */}
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        aria-hidden
+        className="absolute inset-0 h-full w-full object-cover opacity-25"
+      >
+        <source src="/wino/videos/showcase-matrix.mp4" type="video/mp4" />
+      </video>
+      {/* Overlays keep the copy readable */}
+      <div aria-hidden className="absolute inset-0 bg-[#080808]/80" />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(ellipse 60% 50% at 50% 35%, transparent 0%, rgba(8,8,8,0.65) 70%, #080808 100%)",
+        }}
+      />
+
       {/* Animated aurora backdrop */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
         <div
@@ -41,7 +64,7 @@ export function PortfolioHero() {
         variants={container}
         initial="hidden"
         animate="show"
-        className="container-wide relative mx-auto max-w-3xl text-center"
+        className="container-wide relative z-10 mx-auto max-w-3xl text-center"
       >
         <motion.div variants={item} className="flex justify-center">
           <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-4 py-1.5 text-xs font-medium uppercase tracking-[0.22em] text-white/70">

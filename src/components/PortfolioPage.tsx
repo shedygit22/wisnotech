@@ -1,7 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion, useScroll, useSpring } from "framer-motion";
-import { ArrowLeft, ArrowRight, Clapperboard } from "lucide-react";
+import { ArrowLeft, Clapperboard, Send, Check } from "lucide-react";
 import { applyPageMeta, breadcrumbSchema, orgSchema } from "../lib/seo";
+import { sendLead } from "../lib/leadSink";
 import { PORTFOLIO_CATEGORIES } from "../lib/portfolio";
 import { PortfolioHero } from "./portfolio/PortfolioHero";
 import { SamplesGrid } from "./portfolio/SamplesGrid";
@@ -24,7 +25,7 @@ export default function PortfolioPage() {
         "A personal portfolio of AI-generated video samples by Wisnotech — text-to-video, image-to-video, character and cinematic work, curated and ready to browse.",
       path: "/portfolio",
       type: "website",
-      image: "https://wisnotech.vercel.app/assets/wisnotech-logo.png",
+      image: "https://wisnotech.vercel.app/assets/portfolio-og.jpg",
       jsonLd: [
         orgSchema(),
         breadcrumbSchema([
@@ -124,15 +125,7 @@ export default function PortfolioPage() {
                   Every sample here started as a prompt. Tell us what your product,
                   film or story needs — we'll craft the generation.
                 </p>
-                <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-                  <a href="/#contact" className="btn-primary group">
-                    Commission a sample
-                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden />
-                  </a>
-                  <a href="/wino" className="btn-secondary group">
-                    Meet WINO
-                  </a>
-                </div>
+                <CommissionForm />
               </div>
             </div>
           </div>
@@ -215,5 +208,85 @@ export default function PortfolioPage() {
         </div>
       </footer>
     </div>
+  );
+}
+
+const EMAIL = "wisnotech@gmail.com";
+
+function gmailHref(subject: string, body: string) {
+  const params = new URLSearchParams({ view: "cm", fs: "1", to: EMAIL });
+  params.set("su", subject);
+  params.set("body", body);
+  return `https://mail.google.com/mail/?${params.toString()}`;
+}
+
+/** Commission form — pushes a lead and opens a prefilled email, without leaving the page. */
+function CommissionForm() {
+  const [form, setForm] = useState({ name: "", email: "", idea: "" });
+  const [sent, setSent] = useState(false);
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const subject = `AI video commission from ${form.name || "the portfolio"}`;
+    const body = `${form.idea}\n\n— ${form.name}\n${form.email}`;
+    await sendLead({
+      name: form.name,
+      email: form.email,
+      interest: "AI video commission (portfolio)",
+      message: form.idea,
+      source: "portfolio-cta",
+    });
+    window.open(gmailHref(subject, body), "_blank", "noopener,noreferrer");
+    setSent(true);
+  };
+
+  return (
+    <form onSubmit={submit} className="relative mx-auto mt-8 max-w-lg space-y-3 text-left">
+      <div className="grid gap-3 sm:grid-cols-2">
+        <input
+          value={form.name}
+          onChange={(e) => setForm({ ...form, name: e.target.value })}
+          required
+          placeholder="Your name"
+          aria-label="Your name"
+          className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white placeholder:text-white/35 focus:border-neon/50 focus:outline-none"
+        />
+        <input
+          value={form.email}
+          onChange={(e) => setForm({ ...form, email: e.target.value })}
+          type="email"
+          required
+          placeholder="you@example.com"
+          aria-label="Your email"
+          className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white placeholder:text-white/35 focus:border-neon/50 focus:outline-none"
+        />
+      </div>
+      <textarea
+        value={form.idea}
+        onChange={(e) => setForm({ ...form, idea: e.target.value })}
+        required
+        rows={3}
+        placeholder="What should we generate? Style, length, platform…"
+        aria-label="Project idea"
+        className="w-full resize-none rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white placeholder:text-white/35 focus:border-neon/50 focus:outline-none"
+      />
+      <button
+        type="submit"
+        disabled={sent}
+        className="btn-primary group w-full"
+      >
+        {sent ? (
+          <>
+            <Check className="h-4 w-4 text-emerald-500" aria-hidden />
+            Opening your email…
+          </>
+        ) : (
+          <>
+            Send commission request
+            <Send className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden />
+          </>
+        )}
+      </button>
+    </form>
   );
 }

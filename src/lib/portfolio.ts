@@ -26,6 +26,8 @@ export interface PortfolioSample {
   /** Intrinsic media size (px) — cards keep the real aspect ratio. */
   width: number;
   height: number;
+  /** Clip length in seconds (videos only). Renders a duration badge. */
+  durationSeconds?: number;
   tags: string[];
   /** Featured samples get a badge and show first in the grid. */
   featured?: boolean;
@@ -55,6 +57,7 @@ export const PORTFOLIO_SAMPLES: PortfolioSample[] = [
     poster: "/wino/thumbs/video-thumb-1.jpg",
     width: 480,
     height: 852,
+    durationSeconds: 15,
     tags: ["street", "golden hour", "9:16"],
     featured: true,
     published: true,
@@ -69,6 +72,7 @@ export const PORTFOLIO_SAMPLES: PortfolioSample[] = [
     poster: "/wino/thumbs/video-thumb-2.jpg",
     width: 720,
     height: 1280,
+    durationSeconds: 15,
     tags: ["ad", "product", "9:16"],
     featured: true,
     published: true,
@@ -83,6 +87,7 @@ export const PORTFOLIO_SAMPLES: PortfolioSample[] = [
     poster: "/wino/thumbs/video-thumb-3.jpg",
     width: 720,
     height: 1280,
+    durationSeconds: 15,
     tags: ["portrait", "camera move", "9:16"],
     featured: true,
     published: true,
@@ -97,6 +102,7 @@ export const PORTFOLIO_SAMPLES: PortfolioSample[] = [
     poster: "/wino/thumbs/video-thumb-4.jpg",
     width: 720,
     height: 1280,
+    durationSeconds: 8,
     tags: ["character", "motion", "9:16"],
     published: true,
   },
@@ -110,6 +116,7 @@ export const PORTFOLIO_SAMPLES: PortfolioSample[] = [
     poster: "/wino/thumbs/video-thumb-5.jpg",
     width: 720,
     height: 1280,
+    durationSeconds: 15,
     tags: ["loop", "social", "9:16"],
     published: true,
   },
@@ -159,6 +166,7 @@ export const PORTFOLIO_SAMPLES: PortfolioSample[] = [
     poster: "/wino/thumbs/video-thumb-6.jpg",
     width: 720,
     height: 1280,
+    durationSeconds: 44,
     tags: ["film", "teaser", "9:16"],
     published: true,
   },
@@ -172,6 +180,7 @@ export const PORTFOLIO_SAMPLES: PortfolioSample[] = [
     poster: "/wino/thumbs/vertical-01.jpg",
     width: 406,
     height: 720,
+    durationSeconds: 8,
     tags: ["street", "loop", "9:16"],
     published: true,
   },
@@ -185,6 +194,7 @@ export const PORTFOLIO_SAMPLES: PortfolioSample[] = [
     poster: "/wino/thumbs/vertical-02.jpg",
     width: 406,
     height: 720,
+    durationSeconds: 8,
     tags: ["street", "loop", "9:16"],
     published: true,
   },
@@ -198,6 +208,7 @@ export const PORTFOLIO_SAMPLES: PortfolioSample[] = [
     poster: "/wino/thumbs/vertical-03.jpg",
     width: 406,
     height: 720,
+    durationSeconds: 8,
     tags: ["street", "loop", "9:16"],
     published: true,
   },
@@ -211,6 +222,7 @@ export const PORTFOLIO_SAMPLES: PortfolioSample[] = [
     poster: "/wino/thumbs/portrait-moment.jpg",
     width: 720,
     height: 1280,
+    durationSeconds: 8,
     tags: ["portrait", "bokeh", "9:16"],
     published: true,
   },
@@ -224,6 +236,7 @@ export const PORTFOLIO_SAMPLES: PortfolioSample[] = [
     poster: "/wino/thumbs/cinematic-01.jpg",
     width: 1280,
     height: 720,
+    durationSeconds: 8,
     tags: ["16:9", "narrative", "filmic"],
     published: true,
   },
@@ -237,6 +250,7 @@ export const PORTFOLIO_SAMPLES: PortfolioSample[] = [
     poster: "/wino/thumbs/cinematic-02.jpg",
     width: 1280,
     height: 720,
+    durationSeconds: 8,
     tags: ["16:9", "narrative", "filmic"],
     published: true,
   },
@@ -250,6 +264,7 @@ export const PORTFOLIO_SAMPLES: PortfolioSample[] = [
     poster: "/wino/thumbs/showcase-matrix.jpg",
     width: 1280,
     height: 720,
+    durationSeconds: 15,
     tags: ["montage", "16:9", "multi-scene"],
     featured: true,
     published: true,
@@ -264,6 +279,7 @@ export const PORTFOLIO_SAMPLES: PortfolioSample[] = [
     poster: "/wino/thumbs/seedance-demo.jpg",
     width: 1280,
     height: 548,
+    durationSeconds: 8,
     tags: ["text-to-video", "wide", "demo"],
     published: true,
   },
@@ -277,6 +293,7 @@ export const PORTFOLIO_SAMPLES: PortfolioSample[] = [
     poster: "/wino/thumbs/johnwick-character.jpg",
     width: 1080,
     height: 1920,
+    durationSeconds: 26,
     tags: ["action", "character", "9:16"],
     featured: true,
     published: true,
@@ -291,6 +308,7 @@ export const PORTFOLIO_SAMPLES: PortfolioSample[] = [
     poster: "/wino/thumbs/factory-ninja.jpg",
     width: 1280,
     height: 720,
+    durationSeconds: 15,
     tags: ["character", "16:9", "workshop"],
     published: true,
   },
@@ -305,4 +323,21 @@ export function loadPortfolioSamples(): PortfolioSample[] {
 
 export function categoryById(id: string): PortfolioCategory | undefined {
   return PORTFOLIO_CATEGORIES.find((c) => c.id === id);
+}
+
+/** "0:08" / "1:02" style clip length. */
+export function formatDuration(seconds?: number): string {
+  if (!seconds || seconds <= 0) return "";
+  const m = Math.floor(seconds / 60);
+  const s = Math.round(seconds % 60);
+  return `${m}:${String(s).padStart(2, "0")}`;
+}
+
+/** Best-effort aspect label like "9:16", "16:9" or "Portrait". */
+export function aspectLabel(width: number, height: number): string {
+  const ratio = width / height;
+  if (Math.abs(ratio - 9 / 16) < 0.02) return "9:16";
+  if (Math.abs(ratio - 16 / 9) < 0.02) return "16:9";
+  if (Math.abs(ratio - 1) < 0.02) return "1:1";
+  return height > width ? "Portrait" : "Landscape";
 }
