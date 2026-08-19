@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { X, ChevronLeft, ChevronRight } from "lucide-react";
+import { X, ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 import {
   aspectLabel,
   categoryById,
@@ -17,9 +17,10 @@ interface LightboxProps {
 }
 
 /**
- * Fullscreen sample viewer. Videos autoplay on open; images render full size.
- * Includes a thumbnail filmstrip and hidden preload tags for the previous/next
- * clips so navigation feels instant.
+ * Fullscreen piece viewer. Videos autoplay on open; images render full size.
+ * Includes a thumbnail filmstrip, hidden preload tags for the previous/next
+ * clips so navigation feels instant, and a converting CTA that drops the
+ * viewer straight onto the brief form.
  * Keyboard: Esc closes, ←/→ navigate. Body scroll is locked while open.
  */
 export function SampleLightbox({ samples, index, onClose, onNavigate }: LightboxProps) {
@@ -87,7 +88,7 @@ export function SampleLightbox({ samples, index, onClose, onNavigate }: Lightbox
               e.stopPropagation();
               onNavigate((index - 1 + total) % total);
             }}
-            aria-label="Previous sample"
+            aria-label="Previous clip"
             className="absolute left-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-black/50 text-white/70 transition-colors hover:border-white/40 hover:text-white sm:left-6"
           >
             <ChevronLeft className="h-5 w-5" aria-hidden />
@@ -98,7 +99,7 @@ export function SampleLightbox({ samples, index, onClose, onNavigate }: Lightbox
               e.stopPropagation();
               onNavigate((index + 1) % total);
             }}
-            aria-label="Next sample"
+            aria-label="Next clip"
             className="absolute right-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-black/50 text-white/70 transition-colors hover:border-white/40 hover:text-white sm:right-6"
           >
             <ChevronRight className="h-5 w-5" aria-hidden />
@@ -186,6 +187,15 @@ export function SampleLightbox({ samples, index, onClose, onNavigate }: Lightbox
               </span>
             ))}
           </p>
+
+          <a
+            href="#contact"
+            onClick={onClose}
+            className="group mt-6 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-[#080808] transition-all hover:bg-zinc-100"
+          >
+            Want something like this?
+            <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden />
+          </a>
         </div>
 
         {/* Filmstrip */}
@@ -194,7 +204,7 @@ export function SampleLightbox({ samples, index, onClose, onNavigate }: Lightbox
             className="mt-6 flex w-full max-w-3xl gap-2 overflow-x-auto pb-2"
             onClick={(e) => e.stopPropagation()}
             role="tablist"
-            aria-label="Sample thumbnails"
+            aria-label="All clips"
           >
             {samples.map((s, i) => (
               <button

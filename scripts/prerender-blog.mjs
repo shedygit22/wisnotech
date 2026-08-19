@@ -283,7 +283,7 @@ const llms = `# Wisnotech
 ## Company
 - [Homepage](${SITE_URL}/): Wisnotech — AI, software & digital innovation in Nigeria
 - [Contact](${SITE_URL}/#contact): wisnotech@gmail.com · +2349153541297
-- [AI Video Samples Portfolio](${SITE_URL}/portfolio): Curated AI-generated video and still samples by Wisnotech
+- [Wisnotech AI Video Studio](${SITE_URL}/portfolio): Full AI video production for brands, filmmakers and creators — UGC ads, film scenes and channel content
 
 ## Courses
 - [Wisnotech Academy](${SITE_URL}/#/academy): Practical AI, automation, content and software courses with pricing
@@ -350,46 +350,46 @@ console.log("✓ feed.xml (RSS)");
 const PF_CATEGORIES = [
   { id: "cinematic", label: "Cinematic", accent: "#7aa5ff" },
   { id: "character", label: "Character", accent: "#ff7a9e" },
-  { id: "text-to-video", label: "Text to Video", accent: "#3b7bff" },
-  { id: "image-to-video", label: "Image to Video", accent: "#8b7aff" },
-  { id: "social-media", label: "Social", accent: "#2dd4bf" },
-  { id: "advertising", label: "Advertising", accent: "#fbbf24" },
-  { id: "ai-image", label: "AI Stills", accent: "#a78bfa" },
-  { id: "film", label: "Film", accent: "#f472b6" },
+  { id: "text-to-video", label: "Text-to-Video", accent: "#3b7bff" },
+  { id: "image-to-video", label: "Image-to-Video", accent: "#8b7aff" },
+  { id: "social-media", label: "Social Content", accent: "#2dd4bf" },
+  { id: "advertising", label: "Ads & UGC", accent: "#fbbf24" },
+  { id: "ai-image", label: "Campaign Stills", accent: "#a78bfa" },
+  { id: "film", label: "Film & Trailers", accent: "#f472b6" },
 ];
 
 const PF_SAMPLES = [
-  { id: "p1", type: "video", title: "Golden Hour, Lagos", desc: "Text-to-video street scene with a hand-held camera feel and warm dusk light.", cat: "text-to-video", src: "/wino/videos/showreel-1.mp4", poster: "/wino/thumbs/video-thumb-1.jpg", dur: "0:15", ratio: "9:16", featured: true },
-  { id: "p2", type: "video", title: "Product Launch — 15s", desc: "Short-form advertising spot built from a single prompt.", cat: "advertising", src: "/wino/videos/showreel-2.mp4", poster: "/wino/thumbs/video-thumb-2.jpg", dur: "0:15", ratio: "9:16", featured: true },
-  { id: "p3", type: "video", title: "Portrait Push-In", desc: "Image-to-video camera push on a still portrait.", cat: "image-to-video", src: "/wino/videos/showreel-3.mp4", poster: "/wino/thumbs/video-thumb-3.jpg", dur: "0:15", ratio: "9:16", featured: true },
-  { id: "p4", type: "video", title: "Character Study", desc: "Consistent character with expressive, natural motion.", cat: "character", src: "/wino/videos/showreel-4.mp4", poster: "/wino/thumbs/video-thumb-4.jpg", dur: "0:08", ratio: "9:16" },
-  { id: "p5", type: "video", title: "Social Loop", desc: "Vertical-format loop built for social feeds.", cat: "social-media", src: "/wino/videos/showreel-5.mp4", poster: "/wino/thumbs/video-thumb-5.jpg", dur: "0:15", ratio: "9:16" },
-  { id: "p6", type: "image", title: "Neon Market Still", desc: "AI image generated with WINO — neon-soaked night market.", cat: "ai-image", src: "/wino/images/1.jpeg", poster: "/wino/images/1.jpeg", ratio: "9:16" },
-  { id: "p7", type: "image", title: "Portrait Still", desc: "AI image generated with WINO — dramatic studio portrait.", cat: "ai-image", src: "/wino/images/2.jpeg", poster: "/wino/images/2.jpeg", ratio: "9:16" },
-  { id: "p8", type: "image", title: "Landscape Still", desc: "AI image generated with WINO — expansive cinematic landscape.", cat: "ai-image", src: "/wino/images/3.jpeg", poster: "/wino/images/3.jpeg", ratio: "9:16" },
-  { id: "p9", type: "video", title: "Film Teaser", desc: "Narrative teaser with filmic grading and moody pacing.", cat: "film", src: "/wino/videos/showreel-6.mp4", poster: "/wino/thumbs/video-thumb-6.jpg", dur: "0:44", ratio: "9:16" },
-  { id: "p10", type: "video", title: "Street Loop 01", desc: "9:16 text-to-video loop built for portrait feeds.", cat: "social-media", src: "/wino/videos/vertical-01.mp4", poster: "/wino/thumbs/vertical-01.jpg", dur: "0:08", ratio: "9:16" },
-  { id: "p11", type: "video", title: "Street Loop 02", desc: "9:16 text-to-video loop built for portrait feeds.", cat: "social-media", src: "/wino/videos/vertical-02.mp4", poster: "/wino/thumbs/vertical-02.jpg", dur: "0:08", ratio: "9:16" },
-  { id: "p12", type: "video", title: "Street Loop 03", desc: "9:16 text-to-video loop built for portrait feeds.", cat: "social-media", src: "/wino/videos/vertical-03.mp4", poster: "/wino/thumbs/vertical-03.jpg", dur: "0:08", ratio: "9:16" },
-  { id: "p13", type: "video", title: "Portrait Moment", desc: "Vertical cinematic study with shallow depth of field.", cat: "cinematic", src: "/wino/videos/portrait-moment.mp4", poster: "/wino/thumbs/portrait-moment.jpg", dur: "0:08", ratio: "9:16" },
-  { id: "p14", type: "video", title: "Cinematic Scene 01", desc: "16:9 narrative shot with filmic grading and composed blocking.", cat: "cinematic", src: "/wino/videos/cinematic-01.mp4", poster: "/wino/thumbs/cinematic-01.jpg", dur: "0:08", ratio: "16:9" },
-  { id: "p15", type: "video", title: "Cinematic Scene 02", desc: "16:9 narrative shot with filmic grading and subtle camera drift.", cat: "cinematic", src: "/wino/videos/cinematic-02.mp4", poster: "/wino/thumbs/cinematic-02.jpg", dur: "0:08", ratio: "16:9" },
-  { id: "p16", type: "video", title: "Showcase Matrix", desc: "Wide montage of Seedance 2.0 output in a single frame.", cat: "cinematic", src: "/wino/videos/showcase-matrix.mp4", poster: "/wino/thumbs/showcase-matrix.jpg", dur: "0:15", ratio: "16:9", featured: true },
-  { id: "p17", type: "video", title: "Seedance 2.0 Demo", desc: "Text-to-video generation sample at a wide cinematic aspect.", cat: "text-to-video", src: "/wino/videos/seedance-demo.mp4", poster: "/wino/thumbs/seedance-demo.jpg", dur: "0:08", ratio: "Wide" },
-  { id: "p18", type: "video", title: "Action Sequence", desc: "Extended vertical character sequence with quick cuts and energy.", cat: "character", src: "/wino/videos/johnwick-character.mp4", poster: "/wino/thumbs/johnwick-character.jpg", dur: "0:26", ratio: "9:16", featured: true },
-  { id: "p19", type: "video", title: "Factory Ninja", desc: "Cinematic character vignette set in a gritty workshop.", cat: "character", src: "/wino/videos/factory-ninja.mp4", poster: "/wino/thumbs/factory-ninja.jpg", dur: "0:15", ratio: "16:9" },
-  { id: "p20", type: "video", title: "Dune Trailer", desc: "Cinematic sci-fi trailer with epic scale and atmospheric pacing.", cat: "film", src: "/portfolio/videos/dune-trailer.mp4", poster: "/portfolio/thumbs/dune-trailer.jpg", dur: "0:13", ratio: "16:9", featured: true },
-  { id: "p21", type: "video", title: "Fitness Vlog", desc: "Energetic gym vlog with punchy cuts and motivational energy.", cat: "social-media", src: "/portfolio/videos/fitness-vlog.mp4", poster: "/portfolio/thumbs/fitness-vlog.jpg", dur: "0:30", ratio: "16:9" },
-  { id: "p22", type: "video", title: "Portrait Scene 01", desc: "Vertical portrait scene crafted for social feeds.", cat: "social-media", src: "/portfolio/videos/vertical-a1.mp4", poster: "/portfolio/thumbs/vertical-a1.jpg", dur: "0:15", ratio: "9:16" },
-  { id: "p23", type: "video", title: "Portrait Scene 02", desc: "Vertical portrait scene crafted for social feeds.", cat: "social-media", src: "/portfolio/videos/vertical-a2.mp4", poster: "/portfolio/thumbs/vertical-a2.jpg", dur: "0:15", ratio: "9:16" },
-  { id: "p24", type: "video", title: "Portrait Scene 03", desc: "Vertical portrait scene crafted for social feeds.", cat: "social-media", src: "/portfolio/videos/vertical-a3.mp4", poster: "/portfolio/thumbs/vertical-a3.jpg", dur: "0:15", ratio: "9:16" },
-  { id: "p25", type: "video", title: "Portrait Scene 04", desc: "Vertical portrait scene crafted for social feeds.", cat: "social-media", src: "/portfolio/videos/vertical-a4.mp4", poster: "/portfolio/thumbs/vertical-a4.jpg", dur: "0:15", ratio: "9:16" },
-  { id: "p26", type: "video", title: "Portrait Scene 05", desc: "Vertical portrait scene crafted for social feeds.", cat: "social-media", src: "/portfolio/videos/vertical-a5.mp4", poster: "/portfolio/thumbs/vertical-a5.jpg", dur: "0:15", ratio: "9:16" },
-  { id: "p27", type: "video", title: "Portrait Scene 06", desc: "Vertical portrait scene crafted for social feeds.", cat: "social-media", src: "/portfolio/videos/vertical-a6.mp4", poster: "/portfolio/thumbs/vertical-a6.jpg", dur: "0:15", ratio: "9:16" },
-  { id: "p28", type: "video", title: "Portrait Scene 07", desc: "Vertical portrait scene crafted for social feeds.", cat: "social-media", src: "/portfolio/videos/vertical-a7.mp4", poster: "/portfolio/thumbs/vertical-a7.jpg", dur: "0:10", ratio: "9:16" },
-  { id: "p29", type: "video", title: "Portrait Scene 08", desc: "Vertical portrait scene crafted for social feeds.", cat: "social-media", src: "/portfolio/videos/vertical-a8.mp4", poster: "/portfolio/thumbs/vertical-a8.jpg", dur: "0:15", ratio: "9:16" },
-  { id: "p30", type: "video", title: "Portrait Scene 09", desc: "Vertical portrait scene crafted for social feeds.", cat: "social-media", src: "/portfolio/videos/vertical-a9.mp4", poster: "/portfolio/thumbs/vertical-a9.jpg", dur: "0:15", ratio: "9:16" },
-  { id: "p31", type: "video", title: "Wide Demo", desc: "Cinematic 16:9 generation from a single prompt.", cat: "cinematic", src: "/portfolio/videos/web-demo.mp4", poster: "/portfolio/thumbs/web-demo.jpg", dur: "0:13", ratio: "16:9" },
+  { id: "p1", type: "video", title: "The City at Golden Hour", desc: "A hand-held text-to-video street scene in warm dusk light — atmosphere that makes any brand feel alive.", cat: "text-to-video", src: "/wino/videos/showreel-1.mp4", poster: "/wino/thumbs/video-thumb-1.jpg", dur: "0:15", ratio: "9:16", featured: true },
+  { id: "p2", type: "video", title: "Drop Day", desc: "A 15-second launch film built from a single prompt — the energy of a product drop, minus the shoot day.", cat: "advertising", src: "/wino/videos/showreel-2.mp4", poster: "/wino/thumbs/video-thumb-2.jpg", dur: "0:15", ratio: "9:16", featured: true },
+  { id: "p3", type: "video", title: "Portrait, Alive", desc: "One still portrait, given life — an image-to-video push that turns a frame into a scene.", cat: "image-to-video", src: "/wino/videos/showreel-3.mp4", poster: "/wino/thumbs/video-thumb-3.jpg", dur: "0:15", ratio: "9:16", featured: true },
+  { id: "p4", type: "video", title: "The Character Lives", desc: "A character with one face and endless emotion — consistent, expressive and ready for its close-up.", cat: "character", src: "/wino/videos/showreel-4.mp4", poster: "/wino/thumbs/video-thumb-4.jpg", dur: "0:08", ratio: "9:16" },
+  { id: "p5", type: "video", title: "Made for the Feed", desc: "A vertical social clip engineered to stop the scroll — punchy, on-brand and repeatable.", cat: "social-media", src: "/wino/videos/showreel-5.mp4", poster: "/wino/thumbs/video-thumb-5.jpg", dur: "0:15", ratio: "9:16" },
+  { id: "p6", type: "image", title: "Neon Market at Midnight", desc: "A campaign still with the gravity of a film still — neon, night and a world of product placements waiting.", cat: "ai-image", src: "/wino/images/1.jpeg", poster: "/wino/images/1.jpeg", ratio: "9:16" },
+  { id: "p7", type: "image", title: "Face in Studio Light", desc: "A dramatic studio portrait — the kind of imagery that anchors a campaign identity.", cat: "ai-image", src: "/wino/images/2.jpeg", poster: "/wino/images/2.jpeg", ratio: "9:16" },
+  { id: "p8", type: "image", title: "The Long Horizon", desc: "An expansive cinematic landscape — our stills carry the same scale as our motion.", cat: "ai-image", src: "/wino/images/3.jpeg", poster: "/wino/images/3.jpeg", ratio: "9:16" },
+  { id: "p9", type: "video", title: "First Frames of a Film", desc: "A narrative teaser with filmic grading and deliberate pacing — a story in 44 seconds.", cat: "film", src: "/wino/videos/showreel-6.mp4", poster: "/wino/thumbs/video-thumb-6.jpg", dur: "0:44", ratio: "9:16" },
+  { id: "p10", type: "video", title: "City Pulse 01", desc: "A vertical slice of street life crafted to hold attention in a scrolling feed.", cat: "social-media", src: "/wino/videos/vertical-01.mp4", poster: "/wino/thumbs/vertical-01.jpg", dur: "0:08", ratio: "9:16" },
+  { id: "p11", type: "video", title: "City Pulse 02", desc: "Another street, another mood — consistent energy for brand-led social content.", cat: "social-media", src: "/wino/videos/vertical-02.mp4", poster: "/wino/thumbs/vertical-02.jpg", dur: "0:08", ratio: "9:16" },
+  { id: "p12", type: "video", title: "City Pulse 03", desc: "The third beat in a series — proof a campaign can live on repeat without going stale.", cat: "social-media", src: "/wino/videos/vertical-03.mp4", poster: "/wino/thumbs/vertical-03.jpg", dur: "0:08", ratio: "9:16" },
+  { id: "p13", type: "video", title: "Portrait in Motion", desc: "A shallow-depth portrait that moves — cinematic depth for premium brand moments.", cat: "cinematic", src: "/wino/videos/portrait-moment.mp4", poster: "/wino/thumbs/portrait-moment.jpg", dur: "0:08", ratio: "9:16" },
+  { id: "p14", type: "video", title: "A Film Still, Breathing", desc: "A composed 16:9 shot with a filmic grade — the quiet power of a locked-off scene.", cat: "cinematic", src: "/wino/videos/cinematic-01.mp4", poster: "/wino/thumbs/cinematic-01.jpg", dur: "0:08", ratio: "16:9" },
+  { id: "p15", type: "video", title: "The Long Take", desc: "Subtle camera drift across a cinematic frame — motion that never distracts from the story.", cat: "cinematic", src: "/wino/videos/cinematic-02.mp4", poster: "/wino/thumbs/cinematic-02.jpg", dur: "0:08", ratio: "16:9" },
+  { id: "p16", type: "video", title: "Six Stories, One Frame", desc: "A wide montage of multiple AI generations — the scale of what one workflow can produce.", cat: "cinematic", src: "/wino/videos/showcase-matrix.mp4", poster: "/wino/thumbs/showcase-matrix.jpg", dur: "0:15", ratio: "16:9", featured: true },
+  { id: "p17", type: "video", title: "The Wide Frame", desc: "An ultrawide text-to-video generation — cinematic scope from a single line of direction.", cat: "text-to-video", src: "/wino/videos/seedance-demo.mp4", poster: "/wino/thumbs/seedance-demo.jpg", dur: "0:08", ratio: "Wide" },
+  { id: "p18", type: "video", title: "Unbroken", desc: "A 26-second vertical action sequence — fast cuts, real momentum, zero stunt budget.", cat: "character", src: "/wino/videos/johnwick-character.mp4", poster: "/wino/thumbs/johnwick-character.jpg", dur: "0:26", ratio: "9:16", featured: true },
+  { id: "p19", type: "video", title: "The Workshop Assassin", desc: "A gritty character vignette in a working workshop — mood, texture and menace on demand.", cat: "character", src: "/wino/videos/factory-ninja.mp4", poster: "/wino/thumbs/factory-ninja.jpg", dur: "0:15", ratio: "16:9" },
+  { id: "p20", type: "video", title: "A Desert Epic", desc: "An epic-scale trailer sequence from a single prompt — proof that ‘big film’ no longer needs a big budget.", cat: "film", src: "/portfolio/videos/dune-trailer.mp4", poster: "/portfolio/thumbs/dune-trailer.jpg", dur: "0:13", ratio: "16:9", featured: true },
+  { id: "p21", type: "video", title: "Day One Energy", desc: "A 30-second fitness vlog with punchy cuts — creator energy, produced to spec.", cat: "social-media", src: "/portfolio/videos/fitness-vlog.mp4", poster: "/portfolio/thumbs/fitness-vlog.jpg", dur: "0:30", ratio: "16:9" },
+  { id: "p22", type: "video", title: "Scroll-Stop 01", desc: "A vertical social clip built to stop the scroll — consistent tone, crafted for the feed.", cat: "social-media", src: "/portfolio/videos/vertical-a1.mp4", poster: "/portfolio/thumbs/vertical-a1.jpg", dur: "0:15", ratio: "9:16" },
+  { id: "p23", type: "video", title: "Scroll-Stop 02", desc: "A vertical social clip built to stop the scroll — consistent tone, crafted for the feed.", cat: "social-media", src: "/portfolio/videos/vertical-a2.mp4", poster: "/portfolio/thumbs/vertical-a2.jpg", dur: "0:15", ratio: "9:16" },
+  { id: "p24", type: "video", title: "Scroll-Stop 03", desc: "A vertical social clip built to stop the scroll — consistent tone, crafted for the feed.", cat: "social-media", src: "/portfolio/videos/vertical-a3.mp4", poster: "/portfolio/thumbs/vertical-a3.jpg", dur: "0:15", ratio: "9:16" },
+  { id: "p25", type: "video", title: "Scroll-Stop 04", desc: "A vertical social clip built to stop the scroll — consistent tone, crafted for the feed.", cat: "social-media", src: "/portfolio/videos/vertical-a4.mp4", poster: "/portfolio/thumbs/vertical-a4.jpg", dur: "0:15", ratio: "9:16" },
+  { id: "p26", type: "video", title: "Scroll-Stop 05", desc: "A vertical social clip built to stop the scroll — consistent tone, crafted for the feed.", cat: "social-media", src: "/portfolio/videos/vertical-a5.mp4", poster: "/portfolio/thumbs/vertical-a5.jpg", dur: "0:15", ratio: "9:16" },
+  { id: "p27", type: "video", title: "Scroll-Stop 06", desc: "A vertical social clip built to stop the scroll — consistent tone, crafted for the feed.", cat: "social-media", src: "/portfolio/videos/vertical-a6.mp4", poster: "/portfolio/thumbs/vertical-a6.jpg", dur: "0:15", ratio: "9:16" },
+  { id: "p28", type: "video", title: "Scroll-Stop 07", desc: "A vertical social clip built to stop the scroll — consistent tone, crafted for the feed.", cat: "social-media", src: "/portfolio/videos/vertical-a7.mp4", poster: "/portfolio/thumbs/vertical-a7.jpg", dur: "0:10", ratio: "9:16" },
+  { id: "p29", type: "video", title: "Scroll-Stop 08", desc: "A vertical social clip built to stop the scroll — consistent tone, crafted for the feed.", cat: "social-media", src: "/portfolio/videos/vertical-a8.mp4", poster: "/portfolio/thumbs/vertical-a8.jpg", dur: "0:15", ratio: "9:16" },
+  { id: "p30", type: "video", title: "Scroll-Stop 09", desc: "A vertical social clip built to stop the scroll — consistent tone, crafted for the feed.", cat: "social-media", src: "/portfolio/videos/vertical-a9.mp4", poster: "/portfolio/thumbs/vertical-a9.jpg", dur: "0:15", ratio: "9:16" },
+  { id: "p31", type: "video", title: "Cinema Without Cameras", desc: "A cinematic 16:9 generation from a single prompt — the new economics of filmmaking.", cat: "cinematic", src: "/portfolio/videos/web-demo.mp4", poster: "/portfolio/thumbs/web-demo.jpg", dur: "0:13", ratio: "16:9" },
 ];
 
 function pfCat(id) {
@@ -414,14 +414,14 @@ function pfCard(s) {
 }
 
 function portfolioHtml() {
-  const title = "AI Video Samples Portfolio | Wisnotech";
-  const desc = "A personal portfolio of AI-generated video samples by Wisnotech — text-to-video, image-to-video, character and cinematic work, curated and ready to browse.";
+  const title = "Wisnotech — AI Video Studio & Portfolio";
+  const desc = "Wisnotech is a full AI video studio for brands, filmmakers and creators — text-to-video, image-to-video, character and film work, produced and ready to publish.";
   const jsonLd = JSON.stringify([
     JSON.parse(orgLd()),
     {
       "@context": "https://schema.org",
       "@type": "CollectionPage",
-      name: "Wisnotech AI Video Samples Portfolio",
+      name: "Wisnotech AI Video Studio & Portfolio",
       url: `${SITE_URL}/portfolio`,
       description: desc,
       mainEntity: {
@@ -440,7 +440,7 @@ function portfolioHtml() {
       "@type": "BreadcrumbList",
       itemListElement: [
         { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
-        { "@type": "ListItem", position: 2, name: "AI Video Samples Portfolio", item: `${SITE_URL}/portfolio` },
+        { "@type": "ListItem", position: 2, name: "AI Video Studio", item: `${SITE_URL}/portfolio` },
       ],
     })),
   ]);
@@ -449,31 +449,31 @@ function portfolioHtml() {
   const body = `<div id="root">
   <div style="background:#080808;color:#fff;font-family:'Inter',ui-sans-serif,system-ui,sans-serif;min-height:100vh">
     <header style="position:fixed;inset:0 0 auto 0;z-index:50;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;border-bottom:1px solid rgba(255,255,255,0.1);background:rgba(8,8,8,0.85);backdrop-filter:blur(12px)">
-      <a href="${SITE_URL}/" style="display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font-weight:600;font-size:14px">Samples <span style="color:rgba(255,255,255,0.4);font-weight:400">by Wisnotech</span></a>
-      <a href="${SITE_URL}/" style="color:rgba(255,255,255,0.7);text-decoration:none;font-size:14px;border:1px solid rgba(255,255,255,0.15);padding:8px 16px;border-radius:10px">Back to Wisnotech</a>
+      <a href="${SITE_URL}/" style="display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font-weight:600;font-size:14px">Wisnotech</a>
+      <a href="${SITE_URL}/" style="color:rgba(255,255,255,0.7);text-decoration:none;font-size:14px;border:1px solid rgba(255,255,255,0.15);padding:8px 16px;border-radius:10px">Home</a>
     </header>
     <main style="padding-top:120px;text-align:center">
-      <span style="display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.04);padding:6px 16px;border-radius:999px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.7)">AI Video Portfolio</span>
-      <h1 style="margin:32px 0 0;font-size:64px;line-height:1.03;letter-spacing:-0.02em;font-weight:700;background:linear-gradient(110deg,#fff 20%,#7aa5ff 40%,#3b7bff 50%,#7aa5ff 60%,#fff 80%);background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent">AI-crafted motion,<br/>curated by hand.</h1>
-      <p style="max-width:640px;margin:24px auto 0;color:rgba(255,255,255,0.6);font-size:18px;line-height:1.6">A personal collection of AI-generated videos and stills — text-to-video, image-to-video and character work. Every clip generated, curated and graded for the story it tells.</p>
+      <span style="display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.04);padding:6px 16px;border-radius:999px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.7)">Wisnotech — AI Video Studio</span>
+      <h1 style="margin:32px 0 0;font-size:64px;line-height:1.03;letter-spacing:-0.02em;font-weight:700;background:linear-gradient(110deg,#fff 20%,#7aa5ff 40%,#3b7bff 50%,#7aa5ff 60%,#fff 80%);background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent">Video that sells.<br/>Scenes that stick.</h1>
+      <p style="max-width:640px;margin:24px auto 0;color:rgba(255,255,255,0.6);font-size:18px;line-height:1.6">A full AI video studio for brands, filmmakers and creators. We turn a single prompt into UGC ads, film scenes and channel content — produced, graded and ready to publish.</p>
       <div style="display:flex;justify-content:center;gap:12px;margin:40px 0 0;flex-wrap:wrap">
-        <a href="#work" style="display:inline-block;background:#fff;color:#080808;padding:14px 24px;border-radius:12px;text-decoration:none;font-weight:500">Browse the work</a>
-        <a href="${SITE_URL}/#contact" style="display:inline-block;border:1px solid rgba(255,255,255,0.3);color:#fff;padding:14px 24px;border-radius:12px;text-decoration:none;font-weight:500">Commission a sample</a>
+        <a href="#work" style="display:inline-block;background:#fff;color:#080808;padding:14px 24px;border-radius:12px;text-decoration:none;font-weight:500">See the Work</a>
+        <a href="${SITE_URL}/#contact" style="display:inline-block;border:1px solid rgba(255,255,255,0.3);color:#fff;padding:14px 24px;border-radius:12px;text-decoration:none;font-weight:500">Start a Project</a>
       </div>
       <div style="display:flex;justify-content:center;gap:12px;margin:56px auto 0;max-width:560px">
-        <div style="flex:1;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.03);padding:20px;border-radius:16px"><p style="margin:0;font-size:24px;font-weight:700">16</p><p style="margin:6px 0 0;color:rgba(255,255,255,0.5);font-size:12px">Video samples</p></div>
-        <div style="flex:1;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.03);padding:20px;border-radius:16px"><p style="margin:0;font-size:24px;font-weight:700">8</p><p style="margin:6px 0 0;color:rgba(255,255,255,0.5);font-size:12px">Categories</p></div>
+        <div style="flex:1;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.03);padding:20px;border-radius:16px"><p style="margin:0;font-size:24px;font-weight:700">28</p><p style="margin:6px 0 0;color:rgba(255,255,255,0.5);font-size:12px">Pieces of work</p></div>
+        <div style="flex:1;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.03);padding:20px;border-radius:16px"><p style="margin:0;font-size:24px;font-weight:700">48h</p><p style="margin:6px 0 0;color:rgba(255,255,255,0.5);font-size:12px">First cut</p></div>
       </div>
     </main>
     <section id="work" style="max-width:1100px;margin:0 auto;padding:96px 24px">
-      <h2 style="font-size:44px;margin:0 0 12px;letter-spacing:-0.02em;font-weight:600">A growing reel.</h2>
-      <p style="color:rgba(255,255,255,0.6);font-size:18px;margin:0 0 40px">Every sample below was generated from a prompt or an image. New work lands here as it's made.</p>
+      <h2 style="font-size:44px;margin:0 0 12px;letter-spacing:-0.02em;font-weight:600">Proof, not promises.</h2>
+      <p style="color:rgba(255,255,255,0.6);font-size:18px;margin:0 0 40px">Every piece below started as a prompt or an image and ended as production-ready footage. Browse by what you need.</p>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;align-items:start">${cards}</div>
     </section>
     <section style="max-width:760px;margin:0 auto;padding:0 24px 96px;text-align:center">
-      <h2 style="font-size:36px;margin:0 0 12px;letter-spacing:-0.02em;font-weight:600">Want motion like this in your brand?</h2>
-      <p style="color:rgba(255,255,255,0.6);font-size:18px;line-height:1.6">Every sample here started as a prompt. Tell us what your product, film or story needs — we'll craft the generation.</p>
-      <a href="${SITE_URL}/#contact" style="display:inline-block;background:#fff;color:#080808;padding:14px 28px;border-radius:12px;text-decoration:none;font-weight:500;margin-top:24px">Commission a sample</a>
+      <h2 style="font-size:36px;margin:0 0 12px;letter-spacing:-0.02em;font-weight:600">Tell us the story. We'll make it move.</h2>
+      <p style="color:rgba(255,255,255,0.6);font-size:18px;line-height:1.6">Send the brief — a product, a scene, a character, a vibe. We'll reply within 24 hours with a plan and a timeline.</p>
+      <a href="${SITE_URL}/#contact" style="display:inline-block;background:#fff;color:#080808;padding:14px 28px;border-radius:12px;text-decoration:none;font-weight:500;margin-top:24px">Start a Project</a>
     </section>
     <footer style="border-top:1px solid rgba(255,255,255,0.1);padding:24px 32px;color:rgba(255,255,255,0.4);font-size:14px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;background:#0a0a0a">
       <span>&copy; ${new Date().getFullYear()} Wisnotech.</span>

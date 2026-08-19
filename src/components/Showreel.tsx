@@ -27,7 +27,7 @@ export default function Showreel() {
             product launches to short-form social ads.
           </p>
           <a href="/portfolio" className="group mt-6 inline-flex items-center gap-2 text-sm font-medium text-neon transition-colors hover:text-white">
-            Browse the full AI sample portfolio
+            Browse the full AI video portfolio
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden />
           </a>
         </div>

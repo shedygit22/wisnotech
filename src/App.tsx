@@ -75,7 +75,7 @@ export default function App() {
     );
   }
 
-  /* Personal AI video samples portfolio. */
+  /* Client-converting AI video studio portfolio. */
   if (path === "/portfolio") {
     return (
       <Suspense fallback={<PageFallback />}>

@@ -118,7 +118,7 @@ export function SampleCard({
         {sample.featured && (
           <span className="absolute left-3 top-3 z-10 inline-flex items-center gap-1 rounded-full bg-black/50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-white backdrop-blur">
             <Star className="h-3 w-3" style={{ color: accent }} aria-hidden />
-            Featured
+            Signature
           </span>
         )}
 
@@ -143,24 +143,29 @@ export function SampleCard({
       <div className="px-5 py-4">
         <p className="truncate text-[15px] font-semibold text-white">{sample.title}</p>
         <p className="mt-0.5 line-clamp-2 text-xs leading-relaxed text-muted">{sample.description}</p>
-        {sample.tags.length > 0 && (
-          <div className="mt-2.5 flex flex-wrap gap-1.5">
-            {sample.tags.map((t) => (
-              <button
-                key={t}
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onTagClick?.(t);
-                }}
-                className="rounded-md border border-white/10 bg-white/[0.04] px-2 py-0.5 text-[10px] text-white/55 transition-colors hover:border-neon/50 hover:text-neon"
-                title={`Filter by "${t}"`}
-              >
-                {t}
-              </button>
-            ))}
-          </div>
-        )}
+        <div className="mt-3 flex items-center justify-between gap-2">
+          {sample.tags.length > 0 && (
+            <div className="flex flex-wrap gap-1.5">
+              {sample.tags.map((t) => (
+                <button
+                  key={t}
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onTagClick?.(t);
+                  }}
+                  className="rounded-md border border-white/10 bg-white/[0.04] px-2 py-0.5 text-[10px] text-white/55 transition-colors hover:border-neon/50 hover:text-neon"
+                  title={`Filter by "${t}"`}
+                >
+                  {t}
+                </button>
+              ))}
+            </div>
+          )}
+          <span className="shrink-0 text-[11px] font-medium text-neon opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+            View →
+          </span>
+        </div>
       </div>
     </motion.div>
   );

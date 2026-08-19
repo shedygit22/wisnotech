@@ -2,19 +2,19 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowDown,
+  ArrowRight,
   ChevronLeft,
   ChevronRight,
   Clapperboard,
-  Layers,
   Sparkles,
 } from "lucide-react";
 import { PORTFOLIO_SAMPLES } from "../../lib/portfolio";
 import { cn } from "../../lib/utils";
 
 const SLIDES = [
-  { src: "/portfolio/videos/dune-trailer.mp4", poster: "/portfolio/thumbs/dune-trailer.jpg", label: "Dune Trailer" },
-  { src: "/wino/videos/seedance-demo.mp4", poster: "/wino/thumbs/seedance-demo.jpg", label: "Seedance 2.0 Demo" },
-  { src: "/portfolio/videos/web-demo.mp4", poster: "/portfolio/thumbs/web-demo.jpg", label: "Wide Demo" },
+  { src: "/portfolio/videos/dune-trailer.mp4", poster: "/portfolio/thumbs/dune-trailer.jpg", label: "A Desert Epic" },
+  { src: "/wino/videos/seedance-demo.mp4", poster: "/wino/thumbs/seedance-demo.jpg", label: "The Wide Frame" },
+  { src: "/portfolio/videos/web-demo.mp4", poster: "/portfolio/thumbs/web-demo.jpg", label: "Cinema Without Cameras" },
 ];
 
 const container = {
@@ -50,7 +50,7 @@ export function PortfolioHero() {
   };
 
   return (
-    <section className="relative overflow-hidden pt-36 pb-20 sm:pt-40">
+    <section className="relative overflow-hidden pt-36 pb-24 sm:pt-40">
       {/* Ambient hero slider — crossfades between featured clips */}
       <div aria-hidden className="absolute inset-0 opacity-45">
         <AnimatePresence initial={false}>
@@ -113,7 +113,7 @@ export function PortfolioHero() {
         <motion.div variants={item} className="flex justify-center">
           <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-4 py-1.5 text-xs font-medium uppercase tracking-[0.22em] text-white/70 backdrop-blur">
             <Sparkles className="h-3.5 w-3.5 text-neon" aria-hidden />
-            AI Video Portfolio
+            Wisnotech — AI Video Studio
           </span>
         </motion.div>
 
@@ -121,48 +121,49 @@ export function PortfolioHero() {
           variants={item}
           className="mt-8 text-[clamp(2.75rem,7vw,4.75rem)] font-bold leading-[1.03] tracking-tight"
         >
-          <span className="text-shimmer">AI-crafted motion,</span>
+          <span className="text-shimmer">Video that sells.</span>
           <br />
-          curated by hand.
+          Scenes that stick.
         </motion.h1>
 
         <motion.p variants={item} className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-muted">
-          A personal collection of AI-generated videos and stills — text-to-video,
-          image-to-video and character work. Every clip generated, curated and
-          graded for the story it tells.
+          Wisnotech is a full AI video studio for brands, filmmakers and creators.
+          We turn a single prompt into UGC ads, film scenes and channel content —
+          produced, graded and ready to publish. No cameras. No waiting. No limits.
         </motion.p>
 
         <motion.div variants={item} className="mt-10 flex flex-wrap items-center justify-center gap-4">
-          <a href="#work" className="btn-primary group">
-            <Clapperboard className="h-4 w-4" aria-hidden />
-            Browse the work
+          <a href="#contact" className="btn-primary group">
+            Start a Project
+            <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden />
           </a>
-          <a href="/#contact" className="btn-secondary group">
-            Commission a sample
+          <a href="#work" className="btn-secondary group">
+            <Clapperboard className="h-4 w-4" aria-hidden />
+            See the Work
           </a>
         </motion.div>
 
-        {/* Stats */}
+        {/* Proof stats */}
         <motion.div variants={item} className="mx-auto mt-14 grid max-w-xl grid-cols-3 gap-4">
-          <Stat value={String(videos)} label="Video samples" />
-          <Stat value={String(categories)} label="Categories" />
-          <Stat value="∞" label="Prompts behind it" />
+          <Stat value={String(videos)} label="Pieces of work" />
+          <Stat value={String(categories)} label="Disciplines" />
+          <Stat value="48h" label="First cut" />
         </motion.div>
       </motion.div>
 
-      {/* Slider controls */}
-      <div className="absolute inset-x-0 bottom-16 z-20 flex flex-col items-center gap-3 sm:bottom-20">
-        <div className="flex items-center gap-3 rounded-full border border-white/10 bg-black/40 px-2 py-2 backdrop-blur">
+      {/* Slider controls — bottom-right, clear of the copy */}
+      <div className="absolute bottom-5 right-4 z-20 flex flex-col items-end gap-2.5 sm:bottom-8 sm:right-8">
+        <div className="flex items-center gap-2 rounded-full border border-white/10 bg-black/40 px-2 py-1.5 backdrop-blur">
           <button
             type="button"
             onClick={() => go(index - 1)}
-            aria-label="Previous video"
-            className="flex h-9 w-9 items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/10 hover:text-white"
+            aria-label="Previous clip"
+            className="flex h-8 w-8 items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/10 hover:text-white"
           >
             <ChevronLeft className="h-4 w-4" aria-hidden />
           </button>
 
-          <div className="flex items-center gap-2" role="tablist" aria-label="Hero slides">
+          <div className="flex items-center gap-1.5" role="tablist" aria-label="Hero clips">
             {SLIDES.map((s, i) => (
               <button
                 key={s.src}
@@ -173,7 +174,7 @@ export function PortfolioHero() {
                 onClick={() => go(i)}
                 className={cn(
                   "h-1.5 rounded-full transition-all duration-300",
-                  i === index ? "w-6 bg-white" : "w-1.5 bg-white/35 hover:bg-white/60"
+                  i === index ? "w-5 bg-white" : "w-1.5 bg-white/35 hover:bg-white/60"
                 )}
               />
             ))}
@@ -182,32 +183,30 @@ export function PortfolioHero() {
           <button
             type="button"
             onClick={() => go(index + 1)}
-            aria-label="Next video"
-            className="flex h-9 w-9 items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/10 hover:text-white"
+            aria-label="Next clip"
+            className="flex h-8 w-8 items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/10 hover:text-white"
           >
             <ChevronRight className="h-4 w-4" aria-hidden />
           </button>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5">
           <p className="text-xs text-white/70">
             {SLIDES[index].label}
             <span className="text-white/40"> · {index + 1}/{total}</span>
           </p>
-        </div>
-
-        {/* Playback progress */}
-        <div className="h-0.5 w-44 overflow-hidden rounded-full bg-white/15">
-          <div
-            className="h-full rounded-full bg-neon transition-[width] duration-200"
-            style={{ width: `${Math.min(100, Math.max(0, progress * 100))}%` }}
-          />
+          <div className="h-0.5 w-20 overflow-hidden rounded-full bg-white/15">
+            <div
+              className="h-full rounded-full bg-neon transition-[width] duration-200"
+              style={{ width: `${Math.min(100, Math.max(0, progress * 100))}%` }}
+            />
+          </div>
         </div>
       </div>
 
       <motion.a
         href="#work"
-        aria-label="Scroll to samples"
+        aria-label="Scroll to the work"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1, duration: 0.8 }}
@@ -230,10 +229,7 @@ function Stat({ value, label }: { value: string; label: string }) {
   return (
     <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-5 backdrop-blur-xl transition-colors duration-300 hover:border-white/25">
       <p className="text-2xl font-bold text-white">{value}</p>
-      <p className="mt-1 flex items-center justify-center gap-1.5 text-xs text-muted">
-        <Layers className="h-3 w-3 text-neon/70" aria-hidden />
-        {label}
-      </p>
+      <p className="mt-1 text-xs text-muted">{label}</p>
     </div>
   );
 }

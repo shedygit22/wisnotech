@@ -16,6 +16,7 @@ const WEBHOOK_URL =
 export interface Lead {
   name?: string;
   email?: string;
+  company?: string;
   phone?: string;
   interest?: string;
   message?: string;
@@ -51,6 +52,7 @@ function doPost(e) {
       new Date(),
       d.name || '',
       d.email || '',
+      d.company || '',
       d.phone || '',
       d.interest || '',
       d.timeline || '',

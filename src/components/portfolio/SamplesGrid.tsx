@@ -10,7 +10,7 @@ import { SampleCard } from "./SampleCard";
 import { SampleLightbox } from "./SampleLightbox";
 
 /**
- * PORTFOLIO GRID — category filters + live search + animated grid + lightbox.
+ * WORK GRID — category filters + live search + animated grid + lightbox.
  * Filters and search sync to the URL (?category=…&q=…) so views are shareable.
  * A ?sample=id param opens the lightbox directly (used by share links).
  */
@@ -89,27 +89,28 @@ export function SamplesGrid() {
         {/* Heading */}
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-xl">
-            <p className="eyebrow">The Work</p>
+            <p className="eyebrow">Selected work</p>
             <h2 className="mt-5 text-4xl font-semibold tracking-tight text-white md:text-5xl">
-              A growing reel.
+              Proof, not promises.
             </h2>
             <p className="mt-5 text-lg leading-relaxed text-muted">
-              Every sample below was generated from a prompt or an image. New
-              work lands here as it's made.
+              Every piece below started as a prompt or an image and ended as
+              production-ready footage. Browse by what you need — then let&apos;s
+              make yours.
             </p>
           </div>
           <p className="flex items-center gap-2 text-sm text-white/50">
             <Wand2 className="h-4 w-4 text-neon/70" aria-hidden />
-            {all.length} samples · updated regularly
+            {all.length} pieces of work · updated weekly
           </p>
         </div>
 
         {/* Filters + search */}
         <div className="mt-10 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Filter samples">
+          <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Filter the work">
             <span className="mr-1 flex items-center gap-1.5 text-xs uppercase tracking-wider text-white/40">
               <Filter className="h-3.5 w-3.5" aria-hidden />
-              Filter
+              What are you after?
             </span>
             <FilterChip
               active={active === "all"}
@@ -136,8 +137,8 @@ export function SamplesGrid() {
               type="search"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search titles, tags…"
-              aria-label="Search samples"
+              placeholder="Search the work…"
+              aria-label="Search the work"
               className="w-full rounded-full border border-white/15 bg-white/[0.04] py-2.5 pl-10 pr-10 text-sm text-white placeholder:text-white/35 transition-colors focus:border-neon/50 focus:outline-none"
             />
             {query && (
@@ -184,8 +185,11 @@ export function SamplesGrid() {
         </motion.div>
 
         {visible.length === 0 && (
-          <div className="mt-12 rounded-2xl border border-white/10 bg-white/[0.03] p-14 text-center text-white/50">
-            No samples match this filter or search — try another term.
+          <div className="mt-12 rounded-2xl border border-white/10 bg-white/[0.03] p-14 text-center">
+            <p className="text-white/50">Nothing here matches that search — but we can make it.</p>
+            <a href="#contact" className="btn-primary mt-6 inline-flex">
+              Start a project
+            </a>
           </div>
         )}
       </div>

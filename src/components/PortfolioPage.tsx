@@ -1,28 +1,88 @@
 import { useEffect, useState } from "react";
 import { motion, useScroll, useSpring } from "framer-motion";
-import { ArrowLeft, Clapperboard, Send, Check } from "lucide-react";
+import {
+  ArrowRight,
+  Check,
+  Film,
+  Layers,
+  Megaphone,
+  Send,
+  ShieldCheck,
+  Sparkles,
+  Target,
+  Users,
+  Zap,
+} from "lucide-react";
 import { applyPageMeta, breadcrumbSchema, orgSchema } from "../lib/seo";
 import { sendLead } from "../lib/leadSink";
 import { PORTFOLIO_CATEGORIES } from "../lib/portfolio";
+import Logo from "./Logo";
 import { PortfolioHero } from "./portfolio/PortfolioHero";
 import { SamplesGrid } from "./portfolio/SamplesGrid";
 
 const NAV_LINKS = [
   { label: "Work", href: "#work" },
-  { label: "Categories", href: "#work" },
-  { label: "Wisnotech", href: "/" },
+  { label: "Who it's for", href: "#audience" },
+  { label: "Why Wisnotech", href: "#why" },
 ] as const;
 
-/** Personal AI video samples portfolio — standalone page at /portfolio. */
+const AUDIENCES = [
+  {
+    icon: Megaphone,
+    title: "Brands scaling UGC",
+    copy: "Produce on-brand AI UGC ads in days, not months — so you can test new creatives weekly without a shoot budget.",
+    cta: "See ad-style work",
+    filter: "ads-ugc",
+  },
+  {
+    icon: Film,
+    title: "Filmmakers & studios",
+    copy: "From concept frames to shot-ready scenes, we build previs and footage that holds up in the edit — without a crew.",
+    cta: "See film work",
+    filter: "film",
+  },
+  {
+    icon: Users,
+    title: "Creators & channels",
+    copy: "Consistent characters, consistent worlds, zero studio days. Feed your channel faster than you can plan it.",
+    cta: "See social work",
+    filter: "social-content",
+  },
+] as const;
+
+const WHY = [
+  {
+    icon: Zap,
+    title: "48-hour first cut",
+    copy: "Concepts land in your inbox in days, not months. Speed is a feature of the process, not an afterthought.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Brand-safe control",
+    copy: "We iterate on the prompt until the tone, face and feel are unmistakably yours. Nothing ships unapproved.",
+  },
+  {
+    icon: Layers,
+    title: "One brief, many formats",
+    copy: "A single idea becomes a 9:16 cut for TikTok, a 16:9 cut for TV and a still set for ads — automatically.",
+  },
+  {
+    icon: Target,
+    title: "Built to convert",
+    copy: "Every frame is made with a job to do — sell the product, sell the story, or stop the scroll. Proof over pixels.",
+  },
+] as const;
+
+/** Client-converting AI video studio page — standalone at /portfolio. */
 export default function PortfolioPage() {
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 30, mass: 0.4 });
 
   useEffect(() => {
     applyPageMeta({
-      title: "AI Video Samples Portfolio | Wisnotech",
+      title: "Wisnotech — AI Video Studio & Portfolio",
       description:
-        "A personal portfolio of AI-generated video samples by Wisnotech — text-to-video, image-to-video, character and cinematic work, curated and ready to browse.",
+        "Wisnotech is a full AI video studio for brands, filmmakers and creators — text-to-video, image-to-video, character and film work, produced and ready to publish.",
       path: "/portfolio",
       type: "website",
       image: "https://wisnotech.vercel.app/assets/portfolio-og.jpg",
@@ -30,7 +90,7 @@ export default function PortfolioPage() {
         orgSchema(),
         breadcrumbSchema([
           { name: "Home", path: "/" },
-          { name: "AI Video Samples Portfolio", path: "/portfolio" },
+          { name: "AI Video Studio", path: "/portfolio" },
         ]),
       ],
     });
@@ -48,16 +108,9 @@ export default function PortfolioPage() {
 
       {/* Header */}
       <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-[#080808]/85 backdrop-blur-md">
-        <nav className="container-wide flex h-16 items-center justify-between py-4" aria-label="Portfolio navigation">
-          <a href="/" aria-label="Wisnotech home">
-            <span className="flex items-center gap-2.5">
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-white font-bold text-sm text-[#080808]">
-                P
-              </span>
-              <span className="text-sm font-semibold tracking-wide text-white">
-                Samples <span className="font-normal text-white/40">by Wisnotech</span>
-              </span>
-            </span>
+        <nav className="container-wide flex h-16 items-center justify-between py-4" aria-label="Studio navigation">
+          <a href="/" aria-label="Wisnotech home" className="shrink-0">
+            <Logo />
           </a>
 
           <div className="hidden items-center gap-1 md:flex">
@@ -73,12 +126,11 @@ export default function PortfolioPage() {
           </div>
 
           <a
-            href="/"
-            className="group inline-flex items-center gap-2 rounded-lg border border-white/15 px-4 py-2 text-sm text-white/70 transition-colors hover:border-white/35 hover:text-white"
+            href="#contact"
+            className="group inline-flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-medium text-[#080808] transition-all hover:bg-zinc-100"
           >
-            <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" aria-hidden />
-            <span className="hidden sm:inline">Back to Wisnotech</span>
-            <span className="sm:hidden">Home</span>
+            Start a Project
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden />
           </a>
         </nav>
       </header>
@@ -86,7 +138,7 @@ export default function PortfolioPage() {
       <main>
         <PortfolioHero />
 
-        {/* Marquee strip */}
+        {/* Capabilities ticker */}
         <div className="relative overflow-hidden border-y border-white/10 bg-white/[0.02] py-5">
           <div className="animate-marquee flex w-max items-center gap-10" aria-hidden>
             {[...PORTFOLIO_CATEGORIES, ...PORTFOLIO_CATEGORIES].map((c, i) => (
@@ -100,10 +152,69 @@ export default function PortfolioPage() {
           </div>
         </div>
 
+        {/* Who it's for */}
+        <section id="audience" className="section scroll-mt-20">
+          <div className="container-wide">
+            <p className="eyebrow">Who this is for</p>
+            <h2 className="mt-5 max-w-2xl text-4xl font-semibold tracking-tight text-white md:text-5xl">
+              Made for the teams moving at the speed of culture.
+            </h2>
+            <div className="mt-12 grid gap-5 md:grid-cols-3">
+              {AUDIENCES.map((a) => (
+                <motion.a
+                  key={a.title}
+                  href="#work"
+                  initial={{ opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-80px" }}
+                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                  className="group card relative block overflow-hidden p-8"
+                >
+                  <span className="flex h-12 w-12 items-center justify-center rounded-xl border border-white/15 bg-white/[0.05]">
+                    <a.icon className="h-5 w-5 text-neon" aria-hidden />
+                  </span>
+                  <h3 className="mt-6 text-xl font-semibold tracking-tight text-white">{a.title}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-muted">{a.copy}</p>
+                  <span className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-neon">
+                    {a.cta}
+                    <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" aria-hidden />
+                  </span>
+                </motion.a>
+              ))}
+            </div>
+          </div>
+        </section>
+
         <SamplesGrid />
 
-        {/* CTA */}
-        <section className="section">
+        {/* Why Wisnotech */}
+        <section id="why" className="section scroll-mt-20 bg-white/[0.02]">
+          <div className="container-wide">
+            <p className="eyebrow">Why Wisnotech</p>
+            <h2 className="mt-5 max-w-2xl text-4xl font-semibold tracking-tight text-white md:text-5xl">
+              A studio without a set. A pipeline without a pause.
+            </h2>
+            <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {WHY.map((w) => (
+                <motion.div
+                  key={w.title}
+                  initial={{ opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-80px" }}
+                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                  className="rounded-2xl border border-white/10 bg-white/[0.03] p-7"
+                >
+                  <w.icon className="h-6 w-6 text-neon" aria-hidden />
+                  <h3 className="mt-5 text-lg font-semibold tracking-tight text-white">{w.title}</h3>
+                  <p className="mt-2.5 text-sm leading-relaxed text-muted">{w.copy}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* CTA / contact */}
+        <section id="contact" className="section scroll-mt-20">
           <div className="container-wide">
             <div className="card relative overflow-hidden p-10 text-center sm:p-16">
               <div
@@ -116,16 +227,22 @@ export default function PortfolioPage() {
               />
               <div className="relative mx-auto max-w-2xl">
                 <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-white/15 bg-white/[0.05]">
-                  <Clapperboard className="h-6 w-6 text-neon" aria-hidden />
+                  <Sparkles className="h-6 w-6 text-neon" aria-hidden />
                 </span>
                 <h2 className="mt-6 text-3xl font-semibold tracking-tight text-white md:text-4xl">
-                  Want motion like this in your brand?
+                  Tell us the story. We&apos;ll make it move.
                 </h2>
                 <p className="mt-4 text-lg leading-relaxed text-muted">
-                  Every sample here started as a prompt. Tell us what your product,
-                  film or story needs — we'll craft the generation.
+                  Send the brief — a product, a scene, a character, a vibe. We&apos;ll
+                  reply within 24 hours with a plan, a timeline and a first direction.
                 </p>
                 <CommissionForm />
+                <p className="mt-6 text-sm text-white/45">
+                  Prefer email? Write to us directly at{" "}
+                  <a href={`mailto:wisnotech@gmail.com`} className="text-neon underline decoration-neon/30 underline-offset-4 hover:decoration-neon">
+                    wisnotech@gmail.com
+                  </a>
+                </p>
               </div>
             </div>
           </div>
@@ -137,30 +254,30 @@ export default function PortfolioPage() {
         <div className="container-wide py-14 md:py-16">
           <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:justify-between">
             <div className="max-w-sm">
-              <span className="flex items-center gap-2.5">
-                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-white font-bold text-sm text-[#080808]">
-                  P
-                </span>
-                <span className="text-base font-semibold tracking-wide text-white">Samples</span>
-              </span>
-              <p className="mt-3 text-sm text-white/50">A Wisnotech creative portfolio.</p>
+              <a href="/" aria-label="Wisnotech home">
+                <Logo />
+              </a>
+              <p className="mt-3 text-sm leading-relaxed text-white/50">
+                The AI video studio for brands, filmmakers and creators.
+                From prompt to premier.
+              </p>
             </div>
 
-            <nav className="grid grid-cols-2 gap-8 sm:grid-cols-3" aria-label="Portfolio footer navigation">
+            <nav className="grid grid-cols-2 gap-8 sm:grid-cols-3" aria-label="Studio footer navigation">
               <ul className="space-y-3">
                 <li>
                   <a href="#work" className="text-sm text-white/55 transition-colors hover:text-white">
-                    All samples
+                    The work
                   </a>
                 </li>
                 <li>
-                  <a href="#work" className="text-sm text-white/55 transition-colors hover:text-white">
-                    Categories
+                  <a href="#audience" className="text-sm text-white/55 transition-colors hover:text-white">
+                    Who it&apos;s for
                   </a>
                 </li>
                 <li>
-                  <a href="/wino" className="text-sm text-white/55 transition-colors hover:text-white">
-                    WINO
+                  <a href="#why" className="text-sm text-white/55 transition-colors hover:text-white">
+                    Why Wisnotech
                   </a>
                 </li>
               </ul>
@@ -183,8 +300,8 @@ export default function PortfolioPage() {
               </ul>
               <ul className="space-y-3">
                 <li>
-                  <a href="/#contact" className="text-sm text-white/55 transition-colors hover:text-white">
-                    Commission work
+                  <a href="#contact" className="text-sm text-white/55 transition-colors hover:text-white">
+                    Start a project
                   </a>
                 </li>
                 <li>
@@ -220,69 +337,158 @@ function gmailHref(subject: string, body: string) {
   return `https://mail.google.com/mail/?${params.toString()}`;
 }
 
-/** Commission form — pushes a lead and opens a prefilled email, without leaving the page. */
+/** Brief form — saves the lead to the Wisnotech spreadsheet, with an email fallback. */
 function CommissionForm() {
-  const [form, setForm] = useState({ name: "", email: "", idea: "" });
-  const [sent, setSent] = useState(false);
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    company: "",
+    need: "AI UGC ads",
+    idea: "",
+    budget: "Flexible",
+    timeline: "Exploring",
+  });
+  const [status, setStatus] = useState<"idle" | "sending" | "saved" | "email">("idle");
+
+  const set = (key: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
+    setForm({ ...form, [key]: e.target.value });
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const subject = `AI video commission from ${form.name || "the portfolio"}`;
-    const body = `${form.idea}\n\n— ${form.name}\n${form.email}`;
-    await sendLead({
+    setStatus("sending");
+    const message = [form.company && `Company: ${form.company}`, form.idea].filter(Boolean).join("\n");
+    const ok = await sendLead({
       name: form.name,
       email: form.email,
-      interest: "AI video commission (portfolio)",
-      message: form.idea,
-      source: "portfolio-cta",
+      interest: form.need,
+      timeline: form.timeline,
+      budget: form.budget,
+      message,
+      source: "portfolio-form",
     });
+    if (ok) {
+      setStatus("saved");
+      return;
+    }
+    const subject = `New project brief from ${form.name}`;
+    const body = `${form.need}\n${message}\n\n— ${form.name}\n${form.email}\nBudget: ${form.budget}\nTimeline: ${form.timeline}`;
     window.open(gmailHref(subject, body), "_blank", "noopener,noreferrer");
-    setSent(true);
+    setStatus("email");
   };
 
+  const inputCls =
+    "w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white placeholder:text-white/35 focus:border-neon/50 focus:outline-none";
+
+  if (status === "saved" || status === "email") {
+    return (
+      <div className="mx-auto mt-8 max-w-lg rounded-2xl border border-emerald-400/20 bg-emerald-400/[0.06] p-8 text-left">
+        <span className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-400/15">
+          <Check className="h-6 w-6 text-emerald-400" aria-hidden />
+        </span>
+        <h3 className="mt-5 text-xl font-semibold text-white">
+          {status === "saved" ? "Brief received — talk soon." : "Your email is ready to send."}
+        </h3>
+        <p className="mt-2 text-sm leading-relaxed text-muted">
+          {status === "saved"
+            ? "Your details are in our studio inbox. Expect a reply within 24 hours with a plan and a timeline."
+            : "Our spreadsheet is briefly unreachable, so we opened a prefilled email instead — just hit send and we'll pick it up."}
+        </p>
+        <button
+          type="button"
+          onClick={() => setStatus("idle")}
+          className="mt-5 text-sm font-medium text-neon underline decoration-neon/30 underline-offset-4 hover:decoration-neon"
+        >
+          Send another brief
+        </button>
+      </div>
+    );
+  }
+
   return (
-    <form onSubmit={submit} className="relative mx-auto mt-8 max-w-lg space-y-3 text-left">
+    <form onSubmit={submit} className="relative mx-auto mt-8 max-w-2xl space-y-3 text-left">
       <div className="grid gap-3 sm:grid-cols-2">
         <input
           value={form.name}
-          onChange={(e) => setForm({ ...form, name: e.target.value })}
+          onChange={set("name")}
           required
           placeholder="Your name"
           aria-label="Your name"
-          className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white placeholder:text-white/35 focus:border-neon/50 focus:outline-none"
+          className={inputCls}
         />
         <input
           value={form.email}
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
+          onChange={set("email")}
           type="email"
           required
           placeholder="you@example.com"
           aria-label="Your email"
-          className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white placeholder:text-white/35 focus:border-neon/50 focus:outline-none"
+          className={inputCls}
         />
+      </div>
+      <input
+        value={form.company}
+        onChange={set("company")}
+        placeholder="Company or brand (optional)"
+        aria-label="Company or brand"
+        className={inputCls}
+      />
+      <div className="grid gap-3 sm:grid-cols-3">
+        <select
+          value={form.need}
+          onChange={set("need")}
+          aria-label="What do you need"
+          className={inputCls}
+        >
+          {["AI UGC ads", "Film / trailer work", "Social content", "Brand campaign", "Character / product film", "Something else"].map((o) => (
+            <option key={o} value={o} className="bg-[#0d0d0d]">
+              {o}
+            </option>
+          ))}
+        </select>
+        <select
+          value={form.budget}
+          onChange={set("budget")}
+          aria-label="Budget"
+          className={inputCls}
+        >
+          {["Under $500", "$500–$2,000", "$2,000–$5,000", "$5,000+", "Flexible"].map((o) => (
+            <option key={o} value={o} className="bg-[#0d0d0d]">
+              {o}
+            </option>
+          ))}
+        </select>
+        <select
+          value={form.timeline}
+          onChange={set("timeline")}
+          aria-label="Timeline"
+          className={inputCls}
+        >
+          {["ASAP", "2–4 weeks", "This quarter", "Exploring"].map((o) => (
+            <option key={o} value={o} className="bg-[#0d0d0d]">
+              {o}
+            </option>
+          ))}
+        </select>
       </div>
       <textarea
         value={form.idea}
-        onChange={(e) => setForm({ ...form, idea: e.target.value })}
+        onChange={set("idea")}
         required
         rows={3}
-        placeholder="What should we generate? Style, length, platform…"
+        placeholder="What should we make? Product, scene, character, vibe…"
         aria-label="Project idea"
-        className="w-full resize-none rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white placeholder:text-white/35 focus:border-neon/50 focus:outline-none"
+        className={`${inputCls} resize-none`}
       />
       <button
         type="submit"
-        disabled={sent}
+        disabled={status === "sending"}
         className="btn-primary group w-full"
       >
-        {sent ? (
-          <>
-            <Check className="h-4 w-4 text-emerald-500" aria-hidden />
-            Opening your email…
-          </>
+        {status === "sending" ? (
+          "Sending your brief…"
         ) : (
           <>
-            Send commission request
+            Send the brief
             <Send className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden />
           </>
         )}
