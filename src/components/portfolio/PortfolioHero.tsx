@@ -26,18 +26,18 @@ export function PortfolioHero() {
         playsInline
         preload="metadata"
         aria-hidden
-        className="absolute inset-0 h-full w-full object-cover opacity-25"
+        className="absolute inset-0 h-full w-full object-cover opacity-45"
       >
         <source src="/wino/videos/showcase-matrix.mp4" type="video/mp4" />
       </video>
       {/* Overlays keep the copy readable */}
-      <div aria-hidden className="absolute inset-0 bg-[#080808]/80" />
+      <div aria-hidden className="absolute inset-0 bg-[#080808]/50" />
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse 60% 50% at 50% 35%, transparent 0%, rgba(8,8,8,0.65) 70%, #080808 100%)",
+            "radial-gradient(ellipse 60% 50% at 50% 35%, transparent 0%, rgba(8,8,8,0.55) 70%, #080808 100%)",
         }}
       />
 
