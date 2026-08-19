@@ -118,7 +118,7 @@ export function PortfolioHero() {
         <motion.div variants={item} className="flex justify-center">
           <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-4 py-1.5 text-xs font-medium uppercase tracking-[0.22em] text-white/70 backdrop-blur">
             <Sparkles className="h-3.5 w-3.5 text-neon" aria-hidden />
-            Wisnotech — AI Video Studio
+            Wisnotech — Creative Production Studio
           </span>
         </motion.div>
 
@@ -132,9 +132,9 @@ export function PortfolioHero() {
         </motion.h1>
 
         <motion.p variants={item} className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-muted">
-          Wisnotech is a full AI video studio for brands, filmmakers and creators.
-          We turn a single prompt into UGC ads, film scenes and channel content —
-          produced, graded and ready to publish. No cameras. No waiting. No limits.
+          Wisnotech combines AI technology, creative direction, visual storytelling and
+          modern production workflows to create content designed to be seen, remembered
+          and shared. From a simple idea to a cinematic final product.
         </motion.p>
 
         <motion.div variants={item} className="mt-10 flex flex-wrap items-center justify-center gap-4">

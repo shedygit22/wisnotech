@@ -359,7 +359,7 @@ const PF_CATEGORIES = [
 ];
 
 const PF_SAMPLES = [
-  { id: "p1", type: "video", title: "The City at Golden Hour", desc: "A hand-held text-to-video street scene in warm dusk light — atmosphere that makes any brand feel alive.", cat: "text-to-video", src: "/wino/videos/showreel-1.mp4", poster: "/wino/thumbs/video-thumb-1.jpg", dur: "0:15", ratio: "9:16", featured: true },
+  { id: "p1", type: "video", title: "Fresh at Golden Hour", desc: "Hand-held UGC for a healthy drink brand — warm dusk street energy that makes the product feel alive, not advertised.", cat: "text-to-video", src: "/wino/videos/showreel-1.mp4", poster: "/wino/thumbs/video-thumb-1.jpg", dur: "0:15", ratio: "9:16", featured: true },
   { id: "p2", type: "video", title: "Drop Day", desc: "A 15-second launch film built from a single prompt — the energy of a product drop, minus the shoot day.", cat: "advertising", src: "/wino/videos/showreel-2.mp4", poster: "/wino/thumbs/video-thumb-2.jpg", dur: "0:15", ratio: "9:16", featured: true },
   { id: "p3", type: "video", title: "Portrait, Alive", desc: "One still portrait, given life — an image-to-video push that turns a frame into a scene.", cat: "image-to-video", src: "/wino/videos/showreel-3.mp4", poster: "/wino/thumbs/video-thumb-3.jpg", dur: "0:15", ratio: "9:16", featured: true },
   { id: "p4", type: "video", title: "The Character Lives", desc: "A character with one face and endless emotion — consistent, expressive and ready for its close-up.", cat: "character", src: "/wino/videos/showreel-4.mp4", poster: "/wino/thumbs/video-thumb-4.jpg", dur: "0:08", ratio: "9:16" },
@@ -414,14 +414,14 @@ function pfCard(s) {
 }
 
 function portfolioHtml() {
-  const title = "Wisnotech — AI Video Studio & Portfolio";
-  const desc = "Wisnotech is a full AI video studio for brands, filmmakers and creators — text-to-video, image-to-video, character and film work, produced and ready to publish.";
+  const title = "Wisnotech | AI-Powered Creative Production Studio";
+  const desc = "Wisnotech creates AI-powered advertisements, cinematic videos, UGC content, music videos, film trailers, characters and visual campaigns for brands, creators and filmmakers worldwide.";
   const jsonLd = JSON.stringify([
     JSON.parse(orgLd()),
     {
       "@context": "https://schema.org",
       "@type": "CollectionPage",
-      name: "Wisnotech AI Video Studio & Portfolio",
+      name: "Wisnotech | AI-Powered Creative Production Studio",
       url: `${SITE_URL}/portfolio`,
       description: desc,
       mainEntity: {
@@ -453,15 +453,15 @@ function portfolioHtml() {
       <a href="${SITE_URL}/" style="color:rgba(255,255,255,0.7);text-decoration:none;font-size:14px;border:1px solid rgba(255,255,255,0.15);padding:8px 16px;border-radius:10px">Home</a>
     </header>
     <main style="padding-top:120px;text-align:center">
-      <span style="display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.04);padding:6px 16px;border-radius:999px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.7)">Wisnotech — AI Video Studio</span>
+      <span style="display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.04);padding:6px 16px;border-radius:999px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.7)">Wisnotech — Creative Production Studio</span>
       <h1 style="margin:32px 0 0;font-size:64px;line-height:1.03;letter-spacing:-0.02em;font-weight:700;background:linear-gradient(110deg,#fff 20%,#7aa5ff 40%,#3b7bff 50%,#7aa5ff 60%,#fff 80%);background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent">Video that sells.<br/>Scenes that stick.</h1>
-      <p style="max-width:640px;margin:24px auto 0;color:rgba(255,255,255,0.6);font-size:18px;line-height:1.6">A full AI video studio for brands, filmmakers and creators. We turn a single prompt into UGC ads, film scenes and channel content — produced, graded and ready to publish.</p>
+      <p style="max-width:640px;margin:24px auto 0;color:rgba(255,255,255,0.6);font-size:18px;line-height:1.6">Wisnotech combines AI technology, creative direction, visual storytelling and modern production workflows to create content designed to be seen, remembered and shared. From a simple idea to a cinematic final product.</p>
       <div style="display:flex;justify-content:center;gap:12px;margin:40px 0 0;flex-wrap:wrap">
         <a href="#work" style="display:inline-block;background:#fff;color:#080808;padding:14px 24px;border-radius:12px;text-decoration:none;font-weight:500">See the Work</a>
         <a href="${SITE_URL}/#contact" style="display:inline-block;border:1px solid rgba(255,255,255,0.3);color:#fff;padding:14px 24px;border-radius:12px;text-decoration:none;font-weight:500">Start a Project</a>
       </div>
       <div style="display:flex;justify-content:center;gap:12px;margin:56px auto 0;max-width:560px">
-        <div style="flex:1;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.03);padding:20px;border-radius:16px"><p style="margin:0;font-size:24px;font-weight:700">28</p><p style="margin:6px 0 0;color:rgba(255,255,255,0.5);font-size:12px">Pieces of work</p></div>
+        <div style="flex:1;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.03);padding:20px;border-radius:16px"><p style="margin:0;font-size:24px;font-weight:700">31</p><p style="margin:6px 0 0;color:rgba(255,255,255,0.5);font-size:12px">Pieces of work</p></div>
         <div style="flex:1;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.03);padding:20px;border-radius:16px"><p style="margin:0;font-size:24px;font-weight:700">48h</p><p style="margin:6px 0 0;color:rgba(255,255,255,0.5);font-size:12px">First cut</p></div>
       </div>
     </main>
@@ -471,8 +471,8 @@ function portfolioHtml() {
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;align-items:start">${cards}</div>
     </section>
     <section style="max-width:760px;margin:0 auto;padding:0 24px 96px;text-align:center">
-      <h2 style="font-size:36px;margin:0 0 12px;letter-spacing:-0.02em;font-weight:600">Tell us the story. We'll make it move.</h2>
-      <p style="color:rgba(255,255,255,0.6);font-size:18px;line-height:1.6">Send the brief — a product, a scene, a character, a vibe. We'll reply within 24 hours with a plan and a timeline.</p>
+      <h2 style="font-size:36px;margin:0 0 12px;letter-spacing:-0.02em;font-weight:600">Your next big idea could start here.</h2>
+      <p style="color:rgba(255,255,255,0.6);font-size:18px;line-height:1.6">A product. A story. A character. A campaign. A world that does not exist yet. Bring the idea. Let's create it.</p>
       <a href="${SITE_URL}/#contact" style="display:inline-block;background:#fff;color:#080808;padding:14px 28px;border-radius:12px;text-decoration:none;font-weight:500;margin-top:24px">Start a Project</a>
     </section>
     <footer style="border-top:1px solid rgba(255,255,255,0.1);padding:24px 32px;color:rgba(255,255,255,0.4);font-size:14px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;background:#0a0a0a">
