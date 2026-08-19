@@ -106,6 +106,10 @@ export default function PortfolioPage() {
         aria-hidden
       />
 
+      {/* Cinematic texture — fixed grain + vignette over everything */}
+      <div aria-hidden className="film-grain" />
+      <div aria-hidden className="film-vignette" />
+
       {/* Header */}
       <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-[#080808]/85 backdrop-blur-md">
         <nav className="container-wide flex h-16 items-center justify-between py-4" aria-label="Studio navigation">
@@ -194,20 +198,27 @@ export default function PortfolioPage() {
             <h2 className="mt-5 max-w-2xl text-4xl font-semibold tracking-tight text-white md:text-5xl">
               A studio without a set. A pipeline without a pause.
             </h2>
-            <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {WHY.map((w) => (
-                <motion.div
-                  key={w.title}
-                  initial={{ opacity: 0, y: 24 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-80px" }}
-                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                  className="rounded-2xl border border-white/10 bg-white/[0.03] p-7"
-                >
-                  <w.icon className="h-6 w-6 text-neon" aria-hidden />
-                  <h3 className="mt-5 text-lg font-semibold tracking-tight text-white">{w.title}</h3>
-                  <p className="mt-2.5 text-sm leading-relaxed text-muted">{w.copy}</p>
-                </motion.div>
+            <div className="mt-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {WHY.map((w, i) => (
+                <div key={w.title} className="relative">
+                  <span
+                    aria-hidden
+                    className="outline-text absolute -top-9 right-2 text-7xl font-bold"
+                  >
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <motion.div
+                    initial={{ opacity: 0, y: 24 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-80px" }}
+                    transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                    className="relative rounded-2xl border border-white/10 bg-white/[0.03] p-7"
+                  >
+                    <w.icon className="h-6 w-6 text-neon" aria-hidden />
+                    <h3 className="mt-5 text-lg font-semibold tracking-tight text-white">{w.title}</h3>
+                    <p className="mt-2.5 text-sm leading-relaxed text-muted">{w.copy}</p>
+                  </motion.div>
+                </div>
               ))}
             </div>
           </div>

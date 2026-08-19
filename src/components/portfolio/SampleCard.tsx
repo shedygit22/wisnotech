@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { Play, ImageIcon, Star, Clock } from "lucide-react";
 import {
   aspectLabel,
@@ -11,7 +11,9 @@ import { LazyPoster } from "./LazyMedia";
 
 /**
  * Interactive portfolio card: cursor spotlight, hover-to-preview muted loop,
- * aspect/duration badges, clickable tags. Clicking opens the lightbox.
+ * aspect/duration badges, clickable tags, scroll parallax on the media and a
+ * prompt → frame reveal that shows the generation prompt on hover.
+ * Clicking opens the lightbox.
  */
 export function SampleCard({
   sample,
@@ -23,10 +25,18 @@ export function SampleCard({
   onTagClick?: (tag: string) => void;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const mediaRef = useRef<HTMLDivElement>(null);
   const [hovering, setHovering] = useState(false);
   const cat = categoryById(sample.category);
   const accent = cat?.accent ?? "#3b7bff";
   const ratio = `${sample.width} / ${sample.height}`;
+
+  // Subtle scroll parallax on the media — the poster drifts slower than the page.
+  const { scrollYProgress } = useScroll({
+    target: mediaRef,
+    offset: ["start end", "end start"],
+  });
+  const y = useTransform(scrollYProgress, [0, 1], ["-7%", "7%"]);
 
   const handleMove = (e: React.MouseEvent) => {
     const el = ref.current;
@@ -67,17 +77,24 @@ export function SampleCard({
       {/* Spotlight that follows the cursor */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 z-20 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+        className="pointer-events-none absolute inset-0 z-30 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
         style={{
           background: `radial-gradient(220px circle at var(--mx, 50%) var(--my, 50%), ${accent}1f 0%, transparent 70%)`,
         }}
       />
 
       {/* Media */}
-      <div className="relative w-full overflow-hidden bg-[#0b0b0b]" style={{ aspectRatio: ratio }}>
+      <div
+        ref={mediaRef}
+        className="relative w-full overflow-hidden bg-[#0b0b0b]"
+        style={{ aspectRatio: ratio }}
+      >
         {sample.type === "video" ? (
           <>
-            {sample.poster && <LazyPoster src={sample.poster} alt={`${sample.title} preview`} />}
+            {/* Parallax poster */}
+            <motion.div style={{ y }} className="absolute inset-0 scale-[1.25] will-change-transform">
+              {sample.poster && <LazyPoster src={sample.poster} alt={`${sample.title} preview`} />}
+            </motion.div>
 
             {/* Hover-to-preview muted loop */}
             {hovering && (
@@ -103,7 +120,9 @@ export function SampleCard({
           </>
         ) : (
           <>
-            <LazyPoster src={sample.src} alt={sample.title} />
+            <motion.div style={{ y }} className="absolute inset-0 scale-[1.25] will-change-transform">
+              <LazyPoster src={sample.src} alt={sample.title} />
+            </motion.div>
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/20" />
             <span
               className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-lg bg-black/40 backdrop-blur"
@@ -114,7 +133,22 @@ export function SampleCard({
           </>
         )}
 
-        {/* Featured badge */}
+        {/* Prompt → frame reveal */}
+        <div
+          aria-hidden
+          className="absolute inset-0 z-20 flex items-end bg-gradient-to-t from-black/90 via-black/50 to-black/10 p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+        >
+          <div className="translate-y-2 transition-transform duration-300 group-hover:translate-y-0">
+            <p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-neon">
+              The prompt
+            </p>
+            <p className="mt-1 line-clamp-3 font-mono text-[11px] leading-relaxed text-white/80">
+              &ldquo;{sample.prompt}&rdquo;
+            </p>
+          </div>
+        </div>
+
+        {/* Signature badge */}
         {sample.featured && (
           <span className="absolute left-3 top-3 z-10 inline-flex items-center gap-1 rounded-full bg-black/50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-white backdrop-blur">
             <Star className="h-3 w-3" style={{ color: accent }} aria-hidden />

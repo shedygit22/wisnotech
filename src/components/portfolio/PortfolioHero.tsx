@@ -104,6 +104,10 @@ export function PortfolioHero() {
         />
       </div>
 
+      {/* Cinematic letterbox bars */}
+      <div aria-hidden className="letterbox top-0 z-[5]" />
+      <div aria-hidden className="letterbox letterbox-bottom bottom-0 z-[5]" />
+
       <motion.div
         variants={container}
         initial="hidden"

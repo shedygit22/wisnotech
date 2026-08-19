@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { X, ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
+import { X, ChevronLeft, ChevronRight, ArrowRight, Copy, Check } from "lucide-react";
 import {
   aspectLabel,
   categoryById,
@@ -27,7 +27,24 @@ export function SampleLightbox({ samples, index, onClose, onNavigate }: Lightbox
   const sample = samples[index];
   const videoRef = useRef<HTMLVideoElement>(null);
   const [failed, setFailed] = useState(false);
+  const [copied, setCopied] = useState(false);
   const total = samples.length;
+
+  const copyPrompt = async () => {
+    if (!sample?.prompt) return;
+    try {
+      await navigator.clipboard.writeText(sample.prompt);
+    } catch {
+      const tmp = document.createElement("textarea");
+      tmp.value = sample.prompt;
+      document.body.appendChild(tmp);
+      tmp.select();
+      document.execCommand("copy");
+      tmp.remove();
+    }
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1600);
+  };
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -187,6 +204,27 @@ export function SampleLightbox({ samples, index, onClose, onNavigate }: Lightbox
               </span>
             ))}
           </p>
+
+          {sample.prompt && (
+            <div className="mx-auto mt-5 w-full max-w-2xl rounded-xl border border-white/10 bg-black/40 p-4 text-left">
+              <div className="flex items-center justify-between gap-3">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-neon">
+                  The prompt
+                </p>
+                <button
+                  type="button"
+                  onClick={copyPrompt}
+                  className="inline-flex items-center gap-1.5 rounded-md border border-white/15 bg-white/[0.05] px-2.5 py-1 text-[11px] text-white/70 transition-colors hover:border-white/40 hover:text-white"
+                >
+                  {copied ? <Check className="h-3 w-3 text-emerald-400" aria-hidden /> : <Copy className="h-3 w-3" aria-hidden />}
+                  {copied ? "Copied" : "Copy"}
+                </button>
+              </div>
+              <p className="mt-2 font-mono text-[13px] leading-relaxed text-white/75">
+                &ldquo;{sample.prompt}&rdquo;
+              </p>
+            </div>
+          )}
 
           <a
             href="#contact"
