@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Clapperboard, Play, VideoOff } from "lucide-react";
+import { Clapperboard, Play, VideoOff, ArrowRight } from "lucide-react";
 import { VIDEOS } from "../lib/content";
 
 const grid = {
@@ -26,6 +26,10 @@ export default function Showreel() {
             Studio-grade video content produced with AI — from brand films and
             product launches to short-form social ads.
           </p>
+          <a href="/portfolio" className="group mt-6 inline-flex items-center gap-2 text-sm font-medium text-neon transition-colors hover:text-white">
+            Browse the full AI sample portfolio
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden />
+          </a>
         </div>
 
         <motion.div
