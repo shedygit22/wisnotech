@@ -347,7 +347,7 @@ export const PORTFOLIO_SAMPLES: PortfolioSample[] = [
   {
     id: "p22",
     type: "video",
-    title: "Scroll-Stop 01",
+    title: "Golden Hour, Gathered",
     description: "A vertical social clip built to stop the scroll — consistent tone, crafted for the feed.",
     category: "social-media",
     src: "/portfolio/videos/vertical-a1.mp4",
@@ -361,7 +361,7 @@ export const PORTFOLIO_SAMPLES: PortfolioSample[] = [
   {
     id: "p23",
     type: "video",
-    title: "Scroll-Stop 02",
+    title: "The Slow Pour",
     description: "A vertical social clip built to stop the scroll — consistent tone, crafted for the feed.",
     category: "social-media",
     src: "/portfolio/videos/vertical-a2.mp4",
@@ -375,7 +375,7 @@ export const PORTFOLIO_SAMPLES: PortfolioSample[] = [
   {
     id: "p24",
     type: "video",
-    title: "Scroll-Stop 03",
+    title: "Through Neon",
     description: "A vertical social clip built to stop the scroll — consistent tone, crafted for the feed.",
     category: "social-media",
     src: "/portfolio/videos/vertical-a3.mp4",
@@ -389,7 +389,7 @@ export const PORTFOLIO_SAMPLES: PortfolioSample[] = [
   {
     id: "p25",
     type: "video",
-    title: "Scroll-Stop 04",
+    title: "Stroke by Stroke",
     description: "A vertical social clip built to stop the scroll — consistent tone, crafted for the feed.",
     category: "social-media",
     src: "/portfolio/videos/vertical-a4.mp4",
@@ -403,7 +403,7 @@ export const PORTFOLIO_SAMPLES: PortfolioSample[] = [
   {
     id: "p26",
     type: "video",
-    title: "Scroll-Stop 05",
+    title: "Street in Motion",
     description: "A vertical social clip built to stop the scroll — consistent tone, crafted for the feed.",
     category: "social-media",
     src: "/portfolio/videos/vertical-a5.mp4",
@@ -417,7 +417,7 @@ export const PORTFOLIO_SAMPLES: PortfolioSample[] = [
   {
     id: "p27",
     type: "video",
-    title: "Scroll-Stop 06",
+    title: "First Light, First Wave",
     description: "A vertical social clip built to stop the scroll — consistent tone, crafted for the feed.",
     category: "social-media",
     src: "/portfolio/videos/vertical-a6.mp4",
@@ -431,7 +431,7 @@ export const PORTFOLIO_SAMPLES: PortfolioSample[] = [
   {
     id: "p28",
     type: "video",
-    title: "Scroll-Stop 07",
+    title: "The Final Plate",
     description: "A vertical social clip built to stop the scroll — consistent tone, crafted for the feed.",
     category: "social-media",
     src: "/portfolio/videos/vertical-a7.mp4",
@@ -445,7 +445,7 @@ export const PORTFOLIO_SAMPLES: PortfolioSample[] = [
   {
     id: "p29",
     type: "video",
-    title: "Scroll-Stop 08",
+    title: "Arcade After Dark",
     description: "A vertical social clip built to stop the scroll — consistent tone, crafted for the feed.",
     category: "social-media",
     src: "/portfolio/videos/vertical-a8.mp4",
@@ -459,7 +459,7 @@ export const PORTFOLIO_SAMPLES: PortfolioSample[] = [
   {
     id: "p30",
     type: "video",
-    title: "Scroll-Stop 09",
+    title: "Rain on the Window",
     description: "A vertical social clip built to stop the scroll — consistent tone, crafted for the feed.",
     category: "social-media",
     src: "/portfolio/videos/vertical-a9.mp4",

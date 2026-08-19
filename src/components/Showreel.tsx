@@ -26,10 +26,15 @@ export default function Showreel() {
             Studio-grade video content produced with AI — from brand films and
             product launches to short-form social ads.
           </p>
-          <a href="/portfolio" className="group mt-6 inline-flex items-center gap-2 text-sm font-medium text-neon transition-colors hover:text-white">
-            Browse the full AI video portfolio
-            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden />
-          </a>
+          <div className="mt-6 flex flex-wrap items-center gap-3">
+            <a href="/portfolio" className="btn-primary group">
+              Explore the studio
+              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden />
+            </a>
+            <a href="/portfolio#contact" className="btn-secondary group">
+              Start a project
+            </a>
+          </div>
         </div>
 
         <motion.div

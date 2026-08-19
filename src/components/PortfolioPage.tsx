@@ -9,7 +9,9 @@ import {
   Globe,
   Image,
   Megaphone,
+  MessageCircle,
   Music,
+  Plus,
   Send,
   Share2,
   Smartphone,
@@ -143,6 +145,37 @@ const ECOSYSTEM = [
   { title: "Wisnotech Studios", tag: "Studio", href: "/portfolio", copy: "AI-powered creative production for brands, creators, artists and filmmakers." },
   { title: "Wino", tag: "Coming soon", href: "/wino", copy: "AI video creation platform." },
   { title: "Wisnotech AI Academy", tag: "Learn", href: "/#/academy", copy: "Practical AI education — tools, content creation, automation, prompt engineering and video production." },
+] as const;
+
+const FAQS = [
+  {
+    q: "How long does a project take?",
+    a: "Most social and UGC content ships within a few days. Larger films take one to four weeks depending on scope. You get the first creative direction within 24 hours of sending your brief.",
+  },
+  {
+    q: "What do I need to start?",
+    a: "A rough idea is enough — a product, a script, a reference video, images or a character concept. We develop the creative direction, approach and deliverables from there.",
+  },
+  {
+    q: "Will the footage look real?",
+    a: "Yes. Every scene is produced, graded, edited and sound-designed to a professional standard. Creative direction and taste are what separate the work from generic AI output.",
+  },
+  {
+    q: "Do I own the final video?",
+    a: "Yes. You receive full rights to the final deliverables for advertising, publishing, social media and distribution.",
+  },
+  {
+    q: "How do revisions work?",
+    a: "Every project includes a revision round built into the scope. The exact number depends on the project size and is confirmed before production begins.",
+  },
+  {
+    q: "How do pricing and payment work?",
+    a: "The numbers on the pricing section are starting points. International projects are quoted in USD. A deposit begins production and the final balance is due on delivery.",
+  },
+  {
+    q: "Can you match our brand style?",
+    a: "Yes. We iterate on tone, palette, characters and formats until the work is unmistakably yours. Nothing ships unapproved.",
+  },
 ] as const;
 
 const fadeUp = {
@@ -463,6 +496,35 @@ export default function PortfolioPage() {
           </div>
         </section>
 
+        {/* FAQ */}
+        <section id="faq" className="section scroll-mt-20">
+          <div className="container-wide">
+            <div className="max-w-2xl">
+              <p className="eyebrow">Questions, answered</p>
+              <h2 className="mt-5 text-4xl font-semibold tracking-tight text-white md:text-5xl">
+                Everything you&apos;d ask before starting.
+              </h2>
+            </div>
+            <div className="mt-12 grid gap-5 lg:grid-cols-2">
+              {FAQS.map((f) => (
+                <details
+                  key={f.q}
+                  className="group card block rounded-2xl p-0"
+                  style={{ overflow: "visible" }}
+                >
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-6 py-5 text-left text-[15px] font-semibold text-white sm:text-base [&::-webkit-details-marker]:hidden">
+                    {f.q}
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/15 text-white/60 transition-transform duration-300 group-open:rotate-45">
+                      <Plus className="h-4 w-4" aria-hidden />
+                    </span>
+                  </summary>
+                  <p className="px-6 pb-6 text-sm leading-relaxed text-muted">{f.a}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* Contact / final CTA */}
         <section id="contact" className="section scroll-mt-20">
           <div className="container-wide">
@@ -496,6 +558,17 @@ export default function PortfolioPage() {
                     wisnotech@gmail.com
                   </a>
                 </p>
+                <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
+                  <a
+                    href="https://wa.me/2349153541297?text=Hi%20Wisnotech%2C%20I%27d%20like%20to%20start%20a%20project."
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-secondary inline-flex"
+                  >
+                    <MessageCircle className="h-4 w-4 text-emerald-400" aria-hidden />
+                    Chat on WhatsApp
+                  </a>
+                </div>
               </div>
             </div>
           </div>
