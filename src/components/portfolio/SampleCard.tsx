@@ -133,21 +133,6 @@ export function SampleCard({
           </>
         )}
 
-        {/* Prompt → frame reveal */}
-        <div
-          aria-hidden
-          className="absolute inset-0 z-20 flex items-end bg-gradient-to-t from-black/90 via-black/50 to-black/10 p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-        >
-          <div className="translate-y-2 transition-transform duration-300 group-hover:translate-y-0">
-            <p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-neon">
-              The prompt
-            </p>
-            <p className="mt-1 line-clamp-3 font-mono text-[11px] leading-relaxed text-white/80">
-              &ldquo;{sample.prompt}&rdquo;
-            </p>
-          </div>
-        </div>
-
         {/* Signature badge */}
         {sample.featured && (
           <span className="absolute left-3 top-3 z-10 inline-flex items-center gap-1 rounded-full bg-black/50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-white backdrop-blur">
