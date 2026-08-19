@@ -15,6 +15,7 @@ const SLIDES = [
   { src: "/portfolio/videos/dune-trailer.mp4", poster: "/portfolio/thumbs/dune-trailer.jpg", label: "A Desert Epic" },
   { src: "/wino/videos/seedance-demo.mp4", poster: "/wino/thumbs/seedance-demo.jpg", label: "The Wide Frame" },
   { src: "/portfolio/videos/web-demo.mp4", poster: "/portfolio/thumbs/web-demo.jpg", label: "Cinema Without Cameras" },
+  { src: "/wino/videos/johnwick-character.mp4", poster: "/wino/thumbs/johnwick-character.jpg", label: "Unbroken" },
 ];
 
 const container = {
