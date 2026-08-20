@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Send, Sparkles, X, ArrowUpRight, History as HistoryIcon, Plus, Trash2, MessageSquareText } from "lucide-react";
 import { askServerWithFallbackStream } from "../lib/api";
 import { sendLead } from "../lib/leadSink";
-import { speakText, stopSpeaking, useVoice, useVoiceConversation } from "../lib/useVoice";
+import { speakText, splitSentences, stopSpeaking, useVoice, useVoiceConversation } from "../lib/useVoice";
 import { useAutoSpeech } from "../lib/useAutoSpeech";
 import { useChatSessions } from "../lib/chatStore";
 import { MicButton, SpeakButton, AutoSpeakToggle, VoiceCallButton } from "./VoiceControls";
@@ -146,8 +146,8 @@ export default function AiAssistant() {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, thinking, streamingText]);
 
-  const ask = useCallback(
-    async (raw: string): Promise<string | null> => {
+const ask = useCallback(
+    async (raw: string, onSentence?: (sentence: string) => void): Promise<string | null> => {
       const question = raw.trim();
       if (!question || thinking) return null;
       chat.add({ role: "user", text: question });
@@ -159,8 +159,11 @@ export default function AiAssistant() {
         .map((m) => ({ role: m.role, content: m.text }))
         .concat([{ role: "user" as const, content: question }]);
 
-            // Stream the reply so it types out live, Gemini-style. The first chunk
+      // Stream the reply so it types out live, Gemini-style. The first chunk
       // switches the typing dots to the growing message and re-enables input.
+      // In voice mode we also hand each complete sentence to `onSentence` so
+      // TTS can start speaking it immediately while the reply keeps streaming.
+      let sentenceBuffer = "";
       const reply = await askServerWithFallbackStream(
         question,
         stateRef.current,
@@ -169,8 +172,18 @@ export default function AiAssistant() {
         (chunk) => {
           setStreamingText((prev) => prev + chunk);
           setThinking(false);
+          if (onSentence) {
+            sentenceBuffer += chunk;
+            const { complete, remainder } = splitSentences(sentenceBuffer);
+            sentenceBuffer = remainder;
+            for (const s of complete) onSentence(s);
+          }
         }
       );
+      if (onSentence) {
+        const tail = sentenceBuffer.trim();
+        if (tail) onSentence(tail);
+      }
       chat.add({ role: "assistant", text: reply.text, href: reply.href });
       setLastReply(reply.text);
       setStreamingText("");

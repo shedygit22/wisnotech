@@ -85,6 +85,24 @@ export function stripForSpeech(text: string): string {
     .trim();
 }
 
+/**
+ * Split a streaming buffer into complete sentences + the unfinished remainder.
+ * A sentence ends at ".!?" followed by whitespace/end, or at a newline.
+ */
+export function splitSentences(text: string): { complete: string[]; remainder: string } {
+  const complete: string[] = [];
+  let rest = text;
+  while (rest.length) {
+    const m = /(?:[.!?]+(?=\s|$)|[\r\n]+)/.exec(rest);
+    if (!m) break;
+    const end = m.index + m[0].length;
+    const sentence = rest.slice(0, end).trim();
+    rest = rest.slice(end).trimStart();
+    if (sentence) complete.push(sentence);
+  }
+  return { complete, remainder: rest.trim() };
+}
+
 /** Realistic voice: POST to our TTS backend (OpenAI). Returns audio mpeg blob or null. */
 async function fetchTts(text: string): Promise<Blob | null> {
   const url =
@@ -132,25 +150,26 @@ function playAudio(blob: Blob): Promise<void> {
 
 let currentAudio: HTMLAudioElement | null = null;
 
+/** Best audio blob for a text: hosted Gemini TTS, else Piper. Null if none. */
+async function synthesize(text: string): Promise<Blob | null> {
+  const hosted = await fetchTts(text);
+  if (hosted) return hosted;
+  if (piperSupported() && piperStatus() === "ready") {
+    const blob = await piperSpeak(text);
+    if (blob) return blob;
+  }
+  return null;
+}
+
 /** Speak via the server TTS (Gemini — smooth, realistic), else Piper, else browser voices. */
 export async function speakText(text: string): Promise<void> {
   const clean = stripForSpeech(text);
   if (!clean) return;
 
-  // Prefer the hosted Gemini TTS — it sounds far more natural and smooth.
-  // Piper (free/offline) and browser voices are only fallbacks if it fails.
-  const hosted = await fetchTts(clean);
-  if (hosted) {
-    await playAudio(hosted);
+  const blob = await synthesize(clean);
+  if (blob) {
+    await playAudio(blob);
     return;
-  }
-
-  if (piperSupported() && piperStatus() === "ready") {
-    const blob = await piperSpeak(clean);
-    if (blob) {
-      await playAudio(blob);
-      return;
-    }
   }
 
   // Fallback: browser speechSynthesis.
@@ -279,20 +298,34 @@ export interface UseVoiceConversation {
 }
 
 /**
+ * The ask function a voice conversation uses. `onSentence` is called with each
+ * complete sentence as soon as it's ready, so the UI can speak it immediately
+ * while the rest of the reply is still being generated.
+ */
+export type VoiceAsk = (
+  question: string,
+  onSentence?: (sentence: string) => void
+) => Promise<string | null>;
+
+/**
  * Hands-free voice conversation loop:
  * listen → send to LLM → speak reply → listen again (repeat).
- * `ask` must return the assistant's reply text (or null/empty to pause the loop).
+ *
+ * Replies are spoken sentence-by-sentence as they stream in — the first audio
+ * starts as soon as the first sentence is ready (not after the whole reply),
+ * and TTS for later sentences is pipelined behind playback so Wisne keeps
+ * talking without gaps.
  *
  * Built to stay in the conversation: a silent pause retries listening instead
  * of hanging up, and a failed LLM/TTS turn is logged and retried rather than
  * silently killing the call.
  */
-export function useVoiceConversation(ask: (question: string) => Promise<string | null>): UseVoiceConversation {
+export function useVoiceConversation(ask: VoiceAsk): UseVoiceConversation {
   const [active, setActive] = useState(false);
   const [status, setStatus] = useState<ConversationStatus>("off");
   const activeRef = useRef(false);
   const statusRef = useRef<ConversationStatus>("off");
-  const askRef = useRef(ask);
+  const askRef = useRef<VoiceAsk>(ask);
   askRef.current = ask;
   const { supported, startListening, stopListening } = useVoice();
 
@@ -329,24 +362,32 @@ export function useVoiceConversation(ask: (question: string) => Promise<string |
 
       statusRef.current = "thinking";
       setStatus("thinking");
-      let reply: string | null = null;
+
+      // Pipeline: generate audio for each sentence as it arrives and play it
+      // in order, starting the next sentence's audio while the previous plays.
+      let playing = Promise.resolve();
+      const speakSentence = (sentence: string) => {
+        const clean = stripForSpeech(sentence);
+        if (!clean) return;
+        statusRef.current = "speaking";
+        setStatus("speaking");
+        const gen = synthesize(clean);
+        playing = playing.then(async () => {
+          if (!activeRef.current) return;
+          const blob = await gen;
+          if (blob) await playAudio(blob);
+        });
+      };
+
       try {
-        reply = await askRef.current(text);
+        await askRef.current(text, speakSentence);
       } catch (err) {
-        console.warn("Voice: ask failed, retrying next turn:", err);
+        console.warn("Voice: ask failed, continuing:", err);
       }
       if (!activeRef.current) break;
 
-      // No usable reply — keep the call alive rather than dying silently.
-      if (!reply) continue;
-
-      statusRef.current = "speaking";
-      setStatus("speaking");
-      try {
-        await speakText(reply);
-      } catch (err) {
-        console.warn("Voice: speak failed, continuing:", err);
-      }
+      // Wait for the last queued sentence to finish before listening again.
+      await playing;
     }
 
     activeRef.current = false;

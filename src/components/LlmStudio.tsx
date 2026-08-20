@@ -18,7 +18,7 @@ import {
   type ClientProfile,
 } from "../lib/assistant";
 import { useChatSessions } from "../lib/chatStore";
-import { speakText, useVoice, useVoiceConversation } from "../lib/useVoice";
+import { speakText, splitSentences, useVoice, useVoiceConversation } from "../lib/useVoice";
 import { useAutoSpeech } from "../lib/useAutoSpeech";
 import { MicButton, SpeakButton, AutoSpeakToggle, VoiceCallButton } from "./VoiceControls";
 import { VoiceCallOverlay } from "./LiveVoiceCall";
@@ -60,7 +60,7 @@ export default function LlmStudio() {
   }, [messages, thinking, streamingText]);
 
   const ask = useCallback(
-    async (raw: string): Promise<string | null> => {
+    async (raw: string, onSentence?: (sentence: string) => void): Promise<string | null> => {
       const question = raw.trim();
       if (!question || thinking) return null;
       chat.add({ role: "user", text: question });
@@ -80,6 +80,7 @@ export default function LlmStudio() {
       if (role && !profileRef.current.role) profileRef.current.role = role;
 
       // Stream the reply so it types out live, Gemini-style.
+      let sentenceBuffer = "";
       const reply = await askServerWithFallbackStream(
         question,
         createInitialState(),
@@ -88,8 +89,18 @@ export default function LlmStudio() {
         (chunk) => {
           setStreamingText((prev) => prev + chunk);
           setThinking(false);
+          if (onSentence) {
+            sentenceBuffer += chunk;
+            const { complete, remainder } = splitSentences(sentenceBuffer);
+            sentenceBuffer = remainder;
+            for (const s of complete) onSentence(s);
+          }
         }
       );
+      if (onSentence) {
+        const tail = sentenceBuffer.trim();
+        if (tail) onSentence(tail);
+      }
       chat.add({ role: "assistant", text: reply.text });
       setLastReply(reply.text);
       setStreamingText("");
