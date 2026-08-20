@@ -33,8 +33,8 @@ export default function FinalCta() {
               AI, software and automation built around your business goals. Tell
               us what you want to achieve — we&apos;ll handle the technology.
             </p>
-            <div className="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <a href="#contact" className="btn-primary group">
+<div className="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <a href="/#contact" className="btn-primary group">
                 Start a Project
                 <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden />
               </a>
@@ -48,6 +48,23 @@ export default function FinalCta() {
                 Talk to Wisnotech
               </a>
             </div>
+
+            <a
+              href="https://share.google/fzDWOReUCEYSgaoeA"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group mt-8 inline-flex items-center gap-2 text-sm text-white/55 transition-colors hover:text-white"
+            >
+              <span className="flex items-center gap-0.5 text-amber-300" aria-hidden>
+                {[...Array(5)].map((_, i) => (
+                  <svg key={i} viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5">
+                    <path d="M10 1.5l2.6 5.3 5.9.9-4.3 4.1 1 5.9L10 15.3l-5.2 2.4 1-5.9L1.5 7.7l5.9-.9z" />
+                  </svg>
+                ))}
+              </span>
+              Rated on Google — read our reviews
+              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden />
+            </a>
           </div>
         </motion.div>
       </div>

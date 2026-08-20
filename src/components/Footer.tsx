@@ -30,6 +30,7 @@ const FOOTER_GROUPS = [
       { label: "Talk on WhatsApp", href: "https://wa.me/2349153541297" },
       { label: "Email Us", href: "mailto:wisnotech@gmail.com" },
       { label: "Call Us", href: "tel:+2349153541297" },
+      { label: "Google Reviews", href: "https://share.google/fzDWOReUCEYSgaoeA" },
       { label: "FAQ", href: "/#faq" },
     ],
   },

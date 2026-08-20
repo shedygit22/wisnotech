@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import {
-  ArrowRight,
   ArrowUpRight,
   Mail,
   MapPin,
@@ -373,11 +372,13 @@ export default function Contact() {
                 <p className="text-sm text-white/80">We respond within one business day.</p>
               </div>
               <a
-                href="#home"
+                href="https://share.google/fzDWOReUCEYSgaoeA"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="group inline-flex items-center gap-1.5 text-sm font-medium text-white/70 transition-colors hover:text-neon"
               >
-                Back to top
-                <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden />
+                Read our Google reviews
+                <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden />
               </a>
             </div>
           </motion.div>

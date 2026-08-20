@@ -83,7 +83,7 @@ export function orgSchema() {
     name: "Wisnotech",
     url: SITE_URL,
     logo: `${SITE_URL}/assets/wisnotech-favicon.png`,
-    sameAs: [],
+    sameAs: ["https://share.google/fzDWOReUCEYSgaoeA"],
     contactPoint: {
       "@type": "ContactPoint",
       telephone: "+2349153541297",
