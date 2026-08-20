@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Send, Sparkles, X, ArrowUpRight, History as HistoryIcon, Plus, Trash2, MessageSquareText } from "lucide-react";
-import { askServerWithFallback } from "../lib/api";
+import { askServerWithFallbackStream } from "../lib/api";
 import { sendLead } from "../lib/leadSink";
 import { speakText, stopSpeaking, useVoice, useVoiceConversation } from "../lib/useVoice";
 import { useAutoSpeech } from "../lib/useAutoSpeech";
@@ -47,6 +47,7 @@ export default function AiAssistant() {
   const [attention, setAttention] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [lastReply, setLastReply] = useState<string | null>(null);
+  const [streamingText, setStreamingText] = useState<string>("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const promptedRef = useRef(false);
@@ -144,7 +145,7 @@ export default function AiAssistant() {
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
-  }, [messages, thinking]);
+  }, [messages, thinking, streamingText]);
 
   const ask = useCallback(
     async (raw: string): Promise<string | null> => {
@@ -159,14 +160,21 @@ export default function AiAssistant() {
         .map((m) => ({ role: m.role, content: m.text }))
         .concat([{ role: "user" as const, content: question }]);
 
-      const reply = await askServerWithFallback(
+            // Stream the reply so it types out live, Gemini-style. The first chunk
+      // switches the typing dots to the growing message and re-enables input.
+      const reply = await askServerWithFallbackStream(
         question,
         stateRef.current,
         history.slice(0, -1),
-        buildClientProfile(stateRef.current)
+        buildClientProfile(stateRef.current),
+        (chunk) => {
+          setStreamingText((prev) => prev + chunk);
+          setThinking(false);
+        }
       );
       chat.add({ role: "assistant", text: reply.text, href: reply.href });
       setLastReply(reply.text);
+      setStreamingText("");
       setThinking(false);
 
       // Capture a qualified lead the moment an email appears in the chat.
@@ -410,7 +418,7 @@ export default function AiAssistant() {
                 </div>
               ))}
 
-              {thinking && (
+              {thinking && !streamingText && (
                 <div className="flex justify-start">
                   <div className="flex items-center gap-1.5 rounded-2xl rounded-bl-md border border-white/10 bg-white/[0.05] px-4 py-3">
                     {[0, 1, 2].map((d) => (
@@ -421,6 +429,14 @@ export default function AiAssistant() {
                         className="h-1.5 w-1.5 rounded-full bg-neon"
                       />
                     ))}
+                  </div>
+                </div>
+              )}
+              {streamingText && (
+                <div className="flex justify-start">
+                  <div className="max-w-[85%] whitespace-pre-line rounded-2xl rounded-bl-md border border-white/10 bg-white/[0.05] px-4 py-3 text-[14px] leading-relaxed text-white/85">
+                    {streamingText}
+                    <span className="ml-0.5 inline-block h-3.5 w-0.5 animate-pulse bg-neon align-middle" />
                   </div>
                 </div>
               )}

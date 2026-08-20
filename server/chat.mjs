@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 import { createServer } from "node:http";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { runChat } from "../api/_core.mjs";
+import { runChat, runChatStream } from "../api/_core.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, "..");
@@ -247,6 +247,29 @@ const server = createServer(async (req, res) => {
   if (!Array.isArray(payload?.messages)) {
     res.writeHead(400, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ error: "messages array is required" }));
+    return;
+  }
+
+  if (payload.stream === true) {
+    res.writeHead(200, {
+      "Content-Type": "text/event-stream; charset=utf-8",
+      "Cache-Control": "no-cache, no-transform",
+      Connection: "keep-alive",
+      "X-Accel-Buffering": "no",
+    });
+    try {
+      for await (const chunk of runChatStream(payload, process.env)) {
+        if (chunk) res.write(`data: ${JSON.stringify({ t: chunk })}\n\n`);
+      }
+      res.write(`data: ${JSON.stringify({ done: true })}\n\n`);
+      res.end();
+    } catch (err) {
+      console.error("LLM stream error:", err.message);
+      if (!res.writableEnded) {
+        res.write(`data: ${JSON.stringify({ error: err.message })}\n\n`);
+        res.end();
+      }
+    }
     return;
   }
 

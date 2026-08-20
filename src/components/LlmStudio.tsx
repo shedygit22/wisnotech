@@ -9,7 +9,7 @@ import {
   Zap,
   Trash2,
 } from "lucide-react";
-import { askServerWithFallback } from "../lib/api";
+import { askServerWithFallbackStream } from "../lib/api";
 import {
   createInitialState,
   detectBusinessType,
@@ -43,6 +43,7 @@ export default function LlmStudio() {
   const [input, setInput] = useState("");
   const [thinking, setThinking] = useState(false);
   const [lastReply, setLastReply] = useState<string | null>(null);
+  const [streamingText, setStreamingText] = useState<string>("");
   const profileRef = useRef<ClientProfile>({});
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -57,7 +58,7 @@ export default function LlmStudio() {
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
-  }, [messages, thinking]);
+  }, [messages, thinking, streamingText]);
 
   const ask = useCallback(
     async (raw: string): Promise<string | null> => {
@@ -79,14 +80,20 @@ export default function LlmStudio() {
       const role = detectRole(question);
       if (role && !profileRef.current.role) profileRef.current.role = role;
 
-      const reply = await askServerWithFallback(
+      // Stream the reply so it types out live, Gemini-style.
+      const reply = await askServerWithFallbackStream(
         question,
         createInitialState(),
         history.slice(0, -1),
-        profileRef.current
+        profileRef.current,
+        (chunk) => {
+          setStreamingText((prev) => prev + chunk);
+          setThinking(false);
+        }
       );
       chat.add({ role: "assistant", text: reply.text });
       setLastReply(reply.text);
+      setStreamingText("");
       setThinking(false);
       return reply.text;
     },
@@ -271,7 +278,7 @@ export default function LlmStudio() {
                     </div>
                   </div>
                 ))}
-                {thinking && (
+                {thinking && !streamingText && (
                   <div className="flex justify-start">
                     <div className="flex items-center gap-1.5 rounded-2xl rounded-bl-md border border-white/10 bg-white/[0.05] px-4 py-3">
                       {[0, 1, 2].map((d) => (
@@ -282,6 +289,14 @@ export default function LlmStudio() {
                           className="h-1.5 w-1.5 rounded-full bg-neon"
                         />
                       ))}
+                    </div>
+                  </div>
+                )}
+                {streamingText && (
+                  <div className="flex justify-start">
+                    <div className="max-w-[85%] whitespace-pre-line rounded-2xl rounded-bl-md border border-white/10 bg-white/[0.05] px-4 py-3 text-[14.5px] leading-relaxed text-white/85 sm:max-w-[75%]">
+                      {streamingText}
+                      <span className="ml-0.5 inline-block h-3.5 w-0.5 animate-pulse bg-neon align-middle" />
                     </div>
                   </div>
                 )}

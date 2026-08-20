@@ -114,16 +114,7 @@ async function callGoogle(messages, env) {
   const model = env.GOOGLE_AI_MODEL ?? "gemini-3.5-flash";
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
-  const systemText = messages
-    .filter((m) => m.role === "system")
-    .map((m) => m.content)
-    .join("\n");
-  const contents = messages
-    .filter((m) => m.role !== "system")
-    .map((m) => ({
-      role: m.role === "assistant" ? "model" : "user",
-      parts: [{ text: m.content }],
-    }));
+  const { systemText, contents } = toGemini(messages);
 
   const res = await fetch(url, {
     method: "POST",
@@ -146,6 +137,80 @@ async function callGoogle(messages, env) {
     .trim();
   if (!text) throw new Error("Empty response from Google AI.");
   return text;
+}
+
+/** Split messages into a Gemini systemInstruction string + contents array. */
+function toGemini(messages) {
+  const systemText = messages
+    .filter((m) => m.role === "system")
+    .map((m) => m.content)
+    .join("\n");
+  const contents = messages
+    .filter((m) => m.role !== "system")
+    .map((m) => ({
+      role: m.role === "assistant" ? "model" : "user",
+      parts: [{ text: m.content }],
+    }));
+  return { systemText, contents };
+}
+
+/**
+ * Stream a reply from Gemini token-by-token (SSE). Yields text chunks.
+ * Docs: POST models/{model}:streamGenerateContent?alt=sse
+ */
+async function* callGoogleStream(messages, env) {
+  const apiKey = env.GOOGLE_AI_API_KEY;
+  if (!apiKey) throw new Error("GOOGLE_AI_API_KEY is not set. Add it to env (see .env.example).");
+  const model = env.GOOGLE_AI_MODEL ?? "gemini-3.5-flash";
+  const { systemText, contents } = toGemini(messages);
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:streamGenerateContent?alt=sse&key=${apiKey}`;
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      systemInstruction: systemText ? { parts: [{ text: systemText }] } : undefined,
+      contents,
+      generationConfig: { temperature: 0.75, maxOutputTokens: 800 },
+    }),
+  });
+
+  if (!res.ok || !res.body) {
+    const body = await res.text().catch(() => "");
+    throw new Error(`Google AI API ${res.status}: ${body.slice(0, 300)}`);
+  }
+
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+
+      let idx;
+      while ((idx = buffer.indexOf("\n")) !== -1) {
+        const line = buffer.slice(0, idx).trim();
+        buffer = buffer.slice(idx + 1);
+        if (!line.startsWith("data:")) continue;
+        const payload = line.slice(5).trim();
+        if (!payload || payload === "[DONE]") continue;
+        try {
+          const json = JSON.parse(payload);
+          const parts = json.candidates?.[0]?.content?.parts ?? [];
+          for (const p of parts) {
+            if (p.text) yield p.text;
+          }
+        } catch {
+          /* skip malformed event */
+        }
+      }
+    }
+  } finally {
+    reader.releaseLock();
+  }
 }
 
 async function callNvidia(messages, env) {
@@ -203,4 +268,23 @@ export async function runChat(payload, env) {
     return callNvidia(messages, env);
   }
   return callDeepSeek(messages, env);
+}
+
+/**
+ * Streaming chat. Yields text chunks as they arrive.
+ * Google streams token-by-token; other providers yield their full reply once
+ * (so every backend speaks the same SSE protocol to the client).
+ */
+export async function* runChatStream(payload, env) {
+  const provider = (env.LLM_PROVIDER ?? "google").toLowerCase();
+  const messages = [{ role: "system", content: systemPrompt(payload?.profile) }, ...payload.messages];
+
+  if (provider === "google") {
+    yield* callGoogleStream(messages, env);
+    return;
+  }
+  const text = provider === "nvidia"
+    ? await callNvidia(messages, env)
+    : await callDeepSeek(messages, env);
+  yield text;
 }

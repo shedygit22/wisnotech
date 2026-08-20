@@ -1,6 +1,11 @@
 // Vercel serverless function: POST /api/chat
-// Body: { messages: [{ role: "user" | "assistant", content: string }] }
-import { runChat } from "./_core.mjs";
+// Body: { messages: [{ role: "user" | "assistant", content: string }], stream?: boolean }
+// When stream:true the response is SSE:  data: {"t":"<text chunk>"} ... data: {"done":true}
+import { runChat, runChatStream } from "./_core.mjs";
+
+// Gemini replies are fast, but streaming keeps a slow first token from cutting
+// a visitor off — allow a comfortable ceiling on Hobby (max 60s).
+export const config = { maxDuration: 60 };
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -18,6 +23,33 @@ export default async function handler(req, res) {
 
   if (!Array.isArray(payload?.messages)) {
     res.status(400).json({ error: "messages array is required" });
+    return;
+  }
+
+  // ---- Streaming path (SSE) ----
+  if (payload.stream === true) {
+    res.writeHead(200, {
+      "Content-Type": "text/event-stream; charset=utf-8",
+      "Cache-Control": "no-cache, no-transform",
+      Connection: "keep-alive",
+      "X-Accel-Buffering": "no",
+    });
+    try {
+      let wrote = false;
+      for await (const chunk of runChatStream(payload, process.env)) {
+        if (!chunk) continue;
+        wrote = true;
+        res.write(`data: ${JSON.stringify({ t: chunk })}\n\n`);
+      }
+      res.write(`data: ${JSON.stringify({ done: true })}\n\n`);
+      res.end();
+    } catch (err) {
+      console.error("LLM stream error:", err);
+      if (!res.writableEnded) {
+        res.write(`data: ${JSON.stringify({ error: err.message })}\n\n`);
+        res.end();
+      }
+    }
     return;
   }
 
