@@ -8,7 +8,6 @@ import { useAutoSpeech } from "../lib/useAutoSpeech";
 import { useChatSessions } from "../lib/chatStore";
 import { MicButton, SpeakButton, AutoSpeakToggle, VoiceCallButton } from "./VoiceControls";
 import { VoiceCallOverlay } from "./LiveVoiceCall";
-import { preloadPiper } from "../lib/piperTts";
 import {
   buildClientProfile,
   createInitialState,
@@ -203,15 +202,12 @@ export default function AiAssistant() {
   );
 
   /* Hands-free voice conversation: listen → ask → speak reply → repeat.
-     Speech-to-text uses the browser mic; replies are spoken with Piper TTS
-     running locally in the browser (no Gemini, no server). */
+     Speech-to-text uses the browser mic; replies are spoken with the hosted
+     Gemini TTS voice. */
   const voiceConversation = useVoiceConversation(ask);
 
-  /* Warm the Piper voice model in the background before the call starts so
-     the first spoken reply doesn't wait for the download. */
   const startVoiceConversation = useCallback(() => {
     setOpen(true);
-    void preloadPiper();
     voiceConversation.start();
   }, [voiceConversation]);
 
@@ -495,7 +491,7 @@ export default function AiAssistant() {
             status={voiceConversation.status}
             transcript={lastReply ?? undefined}
             bookingLink={BOOKING_URL}
-            voiceLabel="Piper · in-browser"
+            voiceLabel="Gemini · natural voice"
             onStop={voiceConversation.stop}
           />
         )}

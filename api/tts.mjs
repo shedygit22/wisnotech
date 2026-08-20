@@ -13,7 +13,7 @@
 //   GOOGLE_AI_API_KEY       AIza... from aistudio.google.com/apikey (same key the
 //                           chatbot can use for the LLM). Required for gemini.
 //   GEMINI_TTS_MODEL        default gemini-3.1-flash-tts-preview
-//   GEMINI_TTS_VOICE        default "Kore" (or Charon / Aoede / Puck / Zephyr)
+//   GEMINI_TTS_VOICE        default "Puck" (or Kore / Charon / Zephyr / Asteria)
 //   VOICEBOX_URL            base URL of a running Voicebox backend
 //   VOICEBOX_PROFILE_ID     profile uuid; default "default" (or a preset voice)
 //   VOICEBOX_ENGINE         qwen | qwen_custom_voice | luxtts | chatterbox |
@@ -74,7 +74,7 @@ async function geminiTts(text, env) {
   const apiKey = env.GOOGLE_AI_API_KEY;
   if (!apiKey) return null;
   const model = env.GEMINI_TTS_MODEL || "gemini-3.1-flash-tts-preview";
-  const voice = env.GEMINI_TTS_VOICE || "Kore";
+  const voice = env.GEMINI_TTS_VOICE || "Puck";
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
 
   const res = await fetch(url, {

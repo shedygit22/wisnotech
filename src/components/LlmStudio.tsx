@@ -22,7 +22,6 @@ import { speakText, useVoice, useVoiceConversation } from "../lib/useVoice";
 import { useAutoSpeech } from "../lib/useAutoSpeech";
 import { MicButton, SpeakButton, AutoSpeakToggle, VoiceCallButton } from "./VoiceControls";
 import { VoiceCallOverlay } from "./LiveVoiceCall";
-import { preloadPiper } from "../lib/piperTts";
 
 const STARTERS = [
   "I'm a business owner — where do I start?",
@@ -109,13 +108,11 @@ export default function LlmStudio() {
   );
 
   /* Hands-free voice conversation: listen → ask → speak reply → repeat.
-     Speech-to-text uses the browser mic; replies are spoken with Piper TTS
-     running locally in the browser (no Gemini, no server). */
+     Speech-to-text uses the browser mic; replies are spoken with the hosted
+     Gemini TTS voice. */
   const voiceConversation = useVoiceConversation(ask);
 
-  /* Warm the Piper voice model in the background before the call starts. */
   const startVoiceConversation = useCallback(() => {
-    void preloadPiper();
     voiceConversation.start();
   }, [voiceConversation]);
 
@@ -341,7 +338,7 @@ export default function LlmStudio() {
             status={voiceConversation.status}
             transcript={lastReply ?? undefined}
             bookingLink={BOOKING_URL}
-            voiceLabel="Piper · in-browser"
+            voiceLabel="Gemini · natural voice"
             onStop={voiceConversation.stop}
           />
         )}

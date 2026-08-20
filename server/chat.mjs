@@ -91,7 +91,7 @@ const server = createServer(async (req, res) => {
         const apiKey = process.env.GOOGLE_AI_API_KEY;
         if (apiKey) {
           const model = process.env.GEMINI_TTS_MODEL || "gemini-3.1-flash-tts-preview";
-          const voice = process.env.GEMINI_TTS_VOICE || "Kore";
+          const voice = process.env.GEMINI_TTS_VOICE || "Puck";
           const tts = await fetch(
             `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
             {

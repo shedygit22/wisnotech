@@ -1,6 +1,5 @@
 import { Mic, PhoneCall, Square, Volume2 } from "lucide-react";
 import { stopSpeaking, type UseVoice, type UseVoiceConversation } from "../lib/useVoice";
-import { piperStatus } from "../lib/piperTts";
 
 interface MicProps {
   voice: UseVoice;
@@ -100,7 +99,7 @@ const CONV_LABEL: Record<string, string> = {
   speaking: "Speaking…",
 };
 
-/** Turn on the hands-free speak → reply → speak loop (Piper TTS in-browser). */
+/** Turn on the hands-free speak → reply → speak loop (Gemini TTS voice). */
 export function VoiceCallButton({ voice, onStart }: ConversationProps) {
   if (!voice.supported) return null;
 
@@ -127,18 +126,16 @@ export function VoiceCallButton({ voice, onStart }: ConversationProps) {
     );
   }
 
-  const preparing = piperStatus() === "loading";
-
   return (
     <button
       type="button"
       onClick={() => (onStart ? onStart() : voice.start())}
       aria-label="Start voice conversation"
-      title="Start a hands-free voice conversation (Piper TTS runs in your browser)"
+      title="Start a hands-free voice conversation (natural Gemini TTS voice)"
       className="group flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-xs text-white/60 transition-all duration-200 hover:border-neon/40 hover:text-neon"
     >
       <PhoneCall className="h-4 w-4 transition-transform duration-200 group-hover:scale-110" aria-hidden />
-      {preparing ? "Preparing voice…" : "Talk"}
+      Talk
     </button>
   );
 }

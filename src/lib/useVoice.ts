@@ -132,27 +132,25 @@ function playAudio(blob: Blob): Promise<void> {
 
 let currentAudio: HTMLAudioElement | null = null;
 
-/** Speak via in-browser Piper when ready, else OpenAI/configured TTS, else browser voices. */
+/** Speak via the server TTS (Gemini — smooth, realistic), else Piper, else browser voices. */
 export async function speakText(text: string): Promise<void> {
   const clean = stripForSpeech(text);
   if (!clean) return;
 
-  // Prefer Piper — free, offline, no API key. If it isn't loaded yet, skip
-  // straight to the server TTS so the first reply isn't blocked on the model
-  // download (the voice mode preloads Piper in the background beforehand).
+  // Prefer the hosted Gemini TTS — it sounds far more natural and smooth.
+  // Piper (free/offline) and browser voices are only fallbacks if it fails.
+  const hosted = await fetchTts(clean);
+  if (hosted) {
+    await playAudio(hosted);
+    return;
+  }
+
   if (piperSupported() && piperStatus() === "ready") {
     const blob = await piperSpeak(clean);
     if (blob) {
       await playAudio(blob);
       return;
     }
-  }
-
-  // Prefer realistic OpenAI voice.
-  const blob = await fetchTts(clean);
-  if (blob) {
-    await playAudio(blob);
-    return;
   }
 
   // Fallback: browser speechSynthesis.
