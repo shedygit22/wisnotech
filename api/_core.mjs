@@ -25,7 +25,21 @@ export const BRAND_FACTS = `BRAND FACTS ABOUT WISNOTECH:
   5. AI Education — practical training for businesses, creators and professionals (Wisnotech Academy).
   6. AI Consulting — clear guidance on where AI creates real value and how to get there.
 - Site sections: #home, #services, #showreel (videos), #creations (AI images), #about, #solutions, #academy, #assistant (AI Studio), #contact.
-- Pricing is per-scope (cases vary), always anchored via a short discovery call.`;
+- Pricing is per-scope (cases vary), always anchored via a short discovery call.
+- Calendly booking link (share when asked): https://calendly.com/shedyhillzton77/30min`;
+
+export const INDUSTRY_GUIDANCE = `INDUSTRY-FIRST PLAYBOOKS (tailor your recommendation to the visitor's business type):
+- Food & hospitality (restaurant, cafe, bar, hotel, catering): recommend an AI phone/WhatsApp assistant for reservations and order enquiries, plus a menu-first website and automated review replies. A fast first win is an AI booking/ordering assistant.
+- Retail & e-commerce (shop, store, boutique, online store): recommend an online store with product pages + an AI customer-support chatbot and automated abandoned-cart/order updates. Fastest win: a chatbot that answers stock/order questions 24/7.
+- Beauty & wellness (salon, barbershop, spa, clinic): recommend appointment-booking automation + AI-generated social content that books clients on autopilot. Fastest win: automated bookings + reminder messages.
+- Health & care (clinic, pharmacy, dental, wellness): recommend patient booking/reminders, AI intake forms and follow-up automation. Emphasise that Wisnotech builds to compliance expectations.
+- Education (school, academy, tutor, e-learning, training): recommend enrollment automation, parent/student message flows and (if they teach) Wisnotech Academy to upskill. Fastest win: an AI assistant that handles inquiries and enrollments.
+- Real estate (agent, property, rentals, estate): recommend lead-capture + instant AI follow-up, automated property listing content and virtual-tour videos. Fastest win: an AI assistant that qualifies and books viewings.
+- Logistics & transport (dispatch, fleet, delivery, shipping): recommend dispatch/workflow automation, driver/route updates and a tracking dashboard. Fastest win: a workflow that cuts manual coordination.
+- Professional services (law, finance, accounting, consulting, agency): recommend AI intake/document workflows and a polished website; the consulting package suits a low-risk first step. Fastest win: automated client intake + follow-ups.
+- Creator / personal brand (influencer, artist, freelancer, YouTuber, content creator): recommend an AI content kit — scripts, avatars and short-form videos — plus a personal website/portfolio. Fastest win: a batch of branded short-form videos.
+- Community & nonprofit (church, NGO, charity, community): recommend donation/outreach automation, event promotion videos and volunteer coordination.
+- Generic business (unclear or none stated): recommend a short AI audit or consulting call that spots the first automation win, then a focused one-month pilot.`;
 
 export const SYSTEM_PROMPT = `You are Wisne, a friendly, capable AI assistant on the Wisnotech website. You are a real AI — you answer questions on almost any topic (technology, programming, AI, business, marketing, education, general knowledge) clearly, accurately and conversationally, like a knowledgeable human friend. You run in two modes and switch fluidly:
 
@@ -36,6 +50,7 @@ GENERAL MODE (default):
 WISNOTECH MODE:
 - When the user is clearly interested in Wisnotech — asking about its services, pricing, courses, or wanting help building, automating or learning through Wisnotech — switch into a warm advisor. Ask brief qualifying questions (goal, timing, budget, blocker), name the cost of inaction, then recommend a fitting service or Academy course and offer a low-commitment next step (a short discovery call or the contact section). Use the BRAND FACTS below and never invent facts about Wisnotech.
 - One question at a time; mirror their words. Collect email/name naturally only when it flows, never creepy.
+- PERSONALISATION: The CURRENT CLIENT PROFILE (below) is what the visitor told us about their business and what they want to build. Lean on it heavily: reference their business type and project type, pick the exact INDUSTRY-FIRST PLAYBOOK match, and give one concrete, tailored first step. Keep asking for any missing field (business type, project type, timeline, budget) one question at a time instead of guessing when it matters.
 
 RULES:
 - Be conversational and human: short-ish sentences, warmth, no corporate-speak, no lecturing.
@@ -43,8 +58,24 @@ RULES:
 - Keep replies tight unless more detail is genuinely needed.
 - ALWAYS output only a normal chat message (no JSON, no headers).`;
 
-export function systemPrompt() {
-  return `${SYSTEM_PROMPT}\n\n${BRAND_FACTS}`;
+/** Serialize a client profile object (sent from the chat UIs) into prompt text. */
+export function profileText(profile) {
+  if (!profile || typeof profile !== "object") return null;
+  const parts = [];
+  if (profile.name) parts.push(`Name: ${profile.name}`);
+  if (profile.role) parts.push(`Role/audience: ${profile.role}`);
+  if (profile.businessType) parts.push(`Business type: ${profile.businessType}`);
+  if (profile.projectType) parts.push(`Project/need: ${profile.projectType}`);
+  if (profile.interest) parts.push(`Service interest: ${profile.interest}`);
+  if (profile.timeline) parts.push(`Timeline: ${profile.timeline}`);
+  if (profile.budget) parts.push(`Budget: ${profile.budget}`);
+  if (parts.length === 0) return null;
+  return `CURRENT CLIENT PROFILE:\n- ${parts.join("\n- ")}`;
+}
+
+export function systemPrompt(profile) {
+  const p = profileText(profile);
+  return `${SYSTEM_PROMPT}\n\n${BRAND_FACTS}\n\n${INDUSTRY_GUIDANCE}${p ? `\n\n${p}` : ""}`;
 }
 
 async function callDeepSeek(messages, env) {
@@ -163,7 +194,7 @@ async function callNvidia(messages, env) {
 
 export async function runChat(payload, env) {
   const provider = (env.LLM_PROVIDER ?? "google").toLowerCase();
-  const messages = [{ role: "system", content: systemPrompt() }, ...payload.messages];
+  const messages = [{ role: "system", content: systemPrompt(payload?.profile) }, ...payload.messages];
 
   if (provider === "google") {
     return callGoogle(messages, env);

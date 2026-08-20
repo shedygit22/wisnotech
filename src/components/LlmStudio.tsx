@@ -10,14 +10,19 @@ import {
   Trash2,
 } from "lucide-react";
 import { askServerWithFallback } from "../lib/api";
-import { createInitialState, liveVoiceInstruction, liveVoiceGreeting } from "../lib/assistant";
+import {
+  createInitialState,
+  detectBusinessType,
+  detectProjectType,
+  detectRole,
+  type ClientProfile,
+} from "../lib/assistant";
 import { useChatSessions } from "../lib/chatStore";
 import { speakText, useVoice, useVoiceConversation } from "../lib/useVoice";
 import { useAutoSpeech } from "../lib/useAutoSpeech";
-import { useLiveCall } from "../hooks/useLiveCall";
-import { LIVE_VOICES } from "../lib/liveCall";
-import { MicButton, SpeakButton, AutoSpeakToggle, VoiceCallButton, LiveCallButton, LiveVoiceSelect } from "./VoiceControls";
-import { LiveVoiceCall } from "./LiveVoiceCall";
+import { MicButton, SpeakButton, AutoSpeakToggle, VoiceCallButton } from "./VoiceControls";
+import { VoiceCallOverlay } from "./LiveVoiceCall";
+import { preloadPiper } from "../lib/piperTts";
 
 const STARTERS = [
   "I'm a business owner — where do I start?",
@@ -31,9 +36,14 @@ const STARTERS = [
 const WELCOME =
   "Hey there! I'm Wisne — the Wisnotech AI assistant. Ask me anything about our services, pricing, videos, or what to build first. I can even draft a plan for you.";
 
+/** Calendly link Wisne shares when a visitor wants to book a call. */
+const BOOKING_URL = "https://calendly.com/shedyhillzton77/30min";
+
 export default function LlmStudio() {
   const [input, setInput] = useState("");
   const [thinking, setThinking] = useState(false);
+  const [lastReply, setLastReply] = useState<string | null>(null);
+  const profileRef = useRef<ClientProfile>({});
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const voice = useVoice();
@@ -59,8 +69,24 @@ export default function LlmStudio() {
       const history = chat.messages
         .map((m) => ({ role: m.role, content: m.text }))
         .concat([{ role: "user", content: question }]);
-      const reply = await askServerWithFallback(question, createInitialState(), history.slice(0, -1));
+
+      // Accumulate a client profile from what the visitor tells us so the
+      // LLM backend can tailor its answers to their business and project.
+      const biz = detectBusinessType(question);
+      if (biz) profileRef.current.businessType = biz;
+      const proj = detectProjectType(question);
+      if (proj) profileRef.current.projectType = proj;
+      const role = detectRole(question);
+      if (role && !profileRef.current.role) profileRef.current.role = role;
+
+      const reply = await askServerWithFallback(
+        question,
+        createInitialState(),
+        history.slice(0, -1),
+        profileRef.current
+      );
       chat.add({ role: "assistant", text: reply.text });
+      setLastReply(reply.text);
       setThinking(false);
       return reply.text;
     },
@@ -75,23 +101,16 @@ export default function LlmStudio() {
     [ask, autoSpeakRef]
   );
 
-  /* Hands-free voice conversation: listen → ask → speak reply → repeat. */
+  /* Hands-free voice conversation: listen → ask → speak reply → repeat.
+     Speech-to-text uses the browser mic; replies are spoken with Piper TTS
+     running locally in the browser (no Gemini, no server). */
   const voiceConversation = useVoiceConversation(ask);
 
-  /* Real-time phone-call style voice via Gemini Live (fallback to loop above). */
-  const liveCall = useLiveCall();
-  const startLiveCall = useCallback(() => {
-    void liveCall.start(liveVoiceInstruction(), liveVoiceGreeting());
-  }, [liveCall]);
-
-  const liveErrorRef = useRef<boolean>(false);
-  useEffect(() => {
-    if (liveCall.error && !liveErrorRef.current) {
-      liveErrorRef.current = true;
-      voiceConversation.start();
-    }
-    if (!liveCall.error) liveErrorRef.current = false;
-  }, [liveCall.error, voiceConversation]);
+  /* Warm the Piper voice model in the background before the call starts. */
+  const startVoiceConversation = useCallback(() => {
+    void preloadPiper();
+    voiceConversation.start();
+  }, [voiceConversation]);
 
   const handleTranscript = useCallback(
     (t: string) => {
@@ -285,9 +304,7 @@ export default function LlmStudio() {
                 className="min-w-0 flex-1 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white placeholder:text-white/35 focus:border-neon/50 focus:outline-none"
               />
               <MicButton voice={voice} onTranscript={handleTranscript} disabled={thinking} />
-              <LiveVoiceSelect value={liveCall.voice} onChange={liveCall.setVoice} />
-              <LiveCallButton supported={liveCall.supported} onStart={startLiveCall} />
-              <VoiceCallButton voice={voiceConversation} />
+              <VoiceCallButton voice={voiceConversation} onStart={startVoiceConversation} />
               <button
                 type="submit"
                 disabled={!input.trim() || thinking}
@@ -302,19 +319,15 @@ export default function LlmStudio() {
       </div>
     </section>
 
-      {/* Real-time live voice call overlay */}
+      {/* In-browser voice call overlay (Piper TTS) */}
       <AnimatePresence>
-        {liveCall.active && liveCall.status !== "off" && (
-          <LiveVoiceCall
-            status={liveCall.status}
-            energy={liveCall.energy}
-            aiEnergy={liveCall.aiEnergy}
-            userTranscript={liveCall.userTranscript}
-            assistantTranscript={liveCall.assistantTranscript}
-            bookingLink={liveCall.bookingLink}
-            error={liveCall.error}
-            voiceLabel={LIVE_VOICES.find((v) => v.id === liveCall.voice)?.label}
-            onStop={liveCall.stop}
+        {voiceConversation.active && voiceConversation.status !== "off" && (
+          <VoiceCallOverlay
+            status={voiceConversation.status}
+            transcript={lastReply ?? undefined}
+            bookingLink={BOOKING_URL}
+            voiceLabel="Piper · in-browser"
+            onStop={voiceConversation.stop}
           />
         )}
       </AnimatePresence>

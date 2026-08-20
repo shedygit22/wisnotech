@@ -1,9 +1,9 @@
 import { useEffect, useRef } from "react";
-import type { LiveStatus } from "../lib/liveCall";
+import type { VoiceStatus } from "../lib/voiceTypes";
 
 interface VoiceOrbProps {
   /** Conversation state drives the orb mode. */
-  status: LiveStatus;
+  status: VoiceStatus;
   /** 0..1 smoothed user (mic) energy — live from the analyser. */
   energy?: number;
   /** 0..1 smoothed AI (playback) energy — live from the analyser. */
@@ -22,7 +22,7 @@ export interface VoicePalette {
   rim: RGB;
 }
 
-export const VOICE_PALETTES: Record<LiveStatus, VoicePalette> = {
+export const VOICE_PALETTES: Record<VoiceStatus, VoicePalette> = {
   off: {
     core: [18, 30, 60],
     glow: [59, 123, 255],

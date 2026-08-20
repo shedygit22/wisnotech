@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import type { LiveStatus } from "../lib/liveCall";
+import type { VoiceStatus } from "../lib/voiceTypes";
 import { VOICE_PALETTES, type VoicePalette } from "./VoiceOrb";
 
 const MOTES = 64;
@@ -9,7 +9,7 @@ const MOTES = 64;
  * hue follows the conversation status, a slow drift of floating dust motes and
  * a soft vignette. Pure canvas, capped DPR for smooth mobile performance.
  */
-export function AuroraField({ status }: { status: LiveStatus }) {
+export function AuroraField({ status }: { status: VoiceStatus }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const statusRef = useRef(status);
   statusRef.current = status;

@@ -1,8 +1,22 @@
 export type Stage = "intro" | "need" | "qualify" | "recommend" | "objection" | "close";
 
+/** Distilled client profile, sent to the LLM backend so answers are tailored. */
+export interface ClientProfile {
+  name?: string;
+  role?: string;
+  businessType?: string;
+  projectType?: string;
+  interest?: string;
+  timeline?: string;
+  budget?: string;
+}
+
 export interface AssistState {
   stage: Stage;
   name?: string;
+  role?: string;
+  businessType?: string;
+  projectType?: string;
   interest?: string;
   timeline?: string;
   budget?: string;
@@ -173,6 +187,157 @@ function detectBudget(text: string): string | null {
   return null;
 }
 
+/* ---------- Business / project type detection ---------- */
+
+const BUSINESS_TYPES: { type: string; label: string; keywords: string[] }[] = [
+  {
+    type: "food & hospitality",
+    label: "Food & hospitality",
+    keywords: ["restaurant", "cafe", "coffee", "bar", "hotel", "lodge", "catering", "food", "kitchen", "bakery", "grill", "suya", "buka", "fast food", "guest house"],
+  },
+  {
+    type: "retail & e-commerce",
+    label: "Retail & e-commerce",
+    keywords: ["shop", "store", "retail", "boutique", "ecommerce", "e-commerce", "online store", "marketplace", "supermarket", "mall", "fashion", "clothing", "sell products", "product", "goods", "supply"],
+  },
+  {
+    type: "beauty & wellness",
+    label: "Beauty & wellness",
+    keywords: ["salon", "barbershop", "barber", "spa", "beauty", "makeup", "hair", "nails", "massage", "fitness", "gym", "wellness", "esthetics"],
+  },
+  {
+    type: "health & care",
+    label: "Health & care",
+    keywords: ["clinic", "hospital", "pharmacy", "chemist", "dental", "dentist", "doctor", "medical", "health", "laboratory", "healthcare", "diagnostic"],
+  },
+  {
+    type: "education",
+    label: "Education",
+    keywords: ["school", "academy", "tutor", "tutoring", "college", "university", "e-learning", "training center", "coaching", "students", "education", "classroom"],
+  },
+  {
+    type: "real estate",
+    label: "Real estate",
+    keywords: ["real estate", "property", "estate agent", "agent", "rental", "rentals", "landlord", "housing", "apartment", "land", "realtor", "buying and selling houses", "shortlet"],
+  },
+  {
+    type: "logistics & transport",
+    label: "Logistics & transport",
+    keywords: ["logistics", "shipping", "delivery", "courier", "fleet", "transport", "dispatch", "trucking", "cargo", "rides", "drivers"],
+  },
+  {
+    type: "professional services",
+    label: "Professional services",
+    keywords: ["law", "legal", "lawyer", "finance", "accounting", "accountant", "tax", "consulting", "consultant", "agency", "marketing agency", "insurance", "bank", "bookkeeping"],
+  },
+  {
+    type: "creator",
+    label: "Creator & personal brand",
+    keywords: ["creator", "influencer", "youtuber", "you tube", "artist", "musician", "freelancer", "blogger", "personal brand", "podcast", "content creator", "brand myself"],
+  },
+  {
+    type: "community & nonprofit",
+    label: "Community & nonprofit",
+    keywords: ["church", "ngo", "nonprofit", "non-profit", "charity", "foundation", "community", "ministry", "mosque", "association"],
+  },
+  {
+    type: "travel & tourism",
+    label: "Travel & tourism",
+    keywords: ["travel", "tourism", "tour", "agency", "trips", "flight", "booking", "vacation", "destination"],
+  },
+];
+
+const PROJECT_TYPES: { type: string; label: string; keywords: string[] }[] = [
+  {
+    type: "AI & automation",
+    label: "AI & automation",
+    keywords: ["chatbot", "chat bot", "automation", "workflow", "ai assistant", "auto reply", "customer support", "customer service", "agents", "auto respond", "lead follow up", "booking bot", "whatsapp bot"],
+  },
+  {
+    type: "AI video",
+    label: "AI video content",
+    keywords: ["video", "avatar", "reels", "shorts", "tiktok", "youtube videos", "ads", "promo", "showreel", "animation", "digital human", "content"],
+  },
+  {
+    type: "AI imagery",
+    label: "AI visual creation",
+    keywords: ["image", "images", "art", "visuals", "branding", "logo", "pictures", "graphic design", "album art", "photo"],
+  },
+  {
+    type: "software",
+    label: "Software development",
+    keywords: ["software", "app", "application", "saas", "platform", "dashboard", "mvp", "api", "system", "internal tool", "custom software", "inventory software", "pos", "management system"],
+  },
+  {
+    type: "website",
+    label: "Website & mobile",
+    keywords: ["website", "web", "landing page", "online presence", "ecommerce site", "shop online", "portfolio site", "mobile app", "ios", "android", "web app", "online store website"],
+  },
+  {
+    type: "education",
+    label: "AI education & training",
+    keywords: ["learn", "training", "course", "teach", "class", "upskill", "bootcamp", "study", "certificate", "workshop"],
+  },
+  {
+    type: "consulting",
+    label: "AI consulting & strategy",
+    keywords: ["consulting", "strategy", "audit", "advice", "roadmap", "where to start", "guidance", "assessment", "advisory"],
+  },
+];
+
+function matchType<T extends { keywords: string[] }>(entries: T[], text: string): T | null {
+  const q = normalize(text);
+  let best: T | null = null;
+  let bestScore = 0;
+  for (const e of entries) {
+    let score = 0;
+    for (const kw of e.keywords) {
+      const clean = kw.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      if (q.includes(kw) || new RegExp(`\\b${clean}\\b`).test(q)) score += kw.length > 8 ? 3 : 1.5;
+    }
+    if (score > bestScore) {
+      bestScore = score;
+      best = e;
+    }
+  }
+  return bestScore > 0 ? best : null;
+}
+
+export function detectBusinessType(text: string): string | null {
+  return matchType(BUSINESS_TYPES, text)?.type ?? null;
+}
+
+export function detectProjectType(text: string): string | null {
+  return matchType(PROJECT_TYPES, text)?.type ?? null;
+}
+
+export function detectRole(text: string): string | null {
+  const q = normalize(text);
+  if (/(business owner|business person|entrepreneur|founder|i own|i run|company|startup|brand|store|shop|restaurant|salon|clinic|school)/.test(q)) {
+    return "business";
+  }
+  if (/(creator|influencer|youtuber|artist|freelancer|musician|designer|for myself|personal|content creator)/.test(q)) {
+    return "creator";
+  }
+  if (/(student|learner|learning|upskill|i want to learn|training|study)/.test(q)) {
+    return "learner";
+  }
+  return null;
+}
+
+/** Build the client profile sent to the LLM backend from captured state. */
+export function buildClientProfile(state: AssistState): ClientProfile {
+  const profile: ClientProfile = {};
+  if (state.name) profile.name = state.name;
+  if (state.role) profile.role = state.role;
+  if (state.businessType) profile.businessType = state.businessType;
+  if (state.projectType) profile.projectType = state.projectType;
+  if (state.interest) profile.interest = state.interest;
+  if (state.timeline) profile.timeline = state.timeline;
+  if (state.budget) profile.budget = state.budget;
+  return profile;
+}
+
 /* ---------- Proactive / user-sensing ---------- */
 
 export function contextMessage(section: string | null): string | null {
@@ -235,6 +400,12 @@ export function ask(input: string, state: AssistState): Turn {
   const topic = detectTopic(q);
   const timeline = detectTimeline(q);
   const budget = detectBudget(q);
+  const businessType = detectBusinessType(q);
+  const projectType = detectProjectType(q);
+  const role = detectRole(q);
+  if (businessType) next.businessType = businessType;
+  if (projectType) next.projectType = projectType;
+  if (role && !next.role) next.role = role;
 
   /* 0. Capture email → lead captured */
   if (email) {
@@ -462,9 +633,15 @@ function recommendReply(state: AssistState): Turn {
   state.offerMade = true;
   const focus = state.interest ?? "a focused AI pilot";
   const budgetMacro = state.budget === "small" ? "tight" : state.budget ?? "flexible";
+  const who = state.businessType ? `for your ${state.businessType} business` : "";
+  const what = state.projectType ? `built around ${state.projectType}` : "";
+  const tailored = state.businessType || state.projectType;
+  const opening = tailored
+    ? `Here's the line for you${who ? `, ${who}` : ""}${what ? ` ${what}` : ""}: start with a ${focus} package — a focused pilot with a clear, measurable deliverable in the first month, then expand smartly.`
+    : `Here's the line. For a ${budgetMacro} budget on ${state.timeline ?? "your timeline"}, start with a ${focus} package — a focused pilot with a clear, measurable deliverable in the first month, then expand smartly.`;
   return {
     reply: {
-      text: `Here's the line. For a ${budgetMacro} budget on ${state.timeline ?? "your timeline"}, start with a ${focus} package — a focused pilot with a clear, measurable deliverable in the first month, then expand smartly.\n\nWant me to sketch the scope of that pilot?`,
+      text: `${opening}\n\nWant me to sketch the scope of that pilot?`,
     },
     next: state,
   };
@@ -515,25 +692,4 @@ export function quickReplies(stage: Stage): string[] {
 
 export function VIDEOS_SPIEL(): string {
   return "You can watch the videos in the Showreel and the generated visuals in the AI Creations gallery below it.";
-}
-
-/** System instruction for the real-time (Live) voice mode. */
-export function liveVoiceInstruction(): string {
-  return `You are the voice of Wisne, the Wisnotech AI sales advisor. You speak naturally, warmly and concisely — like a helpful human on a phone call, never robotic.
-
-Wisnotech offers: AI & Automation (chatbots, workflows, agents, customer support), AI Video Content Creation (avatars, showreels, short-form), AI Visual Creation (imagery for brands/campaigns), Software Development (custom apps, SaaS, MVPs), Web & Mobile (websites, landing pages, mobile apps), AI Education (Wisnotech Academy hands-on training) and AI Consulting (strategy, AI audits, roadmaps).
-
-Guidelines:
-- Keep replies SHORT and conversational — 1 to 3 sentences is perfect. It's a live voice call.
-- Ask one clear question at a time to discover their goal, timeline ("ASAP", "within 3 months", "exploring") and budget (small / flexible / ballpark).
-- Recommend a smart first step: for most businesses an AI audit or a focused one-month pilot; for creators an AI content kit; for learners the Academy.
-- If they give an email, confirm you've noted it, thank them, and mention the team will reach out with a tailored plan.
-- If they ask price: be transparent that pricing scales with scope and the free next step is a short discovery call with zero obligation.
-- When the caller wants to book, schedule, or set up a call — or asks for the booking/scheduling link — call the "get_booking_link" tool, then tell them the booking page is now open on their screen. On a voice call always prefer sending the booking link over taking an email.
-- Never invent contact details. Stay on the Wisnotech offering above.`;
-}
-
-/** Spoken line Wisne delivers the moment a live voice call connects. */
-export function liveVoiceGreeting(): string {
-  return `Hey there, welcome to Wisnotech! I'm Wisne, your AI advisor. What's the one thing you'd love to build, automate, or learn today?`;
 }

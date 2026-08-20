@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { piperSpeak, piperStatus, piperSupported } from "./piperTts";
 
 type SpeechRecognitionLike = {
   lang: string;
@@ -131,10 +132,21 @@ function playAudio(blob: Blob): Promise<void> {
 
 let currentAudio: HTMLAudioElement | null = null;
 
-/** Speak via OpenAI TTS when configured, else fall back to browser voices. */
+/** Speak via in-browser Piper when ready, else OpenAI/configured TTS, else browser voices. */
 export async function speakText(text: string): Promise<void> {
   const clean = stripForSpeech(text);
   if (!clean) return;
+
+  // Prefer Piper — free, offline, no API key. If it isn't loaded yet, skip
+  // straight to the server TTS so the first reply isn't blocked on the model
+  // download (the voice mode preloads Piper in the background beforehand).
+  if (piperSupported() && piperStatus() === "ready") {
+    const blob = await piperSpeak(clean);
+    if (blob) {
+      await playAudio(blob);
+      return;
+    }
+  }
 
   // Prefer realistic OpenAI voice.
   const blob = await fetchTts(clean);

@@ -5,21 +5,22 @@ import { askServerWithFallback } from "../lib/api";
 import { sendLead } from "../lib/leadSink";
 import { speakText, stopSpeaking, useVoice, useVoiceConversation } from "../lib/useVoice";
 import { useAutoSpeech } from "../lib/useAutoSpeech";
-import { useLiveCall } from "../hooks/useLiveCall";
 import { useChatSessions } from "../lib/chatStore";
-import { LIVE_VOICES } from "../lib/liveCall";
-import { MicButton, SpeakButton, AutoSpeakToggle, VoiceCallButton, LiveCallButton, LiveVoiceSelect } from "./VoiceControls";
-import { LiveVoiceCall } from "./LiveVoiceCall";
+import { MicButton, SpeakButton, AutoSpeakToggle, VoiceCallButton } from "./VoiceControls";
+import { VoiceCallOverlay } from "./LiveVoiceCall";
+import { preloadPiper } from "../lib/piperTts";
 import {
+  buildClientProfile,
   createInitialState,
   contextMessage,
   openingLine,
   exitIntentMessage,
-  liveVoiceInstruction,
-  liveVoiceGreeting,
   quickReplies,
   type AssistState,
 } from "../lib/assistant";
+
+/** Calendly link Wisne shares when a visitor wants to book a call. */
+const BOOKING_URL = "https://calendly.com/shedyhillzton77/30min";
 
 const SECTION_IDS = [
   { id: "home", label: "home" },
@@ -45,6 +46,7 @@ export default function AiAssistant() {
   const [currentSection, setCurrentSection] = useState<string | null>(null);
   const [attention, setAttention] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
+  const [lastReply, setLastReply] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const promptedRef = useRef(false);
@@ -157,8 +159,14 @@ export default function AiAssistant() {
         .map((m) => ({ role: m.role, content: m.text }))
         .concat([{ role: "user" as const, content: question }]);
 
-      const reply = await askServerWithFallback(question, stateRef.current, history.slice(0, -1));
+      const reply = await askServerWithFallback(
+        question,
+        stateRef.current,
+        history.slice(0, -1),
+        buildClientProfile(stateRef.current)
+      );
       chat.add({ role: "assistant", text: reply.text, href: reply.href });
+      setLastReply(reply.text);
       setThinking(false);
 
       // Capture a qualified lead the moment an email appears in the chat.
@@ -186,25 +194,18 @@ export default function AiAssistant() {
     [ask, autoSpeakRef]
   );
 
-  /* Hands-free voice conversation: listen → ask → speak reply → repeat. */
+  /* Hands-free voice conversation: listen → ask → speak reply → repeat.
+     Speech-to-text uses the browser mic; replies are spoken with Piper TTS
+     running locally in the browser (no Gemini, no server). */
   const voiceConversation = useVoiceConversation(ask);
 
-  /* Real-time phone-call style voice via Gemini Live (fallback to loop above). */
-  const liveCall = useLiveCall();
-  const startLiveCall = useCallback(() => {
+  /* Warm the Piper voice model in the background before the call starts so
+     the first spoken reply doesn't wait for the download. */
+  const startVoiceConversation = useCallback(() => {
     setOpen(true);
-    void liveCall.start(liveVoiceInstruction(), liveVoiceGreeting());
-  }, [liveCall]);
-
-  /* If the live call can't start (mic/token issue), gracefully drop back to the loop. */
-  const liveErrorRef = useRef<boolean>(false);
-  useEffect(() => {
-    if (liveCall.error && !liveErrorRef.current) {
-      liveErrorRef.current = true;
-      voiceConversation.start();
-    }
-    if (!liveCall.error) liveErrorRef.current = false;
-  }, [liveCall.error, voiceConversation]);
+    void preloadPiper();
+    voiceConversation.start();
+  }, [voiceConversation]);
 
   /* Esc closes chat */
   useEffect(() => {
@@ -457,9 +458,7 @@ export default function AiAssistant() {
                 className="min-w-0 flex-1 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white placeholder:text-white/35 focus:border-neon/50 focus:outline-none"
               />
               <MicButton voice={voice} onTranscript={handleTranscript} disabled={thinking} />
-              <LiveVoiceSelect value={liveCall.voice} onChange={liveCall.setVoice} />
-              <LiveCallButton supported={liveCall.supported} onStart={startLiveCall} />
-              <VoiceCallButton voice={voiceConversation} />
+              <VoiceCallButton voice={voiceConversation} onStart={startVoiceConversation} />
               <button
                 type="submit"
                 disabled={!input.trim() || thinking}
@@ -473,19 +472,15 @@ export default function AiAssistant() {
         )}
       </AnimatePresence>
 
-      {/* Real-time live voice call overlay */}
+      {/* In-browser voice call overlay (Piper TTS) */}
       <AnimatePresence>
-        {liveCall.active && liveCall.status !== "off" && (
-          <LiveVoiceCall
-            status={liveCall.status}
-            energy={liveCall.energy}
-            aiEnergy={liveCall.aiEnergy}
-            userTranscript={liveCall.userTranscript}
-            assistantTranscript={liveCall.assistantTranscript}
-            bookingLink={liveCall.bookingLink}
-            error={liveCall.error}
-            voiceLabel={LIVE_VOICES.find((v) => v.id === liveCall.voice)?.label}
-            onStop={liveCall.stop}
+        {voiceConversation.active && voiceConversation.status !== "off" && (
+          <VoiceCallOverlay
+            status={voiceConversation.status}
+            transcript={lastReply ?? undefined}
+            bookingLink={BOOKING_URL}
+            voiceLabel="Piper · in-browser"
+            onStop={voiceConversation.stop}
           />
         )}
       </AnimatePresence>

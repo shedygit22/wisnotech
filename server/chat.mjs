@@ -62,40 +62,9 @@ const server = createServer(async (req, res) => {
     return;
   }
 
-  if (req.method !== "POST" || (url.pathname !== "/chat" && url.pathname !== "/tts" && url.pathname !== "/live-token")) {
+  if (req.method !== "POST" || (url.pathname !== "/chat" && url.pathname !== "/tts")) {
     res.writeHead(404, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ error: "Not found" }));
-    return;
-  }
-
-  if (url.pathname === "/live-token") {
-    try {
-      const apiKey = process.env.GOOGLE_AI_API_KEY;
-      if (!apiKey) throw new Error("GOOGLE_AI_API_KEY is not set");
-      const now = new Date();
-      const mint = await fetch("https://generativelanguage.googleapis.com/v1beta/auth_tokens", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
-        body: JSON.stringify({
-          uses: 1,
-          expireTime: new Date(now.getTime() + 30 * 60 * 1000).toISOString(),
-          newSessionExpireTime: new Date(now.getTime() + 60 * 1000).toISOString(),
-        }),
-      });
-      if (!mint.ok) {
-        const body = await mint.text().catch(() => "");
-        throw new Error(`auth_tokens ${mint.status}: ${body.slice(0, 300)}`);
-      }
-      const json = await mint.json();
-      const tokenName = json?.name ?? json?.token?.name;
-      if (!tokenName) throw new Error("auth_tokens returned no token");
-      res.writeHead(200, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ token: json.token.name }));
-    } catch (err) {
-      console.error("live-token error:", err.message);
-      res.writeHead(500, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ error: err.message }));
-    }
     return;
   }
 

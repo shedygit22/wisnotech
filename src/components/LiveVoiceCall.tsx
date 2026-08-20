@@ -1,50 +1,42 @@
 import { motion } from "framer-motion";
 import { PhoneOff, Sparkles } from "lucide-react";
-import type { LiveStatus } from "../lib/liveCall";
+import type { VoiceStatus } from "../lib/voiceTypes";
+import { VOICE_STATUS_TEXT } from "../lib/voiceTypes";
 import { AuroraField } from "./AuroraField";
 import { VoiceOrb } from "./VoiceOrb";
 
-interface LiveVoiceCallProps {
-  status: LiveStatus;
-  /** 0..1 user (mic) energy — real-time analyser value. */
-  energy: number;
-  /** 0..1 AI (playback) energy — real-time analyser value. */
-  aiEnergy: number;
-  userTranscript: string;
-  assistantTranscript: string;
-  bookingLink: string | null;
-  error: string | null;
-  /** Human label of the voice Wisne is using (e.g. "Wisne — main voice"). */
+interface VoiceCallOverlayProps {
+  status: VoiceStatus;
+  /** 0..1 user (mic) energy — optional, smooths the orb. */
+  energy?: number;
+  /** 0..1 AI (playback) energy — optional, smooths the orb. */
+  aiEnergy?: number;
+  /** Latest text shown under the orb (e.g. the last reply). */
+  transcript?: string;
+  /** Calendly booking link surfaced when the assistant offers to book. */
+  bookingLink?: string | null;
+  error?: string | null;
+  /** Human label of the voice engine (e.g. "Piper · in-browser"). */
   voiceLabel?: string;
   onStop: () => void;
 }
 
-const STATUS_TEXT: Record<LiveStatus, string> = {
-  off: "Voice conversation ended",
-  connecting: "Connecting to Wisne…",
-  listening: "I'm listening",
-  thinking: "Analyzing…",
-  speaking: "Wisne is speaking",
-};
-
 /**
- * Fullscreen "phone call" voice mode. The orb floats freely in deep space,
- * wrapped in soft blurred light — no hard edges, no boxes. Everything recedes
- * behind a single living point of light in the site's neon blue.
+ * Fullscreen "phone call" voice mode, now driven by the in-browser Piper TTS
+ * loop (no Gemini). The orb floats freely in deep space — no hard edges, no
+ * boxes. Everything recedes behind a single living point of light.
  */
-export function LiveVoiceCall({
+export function VoiceCallOverlay({
   status,
-  energy,
-  aiEnergy,
-  userTranscript,
-  assistantTranscript,
+  energy = 0,
+  aiEnergy = 0,
+  transcript,
   bookingLink,
   error,
   voiceLabel,
   onStop,
-}: LiveVoiceCallProps) {
-  const live = status !== "off" && status !== "connecting";
-  const transcript = assistantTranscript || userTranscript;
+}: VoiceCallOverlayProps) {
+  const live = status !== "off";
   const base = Math.min(window.innerWidth, window.innerHeight);
   const orbSize = Math.max(200, base * 0.5);
   const level = Math.max(energy, aiEnergy);
@@ -57,7 +49,7 @@ export function LiveVoiceCall({
       transition={{ duration: 0.45 }}
       className="fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden bg-[#05070c]"
       role="dialog"
-      aria-label="Live voice conversation"
+      aria-label="Voice conversation"
     >
       {/* Living ambient backdrop */}
       <AuroraField status={status} />
@@ -124,7 +116,7 @@ export function LiveVoiceCall({
           transition={{ duration: 130, repeat: Infinity, ease: "linear" }}
         >
           <div
-            className="absolute inset-0 rounded-full"
+            className="absolute rounded-full"
             style={{
               border: "1px solid rgba(120,170,255,0.10)",
               maskImage:
@@ -172,7 +164,7 @@ export function LiveVoiceCall({
               <span className="relative inline-flex h-2 w-2 rounded-full bg-neon" />
             </span>
           )}
-          {STATUS_TEXT[status]}
+          {VOICE_STATUS_TEXT[status]}
         </motion.p>
 
         {error ? (

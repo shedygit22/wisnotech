@@ -1,4 +1,4 @@
-import { ask, type AssistState, type Reply } from "./assistant";
+import { ask, type AssistState, type ClientProfile, type Reply } from "./assistant";
 
 function endpoint(): string {
   if (import.meta.env.DEV && !import.meta.env.VITE_USE_LOCAL_FUNCTIONS) {
@@ -8,7 +8,8 @@ function endpoint(): string {
 }
 
 export async function serverChat(
-  history: { role: "user" | "assistant"; content: string }[]
+  history: { role: "user" | "assistant"; content: string }[],
+  profile?: ClientProfile
 ): Promise<string> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 15000);
@@ -17,7 +18,7 @@ export async function serverChat(
     const res = await fetch(endpoint(), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages: history }),
+      body: JSON.stringify({ messages: history, profile }),
       signal: controller.signal,
     });
 
@@ -36,13 +37,17 @@ export async function serverChat(
 export async function askServerWithFallback(
   question: string,
   state: AssistState,
-  history: { role: "user" | "assistant"; content: string }[]
+  history: { role: "user" | "assistant"; content: string }[],
+  profile?: ClientProfile
 ): Promise<Reply> {
   try {
-    const text = await serverChat([
-      ...history,
-      { role: "user", content: question },
-    ]);
+    const text = await serverChat(
+      [
+        ...history,
+        { role: "user", content: question },
+      ],
+      profile
+    );
     return { text, href: undefined };
   } catch (err) {
     console.warn("AI backend unavailable, using built-in knowledge:", err);

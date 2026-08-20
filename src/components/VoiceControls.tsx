@@ -1,6 +1,6 @@
-import { Mic, PhoneCall, Square, Volume2, Radio, ChevronDown } from "lucide-react";
-import { LIVE_VOICES } from "../lib/liveCall";
+import { Mic, PhoneCall, Square, Volume2 } from "lucide-react";
 import { stopSpeaking, type UseVoice, type UseVoiceConversation } from "../lib/useVoice";
+import { piperStatus } from "../lib/piperTts";
 
 interface MicProps {
   voice: UseVoice;
@@ -89,6 +89,8 @@ export function AutoSpeakToggle({ enabled, onToggle }: ToggleProps) {
 
 interface ConversationProps {
   voice: UseVoiceConversation;
+  /** Optional override so callers can warm up Piper before starting. */
+  onStart?: () => void;
 }
 
 const CONV_LABEL: Record<string, string> = {
@@ -98,8 +100,8 @@ const CONV_LABEL: Record<string, string> = {
   speaking: "Speaking…",
 };
 
-/** Turn on the hands-free speak → reply → speak loop. */
-export function VoiceCallButton({ voice }: ConversationProps) {
+/** Turn on the hands-free speak → reply → speak loop (Piper TTS in-browser). */
+export function VoiceCallButton({ voice, onStart }: ConversationProps) {
   if (!voice.supported) return null;
 
   if (voice.active) {
@@ -125,67 +127,18 @@ export function VoiceCallButton({ voice }: ConversationProps) {
     );
   }
 
+  const preparing = piperStatus() === "loading";
+
   return (
     <button
       type="button"
-      onClick={voice.start}
+      onClick={() => (onStart ? onStart() : voice.start())}
       aria-label="Start voice conversation"
-      title="Start a hands-free voice conversation"
+      title="Start a hands-free voice conversation (Piper TTS runs in your browser)"
       className="group flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-xs text-white/60 transition-all duration-200 hover:border-neon/40 hover:text-neon"
     >
       <PhoneCall className="h-4 w-4 transition-transform duration-200 group-hover:scale-110" aria-hidden />
-      Talk
-    </button>
-  );
-}
-
-interface LiveButtonProps {
-  supported: boolean;
-  onStart: () => void;
-}
-
-/** Pick which Gemini Live voice Wisne uses for the call (Wisne main by default). */
-export function LiveVoiceSelect({ value, onChange }: { value: string; onChange: (id: string) => void }) {
-  return (
-    <label
-      className="group relative flex h-11 items-center gap-1.5 rounded-xl border border-white/10 bg-white/[0.04] pl-3 pr-2 text-xs text-white/60 transition-all duration-200 hover:border-neon/40 hover:text-neon"
-      title="Choose the voice Wisne speaks with on live calls"
-    >
-      <Volume2 className="h-4 w-4 shrink-0 text-neon/70" aria-hidden />
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        aria-label="Live voice"
-        className="cursor-pointer appearance-none bg-transparent py-2 text-xs font-medium text-white/85 focus:outline-none"
-      >
-        {LIVE_VOICES.map((v) => (
-          <option key={v.id} value={v.id} className="bg-[#0b0b13] text-white">
-            {v.label}
-          </option>
-        ))}
-      </select>
-      <ChevronDown className="h-3.5 w-3.5 shrink-0 text-white/40 transition-transform duration-200 group-focus-within:rotate-180" aria-hidden />
-    </label>
-  );
-}
-
-/** One-tap entry into the real-time (phone-call style) voice mode. */
-export function LiveCallButton({ supported, onStart }: LiveButtonProps) {
-  if (!supported) return null;
-  return (
-    <button
-      type="button"
-      onClick={onStart}
-      aria-label="Start live voice conversation"
-      title="Start a real-time phone-call style conversation"
-      className="group relative flex items-center gap-1.5 rounded-xl border border-neon/50 bg-neon/10 px-3 py-2 text-xs font-medium text-neon transition-all duration-200 hover:bg-neon/20"
-    >
-      <span className="relative flex h-2 w-2">
-        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-neon opacity-75" />
-        <span className="relative inline-flex h-2 w-2 rounded-full bg-neon" />
-      </span>
-      Live call
-      <Radio className="h-4 w-4 transition-transform duration-200 group-hover:scale-110" aria-hidden />
+      {preparing ? "Preparing voice…" : "Talk"}
     </button>
   );
 }
