@@ -95,8 +95,9 @@ export function SamplesGrid() {
             </h2>
             <p className="mt-5 text-lg leading-relaxed text-muted">
               Every piece below started as a prompt or an image and ended as
-              production-ready footage. Browse by what you need — then let&apos;s
-              make yours.
+              production-ready footage. A mix of commissioned client work and
+              Wisnotech studio experiments — browse by what you need, then
+              let&apos;s make yours.
             </p>
           </div>
           <p className="flex items-center gap-2 text-sm text-white/50">

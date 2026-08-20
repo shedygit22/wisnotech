@@ -252,6 +252,75 @@ for (const post of posts) {
   console.log(`✓ post -> dist/blog/${post.slug}/index.html`);
 }
 
+// ---- Privacy & Terms static pages -------------------------------------------
+function legalHtml(kind) {
+  const isPrivacy = kind === "privacy";
+  const title = isPrivacy ? "Privacy Policy" : "Terms of Service";
+  const intro = isPrivacy
+    ? "This policy explains what information we collect when you use the Wisnotech website, how we use it, and the choices you have."
+    : "These terms govern your use of the Wisnotech website and services. By using the site, you agree to these terms.";
+  const sections = isPrivacy
+    ? [
+        ["Information we collect", "When you use the contact form, AI assistant or course enquiry forms, we collect the details you choose to provide — such as your name, email address, company and project information."],
+        ["How we use your information", "We use the information you provide to respond to your enquiries, prepare project proposals, manage course enquiries and improve our services. We do not sell your personal information."],
+        ["Analytics and site data", "Like most websites, we may collect basic technical data (such as browser type and pages visited) to understand how the site is used and keep it working reliably."],
+        ["AI assistant", "Conversations with the Wisnotech AI assistant are used to answer your questions and may be reviewed to improve its responses. Avoid sharing sensitive personal or financial details in chat."],
+        ["Data sharing", "We do not rent or sell your personal information. We only share data with service providers needed to operate the site (such as hosting) or when required by law."],
+        ["Contact us", "Questions about this policy? Email wisnotech@gmail.com or message +234 915 354 1297."],
+      ]
+    : [
+        ["Our services", "Wisnotech provides AI solutions, automation, software development and digital growth services. Project specifics, scope, pricing and timelines are agreed in writing for each engagement."],
+        ["Quotes and payment", "Every project is scoped before work begins and you receive a clear quote upfront. Payment terms are confirmed per project. Prices shown on the site are starting points unless stated otherwise."],
+        ["Intellectual property", "Once a project is paid for in full, deliverables are yours per the agreed terms. Wisnotech may showcase completed work in its portfolio unless we agree otherwise."],
+        ["Your use of the site", "You agree not to misuse the website, interfere with its operation, or attempt to access systems you are not authorised to use."],
+        ["Limitation of liability", "The site and its content are provided as-is. To the fullest extent permitted by law, Wisnotech is not liable for indirect or consequential losses arising from use of the site or services."],
+        ["Contact us", "Questions about these terms? Email wisnotech@gmail.com or message +234 915 354 1297."],
+      ];
+  const blocks = sections
+    .map(
+      ([h, b]) =>
+        `<h2 style="font-size:20px;font-weight:600;color:#fff;margin:32px 0 8px">${escapeAttr(h)}</h2>
+         <p style="color:rgba(255,255,255,0.7);font-size:15px;line-height:1.7;margin:0">${escapeAttr(b)}</p>`
+    )
+    .join("\n");
+  const body = `${header()}
+  <main style="max-width:720px;margin:0 auto;padding:96px 24px 80px;background:#080808;color:#fff">
+    <a href="${SITE_URL}/" style="color:rgba(255,255,255,0.6);text-decoration:none;font-size:14px">&larr; Back to home</a>
+    <p style="color:#3b7bff;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;margin:32px 0 0">Wisnotech</p>
+    <h1 style="font-size:44px;line-height:1.1;font-weight:600;letter-spacing:-0.02em;margin:12px 0 16px">${escapeAttr(title)}</h1>
+    <p style="color:rgba(255,255,255,0.7);font-size:18px;line-height:1.6;margin:0 0 8px">${escapeAttr(intro)}</p>
+    <p style="color:rgba(255,255,255,0.45);font-size:14px;margin:0 0 16px">Last updated: August 2026</p>
+    <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:8px">${blocks}</div>
+  </main>
+  ${footer()}`;
+  return pageTemplate(
+    `${title} — Wisnotech`,
+    intro,
+    `${SITE_URL}/${kind}`,
+    null,
+    JSON.stringify([
+      JSON.parse(orgLd()),
+      JSON.parse(JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
+          { "@type": "ListItem", position: 2, name: title, item: `${SITE_URL}/${kind}` },
+        ],
+      })),
+    ]),
+    body
+  );
+}
+
+mkdirSync(join(DIST, "privacy"), { recursive: true });
+writeFileSync(join(DIST, "privacy", "index.html"), legalHtml("privacy"));
+console.log("✓ privacy -> dist/privacy/index.html");
+
+mkdirSync(join(DIST, "terms"), { recursive: true });
+writeFileSync(join(DIST, "terms", "index.html"), legalHtml("terms"));
+console.log("✓ terms -> dist/terms/index.html");
+
 // ---- sitemap.xml ------------------------------------------------------------
 const now = new Date().toISOString().slice(0, 10);
 const urls = [
@@ -259,6 +328,8 @@ const urls = [
   { loc: `${SITE_URL}/blog`, lastmod: now, priority: 0.9 },
   { loc: `${SITE_URL}/wino`, lastmod: now, priority: 0.9 },
   { loc: `${SITE_URL}/portfolio`, lastmod: now, priority: 0.9 },
+  { loc: `${SITE_URL}/privacy`, lastmod: now, priority: 0.4 },
+  { loc: `${SITE_URL}/terms`, lastmod: now, priority: 0.4 },
   ...posts.map((p) => ({
     loc: `${SITE_URL}/blog/${p.slug}`,
     lastmod: String(p.data.date || now),
@@ -281,9 +352,11 @@ const llms = `# Wisnotech
 > AI education and consulting. Based in Uromi, Edo State, Nigeria, serving clients worldwide.
 
 ## Company
-- [Homepage](${SITE_URL}/): Wisnotech — AI, software & digital innovation in Nigeria
+- [Homepage](${SITE_URL}/): Wisnotech — AI, software & automation for growing businesses
 - [Contact](${SITE_URL}/#contact): wisnotech@gmail.com · +2349153541297
 - [Wisnotech AI Video Studio](${SITE_URL}/portfolio): Full AI video production for brands, filmmakers and creators — UGC ads, film scenes and channel content
+- [Privacy Policy](${SITE_URL}/privacy)
+- [Terms of Service](${SITE_URL}/terms)
 
 ## Courses
 - [Wisnotech Academy](${SITE_URL}/#/academy): Practical AI, automation, content and software courses with pricing

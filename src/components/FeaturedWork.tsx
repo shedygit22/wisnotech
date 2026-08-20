@@ -6,7 +6,10 @@ import ImageWithFallback from "./ImageWithFallback";
 interface Project {
   name: string;
   category: string;
+  status: string;
+  statusTone: "live" | "progress";
   desc: string;
+  outcome: string;
   tech: string[];
   href: string;
   media: string;
@@ -17,7 +20,10 @@ const PROJECTS: Project[] = [
   {
     name: "Wino",
     category: "AI Product",
+    status: "In development",
+    statusTone: "progress",
     desc: "An AI video creation platform that turns prompts and images into ready-to-publish videos.",
+    outcome: "A working product with a live landing page, pricing and download flow.",
     tech: ["AI generation", "Product platform"],
     href: "/wino",
     media: "/wino/thumbs/showcase-matrix.jpg",
@@ -26,7 +32,10 @@ const PROJECTS: Project[] = [
   {
     name: "Wisnotech Studios",
     category: "Creative Production",
+    status: "Live studio",
+    statusTone: "live",
     desc: "An AI-powered production studio delivering cinematic ads, UGC, trailers and social content.",
+    outcome: "A client-ready studio with services, transparent USD pricing and an inquiry flow.",
     tech: ["AI video", "Creative direction"],
     href: "/portfolio",
     media: "/portfolio/thumbs/dune-trailer.jpg",
@@ -35,7 +44,10 @@ const PROJECTS: Project[] = [
   {
     name: "Wisne — AI Assistant",
     category: "AI Product",
+    status: "Live on this site",
+    statusTone: "live",
     desc: "A live AI advisor that answers questions, quotes projects and even talks on a call.",
+    outcome: "Running right now — try the assistant widget in the corner of this page.",
     tech: ["Chat", "Voice", "Live AI"],
     href: "#assistant",
     media: "/assets/ai-images/1.jpeg",
@@ -44,7 +56,10 @@ const PROJECTS: Project[] = [
   {
     name: "Wisnotech AI Academy",
     category: "Education Platform",
+    status: "Live courses",
+    statusTone: "live",
     desc: "Hands-on courses in AI, automation, prompt engineering and video production.",
+    outcome: "Enrollable courses with curriculum, pricing and an enrolment flow.",
     tech: ["Courses", "Practical training"],
     href: "/#/academy",
     media: "/assets/ai-images/2.jpeg",
@@ -113,13 +128,31 @@ export default function FeaturedWork() {
               {/* Body */}
               <div className="flex flex-1 flex-col p-6">
                 <div className="flex items-start justify-between gap-4">
-                  <h3 className="text-xl font-semibold tracking-tight text-white">{p.name}</h3>
+                  <div>
+                    <h3 className="text-xl font-semibold tracking-tight text-white">{p.name}</h3>
+                    <span
+                      className={`mt-2 inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-medium ${
+                        p.statusTone === "live"
+                          ? "border-emerald-400/30 bg-emerald-400/10 text-emerald-300"
+                          : "border-amber-400/30 bg-amber-400/10 text-amber-300"
+                      }`}
+                    >
+                      <span
+                        className={`h-1.5 w-1.5 rounded-full ${
+                          p.statusTone === "live" ? "bg-emerald-400" : "bg-amber-400"
+                        }`}
+                        aria-hidden
+                      />
+                      {p.status}
+                    </span>
+                  </div>
                   <ArrowUpRight
                     className="h-5 w-5 shrink-0 text-white/35 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-neon"
                     aria-hidden
                   />
                 </div>
-                <p className="mt-2 text-sm leading-relaxed text-muted">{p.desc}</p>
+                <p className="mt-3 text-sm leading-relaxed text-muted">{p.desc}</p>
+                <p className="mt-2 text-[13px] leading-relaxed text-white/55">{p.outcome}</p>
                 <div className="mt-5 flex flex-wrap items-center gap-2">
                   {p.tech.map((t) => (
                     <span

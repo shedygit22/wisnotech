@@ -32,7 +32,7 @@ export default function Navbar() {
         )}
       >
         <nav className="container-wide flex h-18 items-center justify-between py-4" aria-label="Main navigation">
-          <a href="#home" className="shrink-0" aria-label="Wisnotech home">
+          <a href="/#home" className="shrink-0" aria-label="Wisnotech home">
             <Logo />
           </a>
 
@@ -50,7 +50,7 @@ export default function Navbar() {
 
           <div className="hidden md:block">
             <a
-              href="#contact"
+              href="/#contact"
               className="group inline-flex items-center gap-2 rounded-xl bg-white px-5 py-2.5 text-sm font-medium text-[#080808] transition-all hover:bg-zinc-100"
             >
               Start a Project
@@ -112,7 +112,7 @@ export default function Navbar() {
 
             <div className="px-8 pb-12">
               <a
-                href="#contact"
+                href="/#contact"
                 onClick={() => setOpen(false)}
                 className="flex w-full items-center justify-center gap-2 rounded-xl bg-white px-6 py-4 text-base font-semibold text-[#080808]"
               >

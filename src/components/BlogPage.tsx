@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { ArrowRight, Calendar, Clock, Tag } from "lucide-react";
-import Logo from "./Logo";
+import Navbar from "./Navbar";
+import Footer from "./Footer";
 import { blogPosts } from "../lib/posts";
 import { applyPageMeta, breadcrumbSchema, orgSchema } from "../lib/seo";
 
@@ -39,22 +40,9 @@ export default function BlogPage() {
 
   return (
     <div className="relative min-h-screen bg-background text-white">
-      <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-[#080808]/85 backdrop-blur-md">
-        <nav className="container-wide flex h-16 items-center justify-between gap-4 py-4">
-          <a href="/" aria-label="Wisnotech home" className="shrink-0">
-            <Logo />
-          </a>
-          <a
-            href="/"
-            className="group inline-flex items-center gap-2 rounded-lg border border-white/15 px-4 py-2 text-sm text-white/70 transition-colors hover:border-white/35 hover:text-white"
-          >
-            <ArrowRight className="h-4 w-4 rotate-180 transition-transform group-hover:-translate-x-0.5" aria-hidden />
-            Back to home
-          </a>
-        </nav>
-      </header>
+      <Navbar />
 
-      <main className="pt-16">
+      <main className="pt-20">
         <section className="relative overflow-hidden py-16 md:py-24">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_50%_at_50%_0%,rgba(59,123,255,0.12),transparent_70%)]" />
           <div className="container-wide relative">
@@ -146,15 +134,7 @@ export default function BlogPage() {
         </section>
       </main>
 
-      <footer className="border-t border-white/10 py-8">
-        <div className="container-wide flex flex-col items-center justify-between gap-4 text-sm text-white/40 sm:flex-row">
-          <p>© {new Date().getFullYear()} Wisnotech. All rights reserved.</p>
-          <a href="/" className="group inline-flex items-center gap-1.5 transition-colors hover:text-white/70">
-            Back to homepage
-            <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden />
-          </a>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

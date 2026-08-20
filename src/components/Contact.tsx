@@ -106,6 +106,11 @@ export default function Contact() {
     setSent(true);
   };
 
+  const resetForm = () => {
+    setForm({ name: "", email: "", company: "", interest: "", budget: "", message: "" });
+    setSent(false);
+  };
+
   const selectClass =
     "w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white placeholder:text-white/35 focus:border-neon/50 focus:outline-none";
 
@@ -132,7 +137,29 @@ export default function Contact() {
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             className="flex flex-col gap-4"
           >
-            <form onSubmit={submit} className="card space-y-4">
+            {sent ? (
+              <div className="card flex flex-col items-start gap-4 !p-8">
+                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-400/15">
+                  <Send className="h-6 w-6 text-emerald-400" aria-hidden />
+                </span>
+                <div>
+                  <h3 className="text-xl font-semibold text-white">Project request sent.</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted">
+                    Thanks, {form.name || "there"} — your brief is on its way to
+                    our team. We reply within one business day. If a draft email
+                    opened, just hit send and we&apos;ll pick it up from there.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={resetForm}
+                  className="text-sm font-medium text-neon underline decoration-neon/30 underline-offset-4 transition-colors hover:text-white"
+                >
+                  Send another request
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={submit} className="card space-y-4">
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
                   <label htmlFor="c-name" className="mb-1.5 block text-sm font-medium text-white/85">
@@ -251,6 +278,7 @@ export default function Contact() {
                 Or send it on WhatsApp
               </a>
             </form>
+            )}
 
             {CONTACT_ITEMS.map((item) => (
               <a

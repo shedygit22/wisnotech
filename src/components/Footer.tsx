@@ -5,8 +5,8 @@ const FOOTER_GROUPS = [
   {
     heading: "Company",
     links: [
-      { label: "About", href: "#about" },
-      { label: "Our Work", href: "#work" },
+      { label: "About", href: "/#about" },
+      { label: "Our Work", href: "/#work" },
       { label: "Studio Portfolio", href: "/portfolio" },
       { label: "WINO App", href: "/wino" },
       { label: "AI Academy", href: "/#/academy" },
@@ -16,21 +16,21 @@ const FOOTER_GROUPS = [
   {
     heading: "Services",
     links: [
-      { label: "AI Solutions", href: "#services" },
-      { label: "AI Automation", href: "#automation" },
-      { label: "Software Development", href: "#services" },
-      { label: "Digital Growth", href: "#services" },
-      { label: "Business Management Systems", href: "#services" },
+      { label: "AI Solutions", href: "/#services" },
+      { label: "AI Automation", href: "/#automation" },
+      { label: "Software Development", href: "/#services" },
+      { label: "Digital Growth", href: "/#services" },
+      { label: "Business Management Systems", href: "/#services" },
     ],
   },
   {
     heading: "Get Started",
     links: [
-      { label: "Start a Project", href: "#contact" },
+      { label: "Start a Project", href: "/#contact" },
       { label: "Talk on WhatsApp", href: "https://wa.me/2349153541297" },
       { label: "Email Us", href: "mailto:wisnotech@gmail.com" },
       { label: "Call Us", href: "tel:+2349153541297" },
-      { label: "FAQ", href: "#faq" },
+      { label: "FAQ", href: "/#faq" },
     ],
   },
 ];
@@ -105,13 +105,21 @@ export default function Footer() {
 
         <div className="mt-16 flex flex-col items-center gap-4 border-t border-white/10 pt-8 sm:flex-row sm:justify-between">
           <p className="text-sm text-white/40">© 2026 Wisnotech. All rights reserved.</p>
-          <a
-            href="#contact"
-            className="group inline-flex items-center gap-1.5 text-sm font-medium text-white/70 transition-colors hover:text-neon"
-          >
-            Start a Project
-            <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden />
-          </a>
+          <div className="flex items-center gap-6">
+            <a href="/privacy" className="text-sm text-white/40 transition-colors hover:text-white/70">
+              Privacy
+            </a>
+            <a href="/terms" className="text-sm text-white/40 transition-colors hover:text-white/70">
+              Terms
+            </a>
+            <a
+              href="/#contact"
+              className="group inline-flex items-center gap-1.5 text-sm font-medium text-white/70 transition-colors hover:text-neon"
+            >
+              Start a Project
+              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden />
+            </a>
+          </div>
         </div>
       </div>
     </footer>

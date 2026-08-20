@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import ImageWithFallback from "./ImageWithFallback";
 
 export default function About() {
   return (
@@ -31,8 +32,29 @@ export default function About() {
             We focus on practical technology that is useful, scalable and
             accessible — built around real business outcomes, not just features.
           </p>
+
+          {/* Founder */}
+          <div className="mt-10 flex items-center gap-5">
+            <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-2xl border border-white/15 bg-[#12121a]">
+              <ImageWithFallback
+                src="/assets/shedrack-akue-640.jpg"
+                alt="Shedrack Akue — Founder of Wisnotech"
+                className="h-full w-full object-cover"
+                fallback={
+                  <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[#14141c] to-[#0b0b0b]">
+                    <span className="text-xl font-bold text-white/40">SA</span>
+                  </div>
+                }
+              />
+            </div>
+            <div>
+              <p className="text-[15px] font-semibold text-white">Shedrack Akue</p>
+              <p className="mt-0.5 text-sm text-white/50">Founder, Wisnotech</p>
+            </div>
+          </div>
+
           <a
-            href="#services"
+            href="/#services"
             className="group mt-9 inline-flex items-center gap-2 text-[15px] font-medium text-white transition-colors hover:text-zinc-300"
           >
             Explore what we do

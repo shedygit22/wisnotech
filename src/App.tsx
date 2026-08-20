@@ -6,6 +6,7 @@ import About from "./components/About";
 import Problems from "./components/Problems";
 import Services from "./components/Services";
 import FeaturedWork from "./components/FeaturedWork";
+import LatestPosts from "./components/LatestPosts";
 import Why from "./components/Why";
 import WhoWeWorkWith from "./components/WhoWeWorkWith";
 import AiAutomation from "./components/AiAutomation";
@@ -26,6 +27,7 @@ const BlogPage = lazy(() => import("./components/BlogPage"));
 const BlogPostPage = lazy(() => import("./components/BlogPostPage"));
 const WinoPage = lazy(() => import("./components/WinoPage"));
 const PortfolioPage = lazy(() => import("./components/PortfolioPage"));
+const LegalPage = lazy(() => import("./components/LegalPage"));
 
 function useHashRoute(): string {
   const [hash, setHash] = useState(() => window.location.hash);
@@ -65,6 +67,22 @@ export default function App() {
     return (
       <Suspense fallback={<PageFallback />}>
         <BlogPage />
+      </Suspense>
+    );
+  }
+
+  if (path === "/privacy") {
+    return (
+      <Suspense fallback={<PageFallback />}>
+        <LegalPage kind="privacy" />
+      </Suspense>
+    );
+  }
+
+  if (path === "/terms") {
+    return (
+      <Suspense fallback={<PageFallback />}>
+        <LegalPage kind="terms" />
       </Suspense>
     );
   }
@@ -115,6 +133,7 @@ export default function App() {
         <Problems />
         <Services />
         <FeaturedWork />
+        <LatestPosts />
         <Why />
         <WhoWeWorkWith />
         <AiAutomation />

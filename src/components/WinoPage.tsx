@@ -149,12 +149,12 @@ export default function WinoPage() {
               </ul>
               <ul className="space-y-3">
                 <li>
-                  <a href="/" className="text-sm text-white/55 transition-colors hover:text-white">
+                  <a href="/privacy" className="text-sm text-white/55 transition-colors hover:text-white">
                     Privacy
                   </a>
                 </li>
                 <li>
-                  <a href="/" className="text-sm text-white/55 transition-colors hover:text-white">
+                  <a href="/terms" className="text-sm text-white/55 transition-colors hover:text-white">
                     Terms
                   </a>
                 </li>
