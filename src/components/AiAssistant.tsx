@@ -491,7 +491,6 @@ export default function AiAssistant() {
             status={voiceConversation.status}
             transcript={lastReply ?? undefined}
             bookingLink={BOOKING_URL}
-            voiceLabel="Gemini · natural voice"
             onStop={voiceConversation.stop}
           />
         )}

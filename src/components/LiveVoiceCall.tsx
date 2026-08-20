@@ -16,15 +16,13 @@ interface VoiceCallOverlayProps {
   /** Calendly booking link surfaced when the assistant offers to book. */
   bookingLink?: string | null;
   error?: string | null;
-  /** Human label of the voice engine (e.g. "Piper · in-browser"). */
-  voiceLabel?: string;
   onStop: () => void;
 }
 
 /**
- * Fullscreen "phone call" voice mode, now driven by the in-browser Piper TTS
- * loop (no Gemini). The orb floats freely in deep space — no hard edges, no
- * boxes. Everything recedes behind a single living point of light.
+ * Fullscreen "phone call" voice mode, driven by the hosted Gemini TTS loop.
+ * The orb floats freely in deep space — no hard edges, no boxes. Everything
+ * recedes behind a single living point of light.
  */
 export function VoiceCallOverlay({
   status,
@@ -33,7 +31,6 @@ export function VoiceCallOverlay({
   transcript,
   bookingLink,
   error,
-  voiceLabel,
   onStop,
 }: VoiceCallOverlayProps) {
   const live = status !== "off";
@@ -67,7 +64,7 @@ export function VoiceCallOverlay({
         >
           <Sparkles className="h-4 w-4 text-neon" aria-hidden />
           <span className="text-[13px] font-medium tracking-wide text-white/80">
-            Wisne — Live Voice{voiceLabel ? ` · ${voiceLabel}` : ""}
+            Wisne — Live Voice
           </span>
         </motion.div>
       </div>

@@ -196,56 +196,71 @@ export function stopSpeaking(): void {
 export interface UseVoice {
   supported: boolean;
   listening: boolean;
-  /** Starts mic capture; calls onTranscript with final text. No-op if unsupported. */
-  startListening: (onTranscript: (text: string) => void) => void;
+  /** Starts mic capture; calls onTranscript with final text. No-op if already listening. */
+  startListening: (onTranscript: (text: string) => void, onEnd?: () => void) => void;
   stopListening: () => void;
 }
 
 /** Mic capture hook — wraps SpeechRecognition with one-shot final capture. */
 export function useVoice(): UseVoice {
   const recRef = useRef<SpeechRecognitionLike | null>(null);
+  const listeningRef = useRef(false);
   const [listening, setListening] = useState(false);
   const supported = speechSupported();
 
   const stopListening = useCallback(() => {
+    listeningRef.current = false;
     recRef.current?.stop();
     setListening(false);
   }, []);
 
   const startListening = useCallback(
-    (onTranscript: (text: string) => void) => {
-      if (!supported || listening) return;
+    (onTranscript: (text: string) => void, onEnd?: () => void) => {
+      if (!supported || listeningRef.current) return;
       const rec = getRecognition();
       if (!rec) return;
+      listeningRef.current = true;
       recRef.current = rec;
       rec.lang = "en-US";
       rec.continuous = false;
       rec.interimResults = false;
       rec.maxAlternatives = 1;
+      let gotResult = false;
       rec.onresult = (e) => {
         const len = e.results.length;
         for (let i = 0; i < len; i++) {
           const r = e.results[i];
           if (r.isFinal && r[0]?.transcript) {
+            gotResult = true;
             onTranscript(r[0].transcript.trim());
           }
         }
       };
-      rec.onend = () => setListening(false);
-      rec.onerror = () => setListening(false);
+      const ended = () => {
+        listeningRef.current = false;
+        setListening(false);
+        if (!gotResult) onEnd?.();
+      };
+      rec.onend = ended;
+      rec.onerror = () => {
+        listeningRef.current = false;
+        setListening(false);
+        onEnd?.();
+      };
       setListening(true);
       try {
         rec.start();
       } catch {
-        setListening(false);
+        ended();
       }
     },
-    [supported, listening]
+    [supported]
   );
 
   useEffect(() => {
     return () => {
       recRef.current?.abort();
+      listeningRef.current = false;
       stopSpeaking();
     };
   }, []);
@@ -267,6 +282,10 @@ export interface UseVoiceConversation {
  * Hands-free voice conversation loop:
  * listen → send to LLM → speak reply → listen again (repeat).
  * `ask` must return the assistant's reply text (or null/empty to pause the loop).
+ *
+ * Built to stay in the conversation: a silent pause retries listening instead
+ * of hanging up, and a failed LLM/TTS turn is logged and retried rather than
+ * silently killing the call.
  */
 export function useVoiceConversation(ask: (question: string) => Promise<string | null>): UseVoiceConversation {
   const [active, setActive] = useState(false);
@@ -278,34 +297,61 @@ export function useVoiceConversation(ask: (question: string) => Promise<string |
   const { supported, startListening, stopListening } = useVoice();
 
   const loop = useCallback(async () => {
+    let quietRounds = 0;
+
     while (activeRef.current) {
       statusRef.current = "listening";
       setStatus("listening");
 
-      // Capture one utterance.
+      // Capture one utterance. Resolves fast when the mic ends silently so the
+      // loop can listen again instead of stalling on a fixed timeout.
       const text = await new Promise<string | null>((resolve) => {
-        startListening((t) => resolve(t));
-        // If mic never fires (error), bail out of the loop.
-        setTimeout(() => resolve(null), 12000);
+        let settled = false;
+        const finish = (v: string | null) => {
+          if (settled) return;
+          settled = true;
+          clearTimeout(timer);
+          resolve(v);
+        };
+        const timer = setTimeout(() => finish(null), 20000);
+        startListening((t) => finish(t), () => finish(null));
       });
 
-      if (!activeRef.current || !text) {
-        if (activeRef.current) setStatus("off");
-        return;
+      if (!activeRef.current) break;
+
+      // Nothing captured — allow a couple of silent retries before hanging up.
+      if (!text) {
+        quietRounds++;
+        if (quietRounds >= 3) break;
+        continue;
       }
+      quietRounds = 0;
 
       statusRef.current = "thinking";
       setStatus("thinking");
-      const reply = await askRef.current(text);
-      if (!activeRef.current || !reply) {
-        if (activeRef.current) setStatus("off");
-        return;
+      let reply: string | null = null;
+      try {
+        reply = await askRef.current(text);
+      } catch (err) {
+        console.warn("Voice: ask failed, retrying next turn:", err);
       }
+      if (!activeRef.current) break;
+
+      // No usable reply — keep the call alive rather than dying silently.
+      if (!reply) continue;
 
       statusRef.current = "speaking";
       setStatus("speaking");
-      await speakText(reply);
+      try {
+        await speakText(reply);
+      } catch (err) {
+        console.warn("Voice: speak failed, continuing:", err);
+      }
     }
+
+    activeRef.current = false;
+    setActive(false);
+    setStatus("off");
   }, [startListening]);
 
   const start = useCallback(() => {
