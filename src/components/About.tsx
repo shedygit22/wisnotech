@@ -25,17 +25,17 @@ export default function About() {
         >
           <p className="text-lg leading-relaxed text-muted">
             Wisnotech combines artificial intelligence, software development and
-            digital creativity to help people and organizations work smarter.
+            digital growth to help people and organizations work smarter.
           </p>
           <p className="mt-5 text-lg leading-relaxed text-muted">
             We focus on practical technology that is useful, scalable and
             accessible — built around real business outcomes, not just features.
           </p>
           <a
-            href="#academy"
+            href="#services"
             className="group mt-9 inline-flex items-center gap-2 text-[15px] font-medium text-white transition-colors hover:text-zinc-300"
           >
-            Learn more about Wisnotech
+            Explore what we do
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden />
           </a>
         </motion.div>

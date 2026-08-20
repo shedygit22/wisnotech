@@ -1,41 +1,36 @@
-import { Youtube, Instagram, Linkedin, Twitter } from "lucide-react";
+import { ArrowRight, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 import Logo from "./Logo";
-
-const SOCIALS = [
-  { label: "YouTube", icon: Youtube },
-  { label: "Instagram", icon: Instagram },
-  { label: "LinkedIn", icon: Linkedin },
-  { label: "X", icon: Twitter },
-];
 
 const FOOTER_GROUPS = [
   {
     heading: "Company",
     links: [
-      { label: "Home", href: "#home" },
       { label: "About", href: "#about" },
+      { label: "Our Work", href: "#work" },
+      { label: "Studio Portfolio", href: "/portfolio" },
       { label: "WINO App", href: "/wino" },
-      { label: "Portfolio", href: "/portfolio" },
+      { label: "AI Academy", href: "/#/academy" },
       { label: "Blog", href: "/blog" },
-      { label: "Contact", href: "#contact" },
     ],
   },
   {
     heading: "Services",
     links: [
-      { label: "AI & Automation", href: "#services" },
+      { label: "AI Solutions", href: "#services" },
+      { label: "AI Automation", href: "#automation" },
       { label: "Software Development", href: "#services" },
-      { label: "Web & Mobile", href: "#services" },
-      { label: "AI Education", href: "#services" },
+      { label: "Digital Growth", href: "#services" },
+      { label: "Business Management Systems", href: "#services" },
     ],
   },
   {
-    heading: "Academy",
+    heading: "Get Started",
     links: [
-      { label: "Courses", href: "#/academy" },
-      { label: "Curriculum", href: "#/academy" },
-      { label: "Waitlist", href: "#contact" },
-      { label: "FAQs", href: "#/academy" },
+      { label: "Start a Project", href: "#contact" },
+      { label: "Talk on WhatsApp", href: "https://wa.me/2349153541297" },
+      { label: "Email Us", href: "mailto:wisnotech@gmail.com" },
+      { label: "Call Us", href: "tel:+2349153541297" },
+      { label: "FAQ", href: "#faq" },
     ],
   },
 ];
@@ -50,20 +45,38 @@ export default function Footer() {
               <Logo />
             </a>
             <p className="mt-5 max-w-sm text-[15px] leading-relaxed text-muted">
-              AI, software and digital innovation for a smarter future.
+              AI • Software • Automation • Digital Growth
+            </p>
+            <p className="mt-3 max-w-sm text-sm leading-relaxed text-white/45">
+              We help businesses build AI solutions, automate workflows, develop
+              custom software and create digital systems designed for growth.
             </p>
 
-            <div className="mt-8 flex items-center gap-3">
-              {SOCIALS.map((social) => (
-                <a
-                  key={social.label}
-                  href="#"
-                  aria-label={social.label}
-                  className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 text-white/60 transition-colors hover:border-white/25 hover:text-white"
-                >
-                  <social.icon className="h-4 w-4" aria-hidden />
-                </a>
-              ))}
+            <div className="mt-7 flex flex-col gap-2.5 text-sm text-white/60">
+              <a
+                href="mailto:wisnotech@gmail.com"
+                className="inline-flex items-center gap-2.5 transition-colors hover:text-white"
+              >
+                <Mail className="h-4 w-4 text-neon" aria-hidden />
+                wisnotech@gmail.com
+              </a>
+              <a
+                href="https://wa.me/2349153541297"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2.5 transition-colors hover:text-white"
+              >
+                <MessageCircle className="h-4 w-4 text-emerald-400" aria-hidden />
+                +234 915 354 1297
+              </a>
+              <span className="inline-flex items-center gap-2.5">
+                <Phone className="h-4 w-4 text-white/50" aria-hidden />
+                +234 915 354 1297
+              </span>
+              <span className="inline-flex items-center gap-2.5">
+                <MapPin className="h-4 w-4 text-white/50" aria-hidden />
+                Forest Guard Street, Uromi, Edo State, Nigeria
+              </span>
             </div>
           </div>
 
@@ -76,6 +89,8 @@ export default function Footer() {
                     <li key={link.label}>
                       <a
                         href={link.href}
+                        target={link.href.startsWith("http") ? "_blank" : undefined}
+                        rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
                         className="text-sm text-white/55 transition-colors hover:text-white"
                       >
                         {link.label}
@@ -90,14 +105,13 @@ export default function Footer() {
 
         <div className="mt-16 flex flex-col items-center gap-4 border-t border-white/10 pt-8 sm:flex-row sm:justify-between">
           <p className="text-sm text-white/40">© 2026 Wisnotech. All rights reserved.</p>
-          <div className="flex items-center gap-6">
-            <a href="#" className="text-sm text-white/40 transition-colors hover:text-white/70">
-              Privacy
-            </a>
-            <a href="#" className="text-sm text-white/40 transition-colors hover:text-white/70">
-              Terms
-            </a>
-          </div>
+          <a
+            href="#contact"
+            className="group inline-flex items-center gap-1.5 text-sm font-medium text-white/70 transition-colors hover:text-neon"
+          >
+            Start a Project
+            <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden />
+          </a>
         </div>
       </div>
     </footer>

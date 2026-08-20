@@ -1,135 +1,145 @@
 import { motion } from "framer-motion";
 import {
-  ArrowRight,
-  ArrowUpRight,
-  Workflow,
+  AppWindow,
+  Bot,
+  BrainCircuit,
   Code2,
-  MonitorSmartphone,
-  GraduationCap,
-  Video,
-  Compass,
+  Database,
+  FileText,
+  Globe,
+  Layers,
+  LineChart,
+  MessageSquareText,
+  PenTool,
+  Plug,
+  Repeat,
+  Target,
+  TrendingUp,
+  Wrench,
+  Workflow,
   type LucideIcon,
 } from "lucide-react";
-import { SERVICES } from "../lib/content";
 
-const ICONS: Record<string, LucideIcon> = {
-  workflow: Workflow,
-  code: Code2,
-  devices: MonitorSmartphone,
-  education: GraduationCap,
-  video: Video,
-  compass: Compass,
-};
+interface SubService {
+  icon: LucideIcon;
+  name: string;
+  desc: string;
+}
 
-const grid = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.1 } },
-};
+interface Pillar {
+  icon: LucideIcon;
+  name: string;
+  intro: string;
+  accent: string;
+  services: SubService[];
+}
 
-const card = {
-  hidden: { opacity: 0, y: 24 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as const } },
+const PILLARS: Pillar[] = [
+  {
+    icon: BrainCircuit,
+    name: "AI",
+    intro: "Practical AI built into your operations — not an afterthought.",
+    accent: "#3b7bff",
+    services: [
+      { icon: AppWindow, name: "AI Applications", desc: "Custom AI tools built around your workflow." },
+      { icon: Workflow, name: "AI Automation", desc: "Workflows that run repetitive tasks without you." },
+      { icon: MessageSquareText, name: "AI Assistants", desc: "Support, sales and internal assistants that answer instantly." },
+      { icon: FileText, name: "AI Content Systems", desc: "Produce on-brand content at scale." },
+      { icon: Plug, name: "AI Integrations", desc: "Connect AI into the tools you already use." },
+    ],
+  },
+  {
+    icon: Code2,
+    name: "SOFTWARE",
+    intro: "Custom software engineered to scale with your business.",
+    accent: "#8b7aff",
+    services: [
+      { icon: AppWindow, name: "Custom Web Applications", desc: "Apps built around how your business actually works." },
+      { icon: Layers, name: "SaaS Development", desc: "Multi-tenant platforms built to launch and scale." },
+      { icon: Database, name: "Business Management Systems", desc: "One system for orders, clients, stock and operations." },
+      { icon: Wrench, name: "Internal Tools", desc: "Private tools that remove friction from your team." },
+      { icon: Globe, name: "Websites & Platforms", desc: "Fast, conversion-focused sites and platforms." },
+    ],
+  },
+  {
+    icon: TrendingUp,
+    name: "GROWTH",
+    intro: "Digital systems designed to attract, capture and convert.",
+    accent: "#2dd4bf",
+    services: [
+      { icon: Target, name: "Conversion-Focused Websites", desc: "Sites built to turn visitors into customers." },
+      { icon: LineChart, name: "Lead Generation Systems", desc: "Digital systems that attract, capture and convert." },
+      { icon: PenTool, name: "Content Systems", desc: "AI-powered content engines for marketing at scale." },
+      { icon: Repeat, name: "Business Automation", desc: "End-to-end automation of your operations." },
+      { icon: Bot, name: "AI Marketing Tools", desc: "The stack behind predictable digital growth." },
+    ],
+  },
+];
+
+const fadeUp = {
+  initial: { opacity: 0, y: 24 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: "-80px" },
+  transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] as const },
 };
 
 export default function Services() {
   return (
-    <section id="services" className="section">
+    <section id="services" className="section scroll-mt-20 bg-white/[0.02]">
       <div className="container-wide">
         <div className="max-w-2xl">
           <p className="eyebrow">Services</p>
           <h2 className="mt-5 text-4xl font-semibold tracking-tight text-white md:text-5xl">
-            Technology built around your goals.
+            Technology that moves your business forward.
           </h2>
           <p className="mt-5 text-lg leading-relaxed text-muted">
-            From AI automation to custom software, we turn ideas and business
-            challenges into practical digital solutions.
+            Three pillars, one partner — AI, software and growth systems working
+            together toward your business outcomes.
           </p>
         </div>
 
-        <motion.div
-          variants={grid}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, margin: "-80px" }}
-          className="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 [perspective:1400px]"
-        >
-          {SERVICES.map((service) => {
-            const Icon = ICONS[service.icon] ?? Workflow;
-            return (
-              <motion.article
-                key={service.title}
-                variants={card}
-                className="group h-full"
-              >
-                <ServiceFlip
-                  Icon={Icon}
-                  title={service.title}
-                  description={service.description}
-                />
-              </motion.article>
-            );
-          })}
-        </motion.div>
+        <div className="mt-14 grid gap-5 lg:grid-cols-3">
+          {PILLARS.map((pillar) => (
+            <motion.div
+              key={pillar.name}
+              {...fadeUp}
+              className="card flex h-full flex-col p-7"
+              style={{ borderTopColor: `${pillar.accent}55`, borderTopWidth: 2 }}
+            >
+              <div className="flex items-center gap-3">
+                <span
+                  className="flex h-11 w-11 items-center justify-center rounded-xl"
+                  style={{ background: `${pillar.accent}1f`, color: pillar.accent }}
+                >
+                  <pillar.icon className="h-5 w-5" aria-hidden />
+                </span>
+                <span className="text-lg font-bold tracking-tight text-white">{pillar.name}</span>
+              </div>
+              <p className="mt-4 text-sm leading-relaxed text-muted">{pillar.intro}</p>
+
+              <ul className="mt-6 flex-1 space-y-1">
+                {pillar.services.map((s) => (
+                  <li
+                    key={s.name}
+                    className="group flex items-start gap-3 rounded-xl px-2 py-2.5 transition-colors hover:bg-white/[0.04]"
+                  >
+                    <span
+                      className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg"
+                      style={{ background: `${pillar.accent}14`, color: pillar.accent }}
+                    >
+                      <s.icon className="h-3.5 w-3.5" aria-hidden />
+                    </span>
+                    <div>
+                      <p className="text-[14.5px] font-medium text-white">{s.name}</p>
+                      <p className="text-[13px] leading-relaxed text-muted">{s.desc}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+          ))}
+        </div>
       </div>
     </section>
-  );
-}
-
-function ServiceFlip({
-  Icon,
-  title,
-  description,
-}: {
-  Icon: LucideIcon;
-  title: string;
-  description: string;
-}) {
-  return (
-    <div className="relative h-full [transform-style:preserve-3d] transition-transform duration-700 group-hover:[transform:rotateY(180deg)]">
-      {/* Front — in flow, defines card height */}
-      <div className="card relative flex h-full min-h-[280px] flex-col [backface-visibility:hidden]">
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-white/[0.04] to-transparent" />
-        <span className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/[0.06] text-white/80 transition-colors duration-300 group-hover:border-neon/40 group-hover:text-neon">
-          <Icon className="h-5 w-5" aria-hidden />
-        </span>
-        <h3 className="mt-6 text-lg font-semibold text-white">{title}</h3>
-        <p className="mt-2.5 flex-1 text-[15px] leading-relaxed text-muted">
-          {description}
-        </p>
-        <span className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-white/70 transition-colors group-hover:text-neon">
-          Learn more
-          <ArrowUpRight
-            className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-            aria-hidden
-          />
-        </span>
-      </div>
-
-      {/* Back (flipped) */}
-      <div className="absolute inset-0 flex flex-col items-start overflow-hidden rounded-2xl border border-neon/40 bg-gradient-to-br from-[#0b1324]/95 to-[#101018]/95 p-7 [backface-visibility:hidden] [transform:rotateY(180deg)] backdrop-blur-xl sm:p-8">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(circle at 80% 15%, rgba(80,140,255,0.22) 0%, transparent 55%)",
-          }}
-        />
-        <span className="relative flex h-11 w-11 items-center justify-center rounded-xl border border-neon/40 bg-neon/10 text-neon">
-          <Icon className="h-5 w-5" aria-hidden />
-        </span>
-        <h3 className="relative mt-6 text-lg font-semibold text-white">{title}</h3>
-        <p className="relative mt-3 flex-1 text-[15px] leading-relaxed text-white/70">
-          {description}
-        </p>
-        <a
-          href="#contact"
-          className="relative mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-neon transition-colors hover:text-white"
-        >
-          Start a project
-          <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden />
-        </a>
-      </div>
-    </div>
   );
 }

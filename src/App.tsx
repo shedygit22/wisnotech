@@ -1,17 +1,20 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
-import StatsBar from "./components/StatsBar";
-import Services from "./components/Services";
-import Showreel from "./components/Showreel";
-import AiGallery from "./components/AiGallery";
-import Wino from "./components/Wino";
-import Testimonials from "./components/Testimonials";
-import Process from "./components/Process";
+import TrustStrip from "./components/TrustStrip";
 import About from "./components/About";
-import Solutions from "./components/Solutions";
+import Problems from "./components/Problems";
+import Services from "./components/Services";
+import FeaturedWork from "./components/FeaturedWork";
+import Why from "./components/Why";
+import WhoWeWorkWith from "./components/WhoWeWorkWith";
+import AiAutomation from "./components/AiAutomation";
+import Process from "./components/Process";
+import Wino from "./components/Wino";
 import Academy from "./components/Academy";
 import LlmStudio from "./components/LlmStudio";
+import FAQ from "./components/FAQ";
+import FinalCta from "./components/FinalCta";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import AiAssistant from "./components/AiAssistant";
@@ -107,17 +110,20 @@ export default function App() {
       <Navbar />
       <main>
         <Hero />
-        <StatsBar />
-        <Services />
-        <Showreel />
-        <AiGallery />
-        <Wino />
-        <Testimonials />
+        <TrustStrip />
         <About />
-        <Solutions />
+        <Problems />
+        <Services />
+        <FeaturedWork />
+        <Why />
+        <WhoWeWorkWith />
+        <AiAutomation />
         <Process />
+        <Wino />
         <Academy />
         <LlmStudio />
+        <FAQ />
+        <FinalCta />
         <Contact />
       </main>
       <Footer />

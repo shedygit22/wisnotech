@@ -53,7 +53,7 @@ export default function Navbar() {
               href="#contact"
               className="group inline-flex items-center gap-2 rounded-xl bg-white px-5 py-2.5 text-sm font-medium text-[#080808] transition-all hover:bg-zinc-100"
             >
-              Let&apos;s Talk
+              Start a Project
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
             </a>
           </div>
@@ -116,7 +116,7 @@ export default function Navbar() {
                 onClick={() => setOpen(false)}
                 className="flex w-full items-center justify-center gap-2 rounded-xl bg-white px-6 py-4 text-base font-semibold text-[#080808]"
               >
-                Let&apos;s Talk
+                Start a Project
                 <ArrowRight className="h-4 w-4" />
               </a>
             </div>

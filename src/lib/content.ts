@@ -1,12 +1,8 @@
 export const NAV_LINKS = [
-  { label: "Home", href: "#home" },
   { label: "Services", href: "#services" },
+  { label: "Solutions", href: "#solutions" },
+  { label: "Our Work", href: "#work" },
   { label: "About", href: "#about" },
-  { label: "WINO App", href: "/wino" },
-  { label: "Portfolio", href: "/portfolio" },
-  { label: "Courses", href: "#/academy" },
-  { label: "AI Studio", href: "#assistant" },
-  { label: "Blog", href: "/blog" },
   { label: "Contact", href: "#contact" },
 ] as const;
 

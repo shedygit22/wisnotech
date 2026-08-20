@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Search, MapPin, Hammer, Rocket } from "lucide-react";
+import { ArrowRight, Compass, Hammer, Rocket, Search } from "lucide-react";
 
 const STEPS = [
   {
@@ -7,43 +7,50 @@ const STEPS = [
     step: "01",
     title: "Discover",
     description:
-      "A short call to understand your goal, audience and what success looks like — no jargon, no pressure.",
+      "We start by understanding your goals, your business and what success actually looks like. No jargon, no assumptions — just clarity.",
   },
   {
-    icon: MapPin,
+    icon: Compass,
     step: "02",
-    title: "Plan",
+    title: "Strategize",
     description:
-      "A concrete scope, timeline and transparent quote. You always know exactly what you're getting.",
+      "A clear plan, a defined scope and a transparent quote. You know exactly what you're getting before anything is built.",
   },
   {
     icon: Hammer,
     step: "03",
     title: "Build",
     description:
-      "We design, build and iterate in clear milestones, keeping you in the loop at every step.",
+      "We design, build and iterate in visible milestones — keeping you in the loop at every step until it's right.",
   },
   {
     icon: Rocket,
     step: "04",
-    title: "Launch & grow",
+    title: "Launch & Grow",
     description:
-      "You go live with support and training included — plus a roadmap for scaling what works.",
+      "You go live with support and training included, plus a roadmap for improving the system as your business grows.",
   },
 ];
 
+const fadeUp = {
+  initial: { opacity: 0, y: 24 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: "-80px" },
+  transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] as const },
+};
+
 export default function Process() {
   return (
-    <section id="process" className="section bg-white/[0.02]">
+    <section id="process" className="section">
       <div className="container-wide">
         <div className="max-w-2xl">
-          <p className="eyebrow">How we work</p>
+          <p className="eyebrow">How it works</p>
           <h2 className="mt-5 text-4xl font-semibold tracking-tight text-white md:text-5xl">
-            From idea to launch in four steps.
+            From idea to launch in four clear steps.
           </h2>
           <p className="mt-5 text-lg leading-relaxed text-muted">
-            A clear, predictable process — so working with AI feels like working with a
-            partner, not a mystery.
+            A clear, predictable process — so working with technology feels like
+            working with a partner, not a mystery.
           </p>
         </div>
 
@@ -51,10 +58,8 @@ export default function Process() {
           {STEPS.map((s, i) => (
             <motion.div
               key={s.step}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.6, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+              {...fadeUp}
+              transition={{ ...fadeUp.transition, delay: i * 0.08 }}
               className="card group relative flex h-full flex-col"
             >
               <span className="absolute right-6 top-6 text-4xl font-bold text-white/[0.06] transition-colors group-hover:text-neon/20">
@@ -68,6 +73,22 @@ export default function Process() {
             </motion.div>
           ))}
         </div>
+
+        <motion.div
+          {...fadeUp}
+          className="card mt-8 flex flex-col items-center justify-between gap-4 !p-7 text-center sm:flex-row sm:text-left"
+        >
+          <div>
+            <p className="text-lg font-semibold text-white">Ready to start your project?</p>
+            <p className="mt-1 text-sm text-muted">
+              Tell us where you want to go — we&apos;ll map the path from idea to launch.
+            </p>
+          </div>
+          <a href="#contact" className="btn-primary group shrink-0">
+            Start Your Project
+            <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden />
+          </a>
+        </motion.div>
       </div>
     </section>
   );

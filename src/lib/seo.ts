@@ -44,10 +44,10 @@ export interface PageMeta {
 }
 
 export function applyPageMeta(meta: PageMeta) {
-  const title = meta.title ?? "Wisnotech — AI, Software & Digital Innovation in Nigeria";
+  const title = meta.title ?? "Wisnotech — AI, Software & Automation for Growing Businesses";
   const description =
     meta.description ??
-    "Wisnotech builds AI solutions, software, websites and digital experiences that help businesses and ambitious people in Nigeria and beyond work smarter and grow.";
+    "Wisnotech helps businesses build AI solutions, automate workflows, develop custom software and create digital systems designed for growth.";
   const url = `${SITE_URL}${meta.path}`;
   const image = meta.image ?? `${SITE_URL}/assets/wisnotech-og.png`;
 
