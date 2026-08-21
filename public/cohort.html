@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buildcamp — Web Development Cohort 12 | Lagos • Remote • In-person</title>
+<meta name="description" content="12-week intensive web development cohort. Ship 6 real products, get mentored by engineers at Paystack & Moniepoint. Pricing in Naira.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config={
+  theme:{
+    extend:{
+      fontFamily:{
+        sans:['Inter','system-ui','sans-serif'],
+        display:['Space Grotesk','Inter','sans-serif'],
+        mono:['JetBrains Mono','monospace']
+      },
+      colors:{
+        primary:'#4F46E5',
+        secondary:'#818CF8',
+        accent:'#EA580C',
+        ink:'#1E1B4B',
+        muted:'#475569',
+        bg:'#EEF2FF',
+        card:'#FFFFFF',
+        border:'#C7D2FE',
+        soft:'#EBEEF8'
+      }
+    }
+  }
+}
+</script>
+<style>
+:root{--primary:#4F46E5;--accent:#EA580C;--ink:#1E1B4B;--border:#C7D2FE}
+*{font-variant-ligatures:common-ligatures}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+.display{font-family:'Space Grotesk',sans-serif;letter-spacing:-0.03em}
+@media(max-width:640px){.display{letter-spacing:-0.02em}}
+.focus-ring:focus-visible{outline:2px solid #4F46E5;outline-offset:2px}
+.btn-primary{transition:all 200ms ease-out}
+.btn-primary:hover{filter:brightness(1.08)} /* ~8% lightness delta per PencilPlaybook */
+.btn-primary:active{transform:translateY(1px)}
+.glass-nav{background:rgba(255,255,255,.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(199,210,254,.6)}
+.card-shadow{box-shadow:0 1px 3px rgba(30,27,75,.06),0 8px 24px rgba(79,70,229,.06)}
+.card-shadow:hover{box-shadow:0 4px 12px rgba(30,27,75,.08),0 16px 32px rgba(79,70,229,.10)}
+.disabled{opacity:.4;pointer-events:none} /* PencilPlaybook 40% not 50% */
+.touch-target{min-height:44px;min-width:44px}
+.code-block{background:#0f172a;color:#E2E8F0} /* not pure white on dark - halation fix */
+</style>
+</head>
+<body class="bg-bg text-ink antialiased selection:bg-primary selection:text-white">
+<a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 bg-primary text-white px-4 py-2 rounded-lg z-50">Skip to content</a>
+
+<!-- NAV -->
+<header class="sticky top-0 z-40 glass-nav">
+  <div class="max-w-[1160px] mx-auto px-4 sm:px-6 lg:px-8 h-[64px] flex items-center justify-between">
+    <a href="/" class="flex items-center gap-3 focus-ring rounded-lg shrink-0" aria-label="Back to Wisnotech homepage">
+      <span class="w-9 h-9 rounded-xl bg-primary flex items-center justify-center text-white font-bold text-sm">‹/›</span>
+      <span class="font-display font-bold text-[17px] tracking-tight">Buildcamp</span>
+      <span class="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-white border border-border">Cohort 12 <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Open</span>
+    </a>
+    <a href="/" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-primary text-white text-sm font-bold shadow-sm hover:bg-[#4338CA] focus-ring shrink-0" aria-label="Back to homepage">
+    <nav class="hidden md:flex items-center gap-1 text-sm font-medium" aria-label="Primary">
+      <a href="#curriculum" class="px-3 py-2 rounded-lg hover:bg-white focus-ring">Curriculum</a>
+      <a href="#mentors" class="px-3 py-2 rounded-lg hover:bg-white focus-ring">Mentors</a>
+      <a href="#pricing" class="px-3 py-2 rounded-lg hover:bg-white focus-ring">Pricing ₦</a>
+      <a href="#faq" class="px-3 py-2 rounded-lg hover:bg-white focus-ring">FAQ</a>
+    </nav>
+    <div class="flex items-center gap-2">
+      <a href="#pricing" class="hidden sm:inline-flex touch-target items-center px-4 py-2 text-sm font-semibold hover:bg-white rounded-full focus-ring transition">Log in</a>
+      <a href="#pricing" class="touch-target inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-bold text-white bg-accent hover:bg-[#D84D07] rounded-full shadow-sm focus-ring btn-primary">Apply — ₦25k deposit</a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<!-- HERO -->
+<section class="relative overflow-hidden">
+  <div class="absolute inset-0 -z-10 bg-gradient-to-b from-white via-bg to-bg"></div>
+  <div class="absolute -top-24 -right-24 w-[720px] h-[480px] bg-[#C7D2FE] rounded-full blur-[90px] opacity-60"></div>
+  <div class="absolute top-24 -left-32 w-[520px] h-[520px] bg-[#FFEDD5] rounded-full blur-[80px] opacity-40"></div>
+  <div class="max-w-[1160px] mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-14 pb-10">
+    <div class="grid lg:grid-cols-[1.05fr_.95fr] gap-10 items-center">
+      <div>
+        <div class="inline-flex flex-wrap items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-border text-xs font-semibold">
+          <span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200">Next cohort: 17 March • Lagos & Remote</span>
+          <span class="hidden sm:inline text-muted">12 weeks • Mon–Thu 7–9pm WAT • Sat Build</span>
+        </div>
+        <h1 class="display mt-5 text-[32px] sm:text-[44px] lg:text-[52px] font-bold leading-[0.9] tracking-[-0.03em]">
+          Become a<br>
+          <span class="bg-gradient-to-r from-primary via-[#6366F1] to-secondary bg-clip-text text-transparent">hireable web</span><br>
+          developer in 12 weeks.
+        </h1>
+        <p class="mt-4 text-[16px] sm:text-[18px] leading-7 text-muted max-w-[560px]">No tutorial hell. You’ll ship <span class="font-semibold text-ink">6 live products</span> — portfolio, SaaS, e-commerce — with code review from engineers at <span class="font-semibold text-ink">Paystack, Moniepoint & PiggyVest</span>.</p>
+        <div class="mt-7 flex flex-col sm:flex-row gap-3">
+          <a href="#pricing" class="touch-target inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-primary hover:bg-[#4338CA] text-white font-bold text-[15px] rounded-full shadow-[0_8px_20px_rgba(79,70,229,.25)] focus-ring btn-primary">
+            Secure my seat — pay in Naira
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+          <a href="#" class="touch-target inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-white border border-border font-semibold text-[15px] rounded-full hover:bg-soft focus-ring">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Watch 90-sec outcomes
+          </a>
+        </div>
+        <p class="mt-3 text-xs font-medium text-muted">₦25,000 reserves your seat • Pay small small available • 2,317 alumni</p>
+        <div class="mt-6 flex items-center gap-4 flex-wrap">
+          <div class="flex -space-x-2">
+            <img src="https://i.pravatar.cc/100?img=8" alt="" class="w-8 h-8 rounded-full border-2 border-white">
+            <img src="https://i.pravatar.cc/100?img=15" alt="" class="w-8 h-8 rounded-full border-2 border-white">
+            <img src="https://i.pravatar.cc/100?img=22" alt="" class="w-8 h-8 rounded-full border-2 border-white">
+            <img src="https://i.pravatar.cc/100?img=28" alt="" class="w-8 h-8 rounded-full border-2 border-white">
+          </div>
+          <p class="text-sm"><span class="font-bold">4.8/5</span> <span class="text-amber-500">★★★★★</span> <span class="text-muted">from 412 reviews</span> • <span class="font-semibold">82% hired</span> <span class="text-muted">within 4 months</span></p>
+        </div>
+        <div class="mt-6 flex flex-wrap gap-2 text-xs font-semibold">
+          <span class="px-2.5 py-1 rounded-full bg-white border border-border">✅ CAC registered</span>
+          <span class="px-2.5 py-1 rounded-full bg-white border border-border">✅ Learn • Build • Get Paid</span>
+          <span class="px-2.5 py-1 rounded-full bg-white border border-border">✅ Laptop-friendly (4GB RAM ok)</span>
+        </div>
+      </div>
+
+      <!-- Code visual -->
+      <div class="relative">
+        <div class="rounded-[24px] overflow-hidden card-shadow bg-white border border-border">
+          <div class="flex items-center justify-between px-4 py-3 bg-white border-b border-border">
+            <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-[#FF5F56] border border-black/5"></span><span class="w-3 h-3 rounded-full bg-[#FFBD2E] border border-black/5"></span><span class="w-3 h-3 rounded-full bg-[#27C93F] border border-black/5"></span></div>
+            <span class="text-xs font-mono text-muted">cohort-12 / buildcamp — zsh</span>
+            <span class="text-xs font-semibold px-2 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">● LIVE cohort</span>
+          </div>
+          <div class="code-block p-4 sm:p-5 font-mono text-[13px] leading-6 overflow-x-auto">
+            <div class="text-[#94A3B8]">$ npm run ship</div>
+            <div class="mt-2"><span class="text-[#818CF8]">›</span> <span class="text-[#F8FAFC]">Building your career…</span></div>
+            <div class="mt-3 text-[#C7D2FE]">Week 01–02 <span class="text-[#E2E8F0]">→ HTML, CSS, Tailwind</span> <span class="bg-emerald-500/20 text-emerald-300 px-1.5 py-0.5 rounded text-xs">done</span></div>
+            <div class="text-[#C7D2FE]">Week 03–05 <span class="text-[#E2E8F0]">→ JavaScript + React</span> <span class="bg-amber-500/20 text-amber-300 px-1.5 py-0.5 rounded text-xs">you are here</span></div>
+            <div class="text-white/60">Week 06–08 → Node, DB, Auth, Paystack API</div>
+            <div class="text-white/60">Week 09–12 → Ship SaaS • Demo Day • Interviews</div>
+            <div class="mt-4 flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span><span class="text-emerald-300">6 projects deployed to vercel.app</span></div>
+          </div>
+          <div class="grid grid-cols-3 gap-3 p-3 bg-bg">
+            <div class="rounded-xl bg-white border border-border p-3"><div class="text-xs font-bold tracking-widest text-muted uppercase">Weeks</div><div class="text-lg font-display font-bold">12</div><div class="text-xs text-muted">live + recorded</div></div>
+            <div class="rounded-xl bg-primary text-white p-3"><div class="text-xs font-bold tracking-widest text-white/70 uppercase">Projects</div><div class="text-lg font-display font-bold">6 live</div><div class="text-xs text-white/70">for portfolio</div></div>
+            <div class="rounded-xl bg-white border border-border p-3"><div class="text-xs font-bold tracking-widest text-muted uppercase">Hiring partners</div><div class="text-lg font-display font-bold">23</div><div class="text-xs text-muted">Lagos • Remote</div></div>
+          </div>
+        </div>
+        <!-- floating naira badge -->
+        <div class="absolute -right-2 sm:-right-4 -bottom-4 hidden sm:flex items-center gap-3 bg-white rounded-2xl border border-border px-4 py-3 card-shadow">
+          <span class="w-10 h-10 rounded-xl bg-accent flex items-center justify-center text-white font-bold">₦</span>
+          <div><div class="text-sm font-bold leading-none">Pay small small</div><div class="text-xs text-muted">3 installments • no interest</div></div>
+        </div>
+        <div class="absolute -left-3 top-6 hidden sm:flex items-center gap-2 bg-white rounded-full border border-border px-3 py-1.5 card-shadow text-xs font-semibold"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> 18 seats left</div>
+      </div>
+    </div>
+
+    <!-- logos -->
+    <div class="mt-12 border-t border-border/60 pt-6">
+      <p class="text-center text-[11px] font-bold tracking-[0.14em] text-muted uppercase">Alumni now build at</p>
+      <div class="mt-4 flex flex-wrap justify-center gap-x-8 gap-y-3 text-sm font-bold opacity-70">
+        <span>Paystack</span><span>Moniepoint</span><span>PiggyVest</span><span>Flutterwave</span><span>Kuda</span><span>Interswitch</span><span class="font-medium text-muted">+ 87 startups</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURE GRID -->
+<section class="py-10">
+  <div class="max-w-[1160px] mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-2xl">
+      <p class="text-xs font-bold tracking-[0.14em] text-primary uppercase">Why Buildcamp</p>
+      <h2 class="display mt-1 text-[26px] sm:text-[32px] font-bold leading-tight">You don’t need another tutorial.<br>You need shipped work.</h2>
+      <p class="mt-2 text-[15px] leading-6 text-muted">Everything is project-based. If you can’t demo it live, you haven’t learned it.</p>
+    </div>
+    <div class="mt-8 grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <article class="rounded-[20px] bg-white border border-border p-6 card-shadow">
+        <div class="w-11 h-11 rounded-xl bg-primary text-white grid place-items-center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M16 18l6-6-6-6"/><path d="M8 6L2 12l6 6"/><path d="M12 2v20"/></svg></div>
+        <h3 class="mt-4 font-bold">Build 6 real products</h3><p class="mt-1.5 text-sm leading-6 text-muted">Portfolio site, agency site, e-commerce with Paystack, SaaS dashboard. All deployed, all yours.</p>
+      </article>
+      <article class="rounded-[20px] bg-white border border-border p-6 card-shadow">
+        <div class="w-11 h-11 rounded-xl bg-white border border-border grid place-items-center">👨‍🏫</div>
+        <h3 class="mt-4 font-bold">Live code reviews</h3><p class="mt-1.5 text-sm leading-6 text-muted">Every submission reviewed within 24h. No “LGTM” — real feedback on architecture & a11y.</p>
+      </article>
+      <article class="rounded-[20px] bg-white border border-border p-6 card-shadow">
+        <div class="w-11 h-11 rounded-xl bg-white border border-border grid place-items-center">💼</div>
+        <h3 class="mt-4 font-bold">Get hired, not just trained</h3><p class="mt-1.5 text-sm leading-6 text-muted">CV clinic, mock interviews, referral to our 23 hiring partners. 82% hired in 4 months.</p>
+      </article>
+      <article class="rounded-[20px] bg-white border border-border p-6 card-shadow">
+        <div class="w-11 h-11 rounded-xl bg-white border border-border grid place-items-center">🌙</div>
+        <h3 class="mt-4 font-bold">Built for 9-to-5ers</h3><p class="mt-1.5 text-sm leading-6 text-muted">Evenings 7–9pm WAT + Saturdays. Recordings + lifetime access if you miss a day.</p>
+      </article>
+      <article class="rounded-[20px] bg-white border border-border p-6 card-shadow">
+        <div class="w-11 h-11 rounded-xl bg-accent text-white grid place-items-center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg></div>
+        <h3 class="mt-4 font-bold">Pay small small</h3><p class="mt-1.5 text-sm leading-6 text-muted">Split any plan into 3 monthly payments. No interest. Flutterwave & bank transfer.</p>
+      </article>
+      <article class="rounded-[20px] bg-ink text-[#E2E8F0] p-6 relative overflow-hidden">
+        <div class="absolute -right-10 -top-10 w-40 h-40 bg-primary/30 rounded-full blur-2xl"></div>
+        <div class="w-11 h-11 rounded-xl bg-white/10 grid place-items-center text-white">⚡</div>
+        <h3 class="relative mt-4 font-bold text-white">We guarantee focus</h3><p class="relative mt-1.5 text-sm leading-6 text-white/70">Small cohort (max 45). No 500-person Zoom. You’ll be known by name.</p>
+        <a href="#pricing" class="relative mt-4 inline-flex text-sm font-bold bg-white text-ink px-4 py-2 rounded-full focus-ring">See pricing in Naira →</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- CURRICULUM -->
+<section id="curriculum" class="py-8">
+  <div class="max-w-[1160px] mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="rounded-[28px] bg-white border border-border p-6 sm:p-8">
+      <div class="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p class="text-xs font-bold tracking-[0.14em] text-primary uppercase">Curriculum — 12 weeks</p>
+          <h2 class="display text-[24px] sm:text-[28px] font-bold">What you’ll ship each week</h2>
+        </div>
+        <span class="text-sm font-medium px-3 py-1.5 rounded-full bg-bg border border-border">Beginner friendly • No CS degree needed</span>
+      </div>
+      <div class="mt-8 grid lg:grid-cols-[1.1fr_.9fr] gap-6">
+        <div class="space-y-3">
+          <details class="group rounded-2xl border border-border bg-bg p-4 open:bg-white" open>
+            <summary class="flex items-center justify-between cursor-pointer list-none font-semibold focus-ring rounded-lg"> <span><span class="inline-flex w-8 h-8 rounded-full bg-primary text-white items-center justify-center text-xs mr-2">01</span> Foundations — HTML, CSS, Tailwind</span> <span class="text-muted group-open:rotate-180 transition">⌃</span></summary>
+            <p class="mt-3 text-sm leading-6 text-muted pl-[40px]">Build a personal portfolio + agency landing. Figma to code, responsive, accessibility, deploy to Vercel. <span class="font-mono text-xs px-1.5 py-0.5 rounded bg-ink text-[#E2E8F0]">portfolio.buildcamp.ng</span></p>
+          </details>
+          <details class="group rounded-2xl border border-border bg-bg p-4 open:bg-white"><summary class="flex items-center justify-between cursor-pointer list-none font-semibold focus-ring rounded-lg"><span><span class="inline-flex w-8 h-8 rounded-full bg-white border border-border items-center justify-center text-xs mr-2">02</span> JavaScript — think like a dev</span><span class="text-muted group-open:rotate-180 transition">⌃</span></summary><p class="mt-3 text-sm leading-6 text-muted pl-[40px]">DOM, async, APIs. Ship a job board that fetches live data, filter & search. No framework yet — fundamentals first.</p></details>
+          <details class="group rounded-2xl border border-border bg-bg p-4 open:bg-white"><summary class="flex items-center justify-between cursor-pointer list-none font-semibold focus-ring rounded-lg"><span><span class="inline-flex w-8 h-8 rounded-full bg-white border border-border items-center justify-center text-xs mr-2">03</span> React + Next.js</span><span class="text-muted group-open:rotate-180 transition">⌃</span></summary><p class="mt-3 text-sm leading-6 text-muted pl-[40px]">Component thinking, state, routing. Rebuild your job board in React, add auth, ship e-commerce with Paystack checkout in Naira (₦).</p></details>
+          <details class="group rounded-2xl border border-border bg-bg p-4 open:bg-white"><summary class="flex items-center justify-between cursor-pointer list-none font-semibold focus-ring rounded-lg"><span><span class="inline-flex w-8 h-8 rounded-full bg-white border border-border items-center justify-center text-xs mr-2">04</span> Backend, DB & Ship</span><span class="text-muted group-open:rotate-180 transition">⌃</span></summary><p class="mt-3 text-sm leading-6 text-muted pl-[40px]">Node/Express, Prisma, Supabase. Build a SaaS: multi-tenant, subscriptions, webhooks. Demo Day with hiring partners.</p></details>
+        </div>
+        <div class="rounded-2xl bg-ink text-[#E2E8F0] p-6">
+          <p class="text-xs font-bold tracking-widest text-white/60 uppercase">Weekly rhythm</p>
+          <ul class="mt-4 space-y-3 text-sm leading-6">
+            <li class="flex gap-3"><span class="w-1.5 h-1.5 rounded-full bg-primary mt-2.5"></span><span><span class="font-semibold text-white">Mon/Wed live</span> — 7–9pm WAT, build together</span></li>
+            <li class="flex gap-3"><span class="w-1.5 h-1.5 rounded-full bg-secondary mt-2.5"></span><span><span class="font-semibold text-white">Thu clinic</span> — code review & office hours</span></li>
+            <li class="flex gap-3"><span class="w-1.5 h-1.5 rounded-full bg-accent mt-2.5"></span><span><span class="font-semibold text-white">Sat Build Day</span> — 10am–2pm, ship & demo</span></li>
+          </ul>
+          <div class="mt-6 rounded-xl bg-white/10 border border-white/10 p-4">
+            <div class="text-sm font-bold text-white">You’ll leave with:</div><div class="mt-2 flex flex-wrap gap-1.5 text-xs"><span class="px-2 py-1 rounded-full bg-white text-ink font-semibold">6 live URLs</span><span class="px-2 py-1 rounded-full bg-white text-ink font-semibold">GitHub history</span><span class="px-2 py-1 rounded-full bg-white text-ink font-semibold">Case studies</span><span class="px-2 py-1 rounded-full bg-white text-ink font-semibold">Reference letter</span></div>
+          </div>
+          <p class="mt-4 text-xs text-white/60">Laptop: 4GB RAM ok. We’ll help you set up VS Code + Node on Day 1.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MENTORS -->
+<section id="mentors" class="py-8">
+  <div class="max-w-[1160px] mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="display text-[22px] font-bold">Learn from people who ship in Naira & dollars</h2>
+    <div class="mt-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <article class="rounded-2xl bg-white border border-border p-5 card-shadow"><img src="https://i.pravatar.cc/100?img=11" alt="" class="w-12 h-12 rounded-full"><div class="mt-3 font-bold text-sm">Fola Adeyemi</div><div class="text-xs text-muted">Senior FE, Paystack</div><p class="mt-2 text-sm leading-6 text-muted">“We hire Buildcamp grads because they’ve already handled money — Paystack in test & live.”</p></article>
+      <article class="rounded-2xl bg-white border border-border p-5 card-shadow"><img src="https://i.pravatar.cc/100?img=32" alt="" class="w-12 h-12 rounded-full"><div class="mt-3 font-bold text-sm">Chioma N.</div><div class="text-xs text-muted">Product Engineer, Moniepoint</div><p class="mt-2 text-sm leading-6 text-muted">Leads React clinic. Obsessed with a11y and 60fps.</p></article>
+      <article class="rounded-2xl bg-white border border-border p-5 card-shadow"><img src="https://i.pravatar.cc/100?img=16" alt="" class="w-12 h-12 rounded-full"><div class="mt-3 font-bold text-sm">Tunde L.</div><div class="text-xs text-muted">Founder, Buildcamp</div><p class="mt-2 text-sm leading-6 text-muted">Ex-Andela, 9 yrs shipping. Your Demo Day MC.</p></article>
+      <article class="rounded-2xl bg-white border border-border p-5 card-shadow flex flex-col justify-center"><div class="text-sm font-bold">+ Guest CTOs</div><p class="mt-1 text-sm text-muted">Weekly AMAs — CTOs from Kuda, PiggyVest & Cowrywise review your SaaS pricing page.</p><span class="mt-3 inline-flex px-2.5 py-1 rounded-full bg-bg border border-border text-xs font-semibold">Ask anything</span></article>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING IN NAIRA -->
+<section id="pricing" class="py-10">
+  <div class="max-w-[1160px] mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-2xl mx-auto text-center">
+      <p class="text-xs font-bold tracking-[0.14em] text-primary uppercase">Pricing in Naira (₦) — no dollar surprise</p>
+      <h2 class="display mt-1 text-[28px] sm:text-[36px] font-bold leading-tight">Pay once. Own your skills forever.</h2>
+      <p class="mt-3 text-sm text-muted">All plans include lifetime recordings + community. Pay with bank transfer, Flutterwave, or Paystack (card/USSD).</p>
+      <div class="mt-5 inline-flex p-1 rounded-full bg-white border border-border text-sm">
+        <button class="px-5 py-2 rounded-full bg-ink text-white font-semibold">Pay once</button>
+        <button class="px-5 py-2 rounded-full text-muted font-medium">Pay small small (×3)</button>
+      </div>
+      <p class="mt-2 text-xs text-muted">Example: Pro ₦249k → ₦83k × 3 months, no interest</p>
+    </div>
+
+    <!-- countdown -->
+    <div class="mt-6 max-w-[760px] mx-auto flex items-center justify-center gap-2 text-xs font-semibold px-4 py-2 rounded-full bg-amber-50 border border-amber-200 text-amber-800">
+      <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span> Early bird ends in 4 days • 9 seats at this price
+    </div>
+
+    <div class="mt-8 grid lg:grid-cols-3 gap-6 max-w-[1100px] mx-auto">
+      <!-- Starter -->
+      <div class="rounded-[24px] bg-white border border-border p-6 sm:p-7 flex flex-col">
+        <h3 class="font-display font-bold text-lg">Starter</h3><p class="text-sm text-muted">Self-paced + community</p>
+        <div class="mt-4"><span class="text-xs font-bold tracking-widest text-muted uppercase line-through">₦199,000</span><div class="flex items-baseline gap-1"><span class="text-3xl font-display font-bold">₦149,000</span><span class="text-sm text-muted">one-time</span></div><span class="inline-flex mt-2 px-2 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold">Save ₦50k</span></div>
+        <ul class="mt-6 space-y-3 text-sm leading-6">
+          <li class="flex gap-2"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> 8 weeks access, 12 hrs/week</li>
+          <li class="flex gap-2"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> 4 projects, community reviews</li>
+          <li class="flex gap-2"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Recordings + Discord</li>
+          <li class="flex gap-2 text-muted"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><path d="M18 6 6 18"/><path d="M6 6l12 12"/></svg> No live mentorship / Demo Day</li>
+        </ul>
+        <a href="#" class="mt-8 touch-target w-full inline-flex justify-center items-center px-5 py-3 rounded-full bg-white border border-border font-semibold text-sm hover:bg-bg focus-ring">Choose Starter — ₦149k</a>
+        <p class="mt-2 text-xs text-center text-muted">Or ₦52k × 3</p>
+      </div>
+      <!-- Pro most popular -->
+      <div class="rounded-[24px] bg-ink text-[#E2E8F0] p-6 sm:p-7 flex flex-col relative overflow-hidden shadow-2xl lg:scale-[1.04] border border-white/10">
+        <div class="absolute -right-16 -top-16 w-48 h-48 bg-primary rounded-full blur-2xl opacity-30"></div>
+        <div class="absolute -left-10 -bottom-10 w-48 h-48 bg-accent rounded-full blur-2xl opacity-20"></div>
+        <span class="relative inline-flex self-start px-3 py-1 rounded-full bg-accent text-white text-xs font-bold tracking-wide">MOST POPULAR • 82% choose this</span>
+        <h3 class="relative mt-3 font-display font-bold text-lg text-white">Pro Cohort</h3><p class="relative text-sm text-white/60">12 weeks live + Demo Day</p>
+        <div class="relative mt-4"><span class="text-xs font-bold tracking-widest text-white/60 line-through">₦350,000</span><div class="flex items-baseline gap-2"><span class="text-3xl font-display font-bold text-white">₦249,000</span><span class="text-sm text-white/60">one-time</span></div><span class="inline-flex mt-2 px-2 py-1 rounded-full bg-white text-ink text-xs font-bold">Save ₦101k • Early bird</span></div>
+        <ul class="relative mt-6 space-y-3 text-sm leading-6">
+          <li class="flex gap-2"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Everything in Starter, plus</li>
+          <li class="flex gap-2"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Mon–Thu live 7–9pm + Sat Build</li>
+          <li class="flex gap-2"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> 6 live projects + code review 24h</li>
+          <li class="flex gap-2"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Mock interviews + hiring referrals</li>
+        </ul>
+        <a href="#" class="relative mt-8 touch-target w-full inline-flex justify-center items-center px-5 py-3 rounded-full bg-accent hover:bg-[#D84D07] text-white font-bold text-sm focus-ring btn-primary">Secure Pro — ₦249k</a>
+        <p class="relative mt-2 text-xs text-center text-white/60">Or ₦83k × 3 • Flutterwave / bank transfer</p>
+        <p class="relative mt-3 text-xs text-center text-white/50">₦25k deposit reserves seat, balance before Week 3</p>
+      </div>
+      <!-- Elite -->
+      <div class="rounded-[24px] bg-white border border-border p-6 sm:p-7 flex flex-col">
+        <h3 class="font-display font-bold text-lg">Elite — 1:1</h3><p class="text-sm text-muted">For career switchers, intensive</p>
+        <div class="mt-4"><span class="text-xs font-bold tracking-widest text-muted uppercase line-through">₦600,000</span><div class="flex items-baseline gap-1"><span class="text-3xl font-display font-bold">₦449,000</span><span class="text-sm text-muted">one-time</span></div><span class="inline-flex mt-2 px-2 py-1 rounded-full bg-primary text-white text-xs font-bold">Save ₦151k</span></div>
+        <ul class="mt-6 space-y-3 text-sm leading-6">
+          <li class="flex gap-2"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Everything in Pro, plus</li>
+          <li class="flex gap-2"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Weekly 1:1 mentorship (12 hrs)</li>
+          <li class="flex gap-2"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Internship + paid client gig</li>
+          <li class="flex gap-2"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Laptop support (if needed)</li>
+        </ul>
+        <a href="#" class="mt-8 touch-target w-full inline-flex justify-center items-center px-5 py-3 rounded-full bg-ink text-white font-semibold text-sm hover:bg-[#1E1B4B]/90 focus-ring">Apply Elite — ₦449k</a>
+        <p class="mt-2 text-xs text-center text-muted">Or ₦150k × 3 • Interview required</p>
+      </div>
+    </div>
+    <p class="mt-6 text-center text-xs text-muted">All prices in Nigerian Naira (₦). No hidden dollar charges. Receipt + CAC invoice. <a href="#" class="underline focus-ring rounded">See payment options</a> • <a href="#" class="underline focus-ring rounded">Refund policy: full before Week 1</a></p>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="py-8">
+  <div class="max-w-[1160px] mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-end justify-between gap-4 flex-wrap"><h2 class="display text-[22px] font-bold">They were where you are</h2><span class="text-sm text-muted">4.8/5 from 412 alumni • Video stories →</span></div>
+    <div class="mt-6 grid md:grid-cols-3 gap-5">
+      <figure class="rounded-2xl bg-white border border-border p-6 card-shadow"><div class="text-amber-400 text-sm">★★★★★</div><blockquote class="mt-2 text-[15px] leading-6 font-medium">“I was selling thrift on Instagram. Now I’m frontend at Kuda — ₦450k/month. Portfolio did the talking.”</blockquote><figcaption class="mt-4 flex items-center gap-3"><img src="https://i.pravatar.cc/100?img=26" alt="" class="w-10 h-10 rounded-full"><div><div class="text-sm font-bold">Blessing O.</div><div class="text-xs text-muted">Cohort 9 • Computer Sc. dropout</div></div></figcaption></figure>
+      <figure class="rounded-2xl bg-white border border-border p-6 card-shadow"><div class="text-amber-400 text-sm">★★★★★</div><blockquote class="mt-2 text-[15px] leading-6 font-medium">“Pay small small saved me. Paid ₦83k monthly from my NYSC allawee. Got offer week 11.”</blockquote><figcaption class="mt-4 flex items-center gap-3"><img src="https://i.pravatar.cc/100?img=53" alt="" class="w-10 h-10 rounded-full"><div><div class="text-sm font-bold">Ahmed S.</div><div class="text-xs text-muted">Cohort 10 • NYSC</div></div></figcaption></figure>
+      <figure class="rounded-2xl bg-white border border-border p-6 card-shadow"><div class="text-amber-400 text-sm">★★★★★</div><blockquote class="mt-2 text-[15px] leading-6 font-medium">“6 live URLs beat any certificate. My SaaS now makes $300 MRR. Boss is me.”</blockquote><figcaption class="mt-4 flex items-center gap-3"><img src="https://i.pravatar.cc/100?img=14" alt="" class="w-10 h-10 rounded-full"><div><div class="text-sm font-bold">David E.</div><div class="text-xs text-muted">Cohort 8 • Self-taught</div></div></figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="py-8">
+  <div class="max-w-[1160px] mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="rounded-[28px] bg-white border border-border p-6 sm:p-8">
+      <h2 class="display text-[22px] font-bold">Common questions (we keep it 100)</h2>
+      <div class="mt-6 grid md:grid-cols-2 gap-4">
+        <details class="rounded-xl border border-border p-4 open:bg-bg" open><summary class="font-semibold cursor-pointer focus-ring rounded">Do I need a laptop? Can I use phone?</summary><p class="mt-2 text-sm leading-6 text-muted">You need a laptop (4GB RAM or better, any OS). We’ll install everything with you on Day 1. Phone alone won’t work — you’re shipping real code.</p></details>
+        <details class="rounded-xl border border-border p-4"><summary class="font-semibold cursor-pointer focus-ring rounded">I’m a complete beginner. Can I join?</summary><p class="mt-2 text-sm leading-6 text-muted">Yes. 63% of alumni started at zero. Pre-work (1 week, free) brings you to HTML/CSS basics before Day 1.</p></details>
+        <details class="rounded-xl border border-border p-4"><summary class="font-semibold cursor-pointer focus-ring rounded">What if I miss a class? NEPA?</summary><p class="mt-2 text-sm leading-6 text-muted">All live sessions recorded + timestamped. Live again? Join next cohort’s session for free.</p></details>
+        <details class="rounded-xl border border-border p-4"><summary class="font-semibold cursor-pointer focus-ring rounded">Is job guaranteed?</summary><p class="mt-2 text-sm leading-6 text-muted">No one can guarantee a job — we guarantee you’ll be hireable: 6 shipped products, mock interviews, referrals. 82% hired in 4 months. You do the work, we open doors.</p></details>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="py-10">
+  <div class="max-w-[1160px] mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="rounded-[28px] bg-primary p-[1px]">
+      <div class="rounded-[27px] bg-gradient-to-br from-primary to-[#4338CA] relative overflow-hidden">
+        <div class="absolute -top-20 -right-20 w-[380px] h-[380px] bg-white/15 rounded-full blur-3xl"></div>
+        <div class="absolute -bottom-24 -left-24 w-[420px] h-[420px] bg-accent/20 rounded-full blur-[80px]"></div>
+        <div class="relative px-6 sm:px-10 py-10 sm:py-14 text-center">
+          <h2 class="display text-[28px] sm:text-[38px] font-bold text-white leading-tight">Your portfolio pays rent.<br>Start this March.</h2>
+          <p class="mt-3 text-white/80 max-w-2xl mx-auto">45 seats only. ₦25k holds yours. Pay balance before Week 3 or split ×3 with Paystack.</p>
+          <div class="mt-7 flex flex-col sm:flex-row gap-3 justify-center">
+            <a href="#" class="touch-target inline-flex items-center justify-center px-7 py-3.5 bg-white text-ink font-bold rounded-full hover:bg-white/90 focus-ring btn-primary">Apply now — ₦25k deposit</a>
+            <a href="#" class="touch-target inline-flex items-center justify-center px-7 py-3.5 bg-white/10 border border-white/20 text-white font-semibold rounded-full hover:bg-white/15 focus-ring">Chat on WhatsApp</a>
+          </div>
+          <p class="mt-3 text-xs text-white/60">Cohort 12 • 17 March – 7 June • Lagos (Yaba) & Remote • Certificate + Demo Day</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="border-t border-border bg-white">
+  <div class="max-w-[1160px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
+      <div class="flex items-center gap-2"><span class="w-8 h-8 rounded-xl bg-primary text-white grid place-items-center font-bold text-sm">‹/›</span><span class="font-display font-bold">Buildcamp</span><span class="text-xs text-muted">© 2026 Buildcamp Technologies • CAC BN 7123456 • Yaba, Lagos</span></div>
+      <div class="flex gap-4 text-xs font-medium text-muted"><a href="#" class="hover:text-ink focus-ring rounded">Privacy</a><a href="#" class="hover:text-ink focus-ring rounded">Terms</a><a href="#" class="hover:text-ink focus-ring rounded">Contact: 080 • • • • • • •</a></div>
+    </div>
+    <p class="mt-4 text-xs leading-5 text-muted">Pricing in Nigerian Naira (₦) only. Flutterwave & Paystack handle cards, USSD & transfer. No data sold. Be honest — we teach, you build.</p>
+  </div>
+</footer>
+</body>
+</html>
