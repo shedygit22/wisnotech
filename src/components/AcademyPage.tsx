@@ -571,8 +571,8 @@ export default function AcademyPage() {
         <div className="mx-auto grid max-w-[1160px] gap-8 px-5 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
           <div className="relative aspect-[4/3] overflow-hidden rounded-[20px] border border-white/10 bg-[#141414] lg:aspect-[4/4.2]">
             <img
-              src="/assets/founder.jpg"
-              alt="Founder — Wisnotech"
+              src="/assets/shedrack-akue-640.jpg"
+              alt="Shedrack Akue — Founder, Wisnotech"
               className="h-full w-full object-cover object-top"
               loading="lazy"
               onError={(e) => ((e.currentTarget.style.display = "none"), ((e.currentTarget.nextElementSibling as HTMLElement).style.display = "flex"))}
@@ -582,8 +582,8 @@ export default function AcademyPage() {
               style={{ display: "none" }}
             >
               <div>
-                <span className="inline-flex h-20 w-20 items-center justify-center rounded-full bg-white text-[22px] font-extrabold text-[#0A0A0A]">W</span>
-                <p className="mt-4 text-sm font-medium text-white/60">Founder portrait — replace /assets/founder.jpg</p>
+                <span className="inline-flex h-20 w-20 items-center justify-center rounded-full bg-white text-[22px] font-extrabold text-[#0A0A0A]">SA</span>
+                <p className="mt-4 text-sm font-medium text-white/60">Shedrack Akue — Founder, Wisnotech</p>
               </div>
             </div>
           </div>
@@ -598,8 +598,8 @@ export default function AcademyPage() {
             </p>
             <div className="mt-6 flex items-center gap-4 border-t border-white/10 pt-6">
               <div>
-                <p className="text-sm font-semibold text-[#F5F3EE]">Wisnotech Studio</p>
-                <p className="text-xs tracking-[0.08em] text-white/40">Founder & Creative Lead</p>
+                <p className="text-sm font-semibold text-[#F5F3EE]">Shedrack Akue</p>
+                <p className="text-xs tracking-[0.08em] text-white/40">Founder, Wisnotech</p>
               </div>
               <a
                 href="/portfolio"
