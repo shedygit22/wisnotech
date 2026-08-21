@@ -20,6 +20,8 @@ import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import AiAssistant from "./components/AiAssistant";
 import { PageFallback } from "./components/PageFallback";
+import { Analytics } from "@vercel/analytics/react";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 
 const AcademyPage = lazy(() => import("./components/AcademyPage"));
 const CoursePage = lazy(() => import("./components/CoursePage"));
@@ -28,6 +30,7 @@ const BlogPostPage = lazy(() => import("./components/BlogPostPage"));
 const WinoPage = lazy(() => import("./components/WinoPage"));
 const PortfolioPage = lazy(() => import("./components/PortfolioPage"));
 const LegalPage = lazy(() => import("./components/LegalPage"));
+const NotFound = lazy(() => import("./components/NotFound"));
 
 function useHashRoute(): string {
   const [hash, setHash] = useState(() => window.location.hash);
@@ -57,96 +60,135 @@ export default function App() {
   if (path.startsWith("/blog/")) {
     const slug = path.slice("/blog/".length).split("/")[0];
     return (
-      <Suspense fallback={<PageFallback />}>
-        <BlogPostPage slug={slug} />
-      </Suspense>
+      <ErrorBoundary>
+        <Suspense fallback={<PageFallback />}>
+          <BlogPostPage slug={slug} />
+        </Suspense>
+      </ErrorBoundary>
     );
   }
 
   if (path === "/blog") {
     return (
-      <Suspense fallback={<PageFallback />}>
-        <BlogPage />
-      </Suspense>
+      <ErrorBoundary>
+        <Suspense fallback={<PageFallback />}>
+          <BlogPage />
+        </Suspense>
+      </ErrorBoundary>
     );
   }
 
   if (path === "/privacy") {
     return (
-      <Suspense fallback={<PageFallback />}>
-        <LegalPage kind="privacy" />
-      </Suspense>
+      <ErrorBoundary>
+        <Suspense fallback={<PageFallback />}>
+          <LegalPage kind="privacy" />
+        </Suspense>
+      </ErrorBoundary>
     );
   }
 
   if (path === "/terms") {
     return (
-      <Suspense fallback={<PageFallback />}>
-        <LegalPage kind="terms" />
-      </Suspense>
+      <ErrorBoundary>
+        <Suspense fallback={<PageFallback />}>
+          <LegalPage kind="terms" />
+        </Suspense>
+      </ErrorBoundary>
     );
   }
 
   /* WINO — dedicated AI video product page. */
   if (path === "/wino") {
     return (
-      <Suspense fallback={<PageFallback />}>
-        <WinoPage />
-      </Suspense>
+      <ErrorBoundary>
+        <Suspense fallback={<PageFallback />}>
+          <WinoPage />
+        </Suspense>
+      </ErrorBoundary>
     );
   }
 
   /* Client-converting AI video studio portfolio. */
   if (path === "/portfolio") {
     return (
-      <Suspense fallback={<PageFallback />}>
-        <PortfolioPage />
-      </Suspense>
+      <ErrorBoundary>
+        <Suspense fallback={<PageFallback />}>
+          <PortfolioPage />
+        </Suspense>
+      </ErrorBoundary>
     );
   }
 
-  /* Lightweight hash routing — "#/academy" opens the dedicated courses page. */
-  if (hash.startsWith("#/courses/")) {
-    const slug = hash.slice("#/courses/".length).split("/")[0];
+  /* Academy & course pages — support both real paths (/academy, /courses/:slug)
+     and legacy hash routes (#/academy, #/courses/:slug) for backwards compat. */
+  const courseSlugFromPath = path.startsWith("/courses/") ? path.slice("/courses/".length).split("/")[0] : "";
+  const courseSlugFromHash = hash.startsWith("#/courses/") ? hash.slice("#/courses/".length).split("/")[0] : "";
+  const courseSlug = courseSlugFromPath || courseSlugFromHash;
+  if (courseSlug) {
     return (
-      <Suspense fallback={<PageFallback />}>
-        <CoursePage slug={slug} />
-      </Suspense>
+      <ErrorBoundary>
+        <Suspense fallback={<PageFallback />}>
+          <CoursePage slug={courseSlug} />
+        </Suspense>
+      </ErrorBoundary>
     );
   }
 
-  if (hash.startsWith("#/academy")) {
+  if (path === "/academy" || path.startsWith("/academy/") || hash.startsWith("#/academy")) {
     return (
-      <Suspense fallback={<PageFallback />}>
-        <AcademyPage />
-      </Suspense>
+      <ErrorBoundary>
+        <Suspense fallback={<PageFallback />}>
+          <AcademyPage />
+        </Suspense>
+      </ErrorBoundary>
+    );
+  }
+
+  // 404 — unknown path (keep homepage for "/" and hash navigations)
+  const knownPaths = ["/", "/wino", "/portfolio", "/blog", "/privacy", "/terms", "/academy"];
+  const isKnownPath =
+    knownPaths.includes(path) ||
+    knownPaths.some((p) => p !== "/" && path.startsWith(`${p}/`)) ||
+    path.startsWith("/blog/") ||
+    path.startsWith("/courses/");
+  if (path !== "/" && !isKnownPath) {
+    return (
+      <ErrorBoundary>
+        <Suspense fallback={<PageFallback />}>
+          <NotFound />
+        </Suspense>
+      </ErrorBoundary>
     );
   }
 
   return (
     <div className="min-h-screen bg-background text-white">
-      <Navbar />
-      <main>
-        <Hero />
-        <TrustStrip />
-        <About />
-        <Problems />
-        <Services />
-        <FeaturedWork />
-        <LatestPosts />
-        <Why />
-        <WhoWeWorkWith />
-        <AiAutomation />
-        <Process />
-        <Wino />
-        <Academy />
-        <LlmStudio />
-        <FAQ />
-        <FinalCta />
-        <Contact />
-      </main>
-      <Footer />
+      <ErrorBoundary>
+        <Navbar />
+        <main>
+          <Hero />
+          <TrustStrip />
+          <About />
+          <Problems />
+          <Services />
+          <FeaturedWork />
+          <LatestPosts />
+          <Why />
+          <WhoWeWorkWith />
+          <AiAutomation />
+          <Process />
+          <Wino />
+          <Academy />
+          <LlmStudio />
+          <FAQ />
+          <FinalCta />
+          <Contact />
+        </main>
+        <Footer />
+      </ErrorBoundary>
       <AiAssistant />
+      <Analytics />
     </div>
   );
 }

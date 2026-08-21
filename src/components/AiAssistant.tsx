@@ -8,6 +8,7 @@ import { useAutoSpeech } from "../lib/useAutoSpeech";
 import { useChatSessions } from "../lib/chatStore";
 import { MicButton, SpeakButton, AutoSpeakToggle, VoiceCallButton } from "./VoiceControls";
 import { VoiceCallOverlay } from "./LiveVoiceCall";
+import { track } from "../lib/analytics";
 import {
   buildClientProfile,
   createInitialState,
@@ -146,10 +147,11 @@ export default function AiAssistant() {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, thinking, streamingText]);
 
-const ask = useCallback(
+  const ask = useCallback(
     async (raw: string, onSentence?: (sentence: string) => void): Promise<string | null> => {
       const question = raw.trim();
       if (!question || thinking) return null;
+      track("chat_sent", { source: onSentence ? "voice" : "text", len: question.length });
       chat.add({ role: "user", text: question });
       setInput("");
       setThinking(true);
@@ -221,6 +223,7 @@ const ask = useCallback(
 
   const startVoiceConversation = useCallback(() => {
     setOpen(true);
+    track("voice_start", { surface: "assistant" });
     voiceConversation.start();
   }, [voiceConversation]);
 

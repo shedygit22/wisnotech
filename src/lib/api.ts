@@ -1,4 +1,5 @@
 import { ask, type AssistState, type ClientProfile, type Reply } from "./assistant";
+import { track } from "./analytics";
 
 function endpoint(): string {
   if (import.meta.env.DEV && !import.meta.env.VITE_USE_LOCAL_FUNCTIONS) {
@@ -138,9 +139,11 @@ export async function askServerWithFallbackStream(
       profile,
       onChunk
     );
+    track("chat_reply", { source: "gemini", streamed: true });
     return { text, href: undefined };
   } catch (err) {
     console.warn("AI backend unavailable, using built-in knowledge:", err);
+    track("chat_fallback", { reason: String((err as Error)?.message ?? err).slice(0, 80) });
     const reply = ask(question, state).reply;
     onChunk(reply.text);
     return reply;

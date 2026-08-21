@@ -9,6 +9,7 @@ import {
   Send,
 } from "lucide-react";
 import { sendLead } from "../lib/leadSink";
+import { track } from "../lib/analytics";
 
 const EMAIL = "wisnotech@gmail.com";
 const WHATSAPP = "https://wa.me/2349153541297";
@@ -77,37 +78,68 @@ export default function Contact() {
     interest: "",
     budget: "",
     message: "",
+    website: "", // honeypot — bots fill it, humans don't
   });
   const [sent, setSent] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [openMap, setOpenMap] = useState(false);
 
   const update = (key: keyof typeof form) => (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
-  ) => setForm({ ...form, [key]: e.target.value });
+  ) => {
+    setForm({ ...form, [key]: e.target.value });
+    if (fieldErrors[key]) setFieldErrors((prev) => ({ ...prev, [key]: "" }));
+    if (error) setError(null);
+  };
+
+  const validate = (): boolean => {
+    const errs: Record<string, string> = {};
+    if (!form.name.trim()) errs.name = "Please enter your name.";
+    if (!form.email.trim()) errs.email = "Please enter your email.";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) errs.email = "Please enter a valid email.";
+    if (!form.message.trim()) errs.message = "Please tell us a bit about your project.";
+    else if (form.message.trim().length < 10) errs.message = "Please provide a bit more detail (at least 10 characters).";
+    setFieldErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
+    // Honeypot — silently drop bot submissions
+    if (form.website.trim()) {
+      setSent(true);
+      return;
+    }
+    if (!validate()) return;
+    setSubmitting(true);
+    track("contact_submit", { interest: form.interest || "General" });
     const interest = form.interest || "General inquiry";
-    const subject = `Project request from ${form.name || "the website"}`;
-    const body =
-      `${form.message}\n\nCompany: ${form.company || "—"}\nBudget: ${form.budget || "—"}\n\n— ${form.name}\n${form.email}`;
-    // Push to the lead sheet when the webhook is configured (never blocks).
-    await sendLead({
-      name: form.name,
-      email: form.email,
-      company: form.company,
+    const ok = await sendLead({
+      name: form.name.trim(),
+      email: form.email.trim(),
+      company: form.company.trim(),
       interest,
       budget: form.budget,
-      message: form.message,
+      message: form.message.trim(),
       source: "contact-form",
     });
-    window.open(gmailHref(subject, body), "_blank", "noopener,noreferrer");
-    setSent(true);
+    setSubmitting(false);
+    if (ok) {
+      track("contact_success", { interest });
+      setSent(true);
+    } else {
+      setError("We couldn't send your request — please try again or reach us on WhatsApp.");
+    }
   };
 
   const resetForm = () => {
-    setForm({ name: "", email: "", company: "", interest: "", budget: "", message: "" });
+    setForm({ name: "", email: "", company: "", interest: "", budget: "", message: "", website: "" });
     setSent(false);
+    setError(null);
+    setFieldErrors({});
   };
 
   const selectClass =
@@ -144,9 +176,7 @@ export default function Contact() {
                 <div>
                   <h3 className="text-xl font-semibold text-white">Project request sent.</h3>
                   <p className="mt-2 text-sm leading-relaxed text-muted">
-                    Thanks, {form.name || "there"} — your brief is on its way to
-                    our team. We reply within one business day. If a draft email
-                    opened, just hit send and we&apos;ll pick it up from there.
+                    Thanks, {form.name || "there"} — we&apos;ve got your request and will reply within one business day at {form.email || "your email"}.
                   </p>
                 </div>
                 <button
@@ -158,7 +188,24 @@ export default function Contact() {
                 </button>
               </div>
             ) : (
-              <form onSubmit={submit} className="card space-y-4">
+              <form onSubmit={submit} className="card space-y-4" noValidate>
+                {/* Honeypot — hidden from humans, bots fill it */}
+                <input
+                  type="text"
+                  name="website"
+                  value={form.website}
+                  onChange={update("website")}
+                  autoComplete="off"
+                  tabIndex={-1}
+                  aria-hidden="true"
+                  className="absolute -left-[9999px] h-px w-px overflow-hidden"
+                  placeholder="Leave this field empty"
+                />
+                {error && (
+                  <div className="rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+                    {error}
+                  </div>
+                )}
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
                   <label htmlFor="c-name" className="mb-1.5 block text-sm font-medium text-white/85">
@@ -170,8 +217,10 @@ export default function Contact() {
                     onChange={update("name")}
                     required
                     placeholder="Full name"
-                    className={selectClass}
+                    aria-invalid={!!fieldErrors.name}
+                    className={`${selectClass} ${fieldErrors.name ? "!border-red-400/50" : ""}`}
                   />
+                  {fieldErrors.name && <p className="mt-1.5 text-xs text-red-300">{fieldErrors.name}</p>}
                 </div>
                 <div>
                   <label htmlFor="c-email" className="mb-1.5 block text-sm font-medium text-white/85">
@@ -184,8 +233,10 @@ export default function Contact() {
                     onChange={update("email")}
                     required
                     placeholder="you@example.com"
-                    className={selectClass}
+                    aria-invalid={!!fieldErrors.email}
+                    className={`${selectClass} ${fieldErrors.email ? "!border-red-400/50" : ""}`}
                   />
+                  {fieldErrors.email && <p className="mt-1.5 text-xs text-red-300">{fieldErrors.email}</p>}
                 </div>
               </div>
 
@@ -256,16 +307,24 @@ export default function Contact() {
                   required
                   rows={4}
                   placeholder="Tell us about your project — goals, timeline, anything that helps…"
-                  className={`${selectClass} resize-none`}
+                  aria-invalid={!!fieldErrors.message}
+                  className={`${selectClass} resize-none ${fieldErrors.message ? "!border-red-400/50" : ""}`}
                 />
+                {fieldErrors.message && <p className="mt-1.5 text-xs text-red-300">{fieldErrors.message}</p>}
               </div>
 
-              <button type="submit" className="btn-primary group w-full" disabled={sent}>
-                {sent ? "Opening your email…" : "Send Project Request"}
-                {!sent && (
+              <button type="submit" className="btn-primary group w-full" disabled={submitting}>
+                {submitting ? "Sending…" : "Send Project Request"}
+                {!submitting && (
                   <Send className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden />
                 )}
               </button>
+              <p className="text-center text-xs text-white/40">
+                Or email us directly at{" "}
+                <a href={gmailHref()} target="_blank" rel="noopener noreferrer" className="text-neon underline decoration-neon/30 underline-offset-4 hover:text-white">
+                  {EMAIL}
+                </a>
+              </p>
 
               <a
                 href={WHATSAPP}

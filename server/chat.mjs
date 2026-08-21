@@ -5,6 +5,7 @@ import { createServer } from "node:http";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { runChat, runChatStream } from "../api/_core.mjs";
+import { enforceRateLimit } from "../api/rate-limit.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, "..");
@@ -67,6 +68,10 @@ const server = createServer(async (req, res) => {
     res.end(JSON.stringify({ error: "Not found" }));
     return;
   }
+
+  const route = url.pathname === "/tts" ? "tts" : "chat";
+  const limit = route === "tts" ? 20 : 15;
+  if (!enforceRateLimit(req, res, { route, windowMs: 60_000, max: limit })) return;
 
   let payload;
   try {

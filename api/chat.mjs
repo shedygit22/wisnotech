@@ -2,6 +2,7 @@
 // Body: { messages: [{ role: "user" | "assistant", content: string }], stream?: boolean }
 // When stream:true the response is SSE:  data: {"t":"<text chunk>"} ... data: {"done":true}
 import { runChat, runChatStream } from "./_core.mjs";
+import { enforceRateLimit } from "./rate-limit.mjs";
 
 // Gemini replies are fast, but streaming keeps a slow first token from cutting
 // a visitor off — allow a comfortable ceiling on Hobby (max 60s).
@@ -12,6 +13,9 @@ export default async function handler(req, res) {
     res.status(405).json({ error: "Method not allowed" });
     return;
   }
+
+  // 15 chat requests / minute per IP protects the Gemini spend with no UX cost.
+  if (!enforceRateLimit(req, res, { route: "chat", windowMs: 60_000, max: 15 })) return;
 
   let payload;
   try {

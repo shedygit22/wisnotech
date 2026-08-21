@@ -1,6 +1,13 @@
 {
   "rewrites": [
     { "source": "/wino", "destination": "/index.html" },
-    { "source": "/portfolio", "destination": "/index.html" }
+    { "source": "/portfolio", "destination": "/index.html" },
+    { "source": "/blog", "destination": "/index.html" },
+    { "source": "/blog/:path*", "destination": "/index.html" },
+    { "source": "/privacy", "destination": "/index.html" },
+    { "source": "/terms", "destination": "/index.html" },
+    { "source": "/academy", "destination": "/index.html" },
+    { "source": "/academy/:path*", "destination": "/index.html" },
+    { "source": "/courses/:path*", "destination": "/index.html" }
   ]
 }

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { piperSpeak, piperStatus, piperSupported } from "./piperTts";
+import { track } from "./analytics";
 
 type SpeechRecognitionLike = {
   lang: string;
@@ -152,12 +153,20 @@ let currentAudio: HTMLAudioElement | null = null;
 
 /** Best audio blob for a text: hosted Gemini TTS, else Piper. Null if none. */
 async function synthesize(text: string): Promise<Blob | null> {
+  track("tts_request", { len: text.length });
   const hosted = await fetchTts(text);
-  if (hosted) return hosted;
+  if (hosted) {
+    track("tts_success", { provider: "gemini" });
+    return hosted;
+  }
   if (piperSupported() && piperStatus() === "ready") {
     const blob = await piperSpeak(text);
-    if (blob) return blob;
+    if (blob) {
+      track("tts_success", { provider: "piper" });
+      return blob;
+    }
   }
+  track("tts_fallback", { reason: "no_blob" });
   return null;
 }
 

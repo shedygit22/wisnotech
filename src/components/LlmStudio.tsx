@@ -22,6 +22,7 @@ import { speakText, splitSentences, useVoice, useVoiceConversation } from "../li
 import { useAutoSpeech } from "../lib/useAutoSpeech";
 import { MicButton, SpeakButton, AutoSpeakToggle, VoiceCallButton } from "./VoiceControls";
 import { VoiceCallOverlay } from "./LiveVoiceCall";
+import { track } from "../lib/analytics";
 
 const STARTERS = [
   "I'm a business owner — where do I start?",
@@ -63,6 +64,7 @@ export default function LlmStudio() {
     async (raw: string, onSentence?: (sentence: string) => void): Promise<string | null> => {
       const question = raw.trim();
       if (!question || thinking) return null;
+      track("chat_sent", { source: onSentence ? "voice" : "text", len: question.length });
       chat.add({ role: "user", text: question });
       setInput("");
       setThinking(true);
@@ -124,6 +126,7 @@ export default function LlmStudio() {
   const voiceConversation = useVoiceConversation(ask);
 
   const startVoiceConversation = useCallback(() => {
+    track("voice_start", { surface: "studio" });
     voiceConversation.start();
   }, [voiceConversation]);
 

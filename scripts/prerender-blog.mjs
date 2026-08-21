@@ -119,7 +119,7 @@ function articleHtml(post) {
   <div style="margin-top:48px;padding:32px;border-radius:16px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);text-align:center">
     <p style="font-weight:600;font-size:15px">Want to actually build with AI?</p>
     <p style="color:rgba(255,255,255,0.6);font-size:14px;margin:8px 0 16px">Explore our practical courses or talk to us about your project.</p>
-    <a href="${SITE_URL}/#/academy" style="display:inline-block;background:#fff;color:#080808;padding:12px 24px;border-radius:12px;text-decoration:none;font-weight:500;margin-right:8px">Explore courses</a>
+    <a href="${SITE_URL}/academy" style="display:inline-block;background:#fff;color:#080808;padding:12px 24px;border-radius:12px;text-decoration:none;font-weight:500;margin-right:8px">Explore courses</a>
     <a href="${SITE_URL}/#contact" style="display:inline-block;border:1px solid rgba(255,255,255,0.3);color:#fff;padding:12px 24px;border-radius:12px;text-decoration:none;font-weight:500">Contact us</a>
   </div>
 </article>`;
@@ -323,11 +323,23 @@ console.log("✓ terms -> dist/terms/index.html");
 
 // ---- sitemap.xml ------------------------------------------------------------
 const now = new Date().toISOString().slice(0, 10);
+const COURSE_SLUGS = [
+  "ai-fundamentals",
+  "automation-workflow-specialist",
+  "ai-content-creation-pro",
+  "prompt-engineering-ai-agents",
+  "no-code-app-building",
+  "ai-for-business-growth",
+  "web-development-bootcamp",
+  "full-stack-software-engineering",
+];
 const urls = [
   { loc: `${SITE_URL}/`, lastmod: now, priority: 1.0 },
   { loc: `${SITE_URL}/blog`, lastmod: now, priority: 0.9 },
   { loc: `${SITE_URL}/wino`, lastmod: now, priority: 0.9 },
   { loc: `${SITE_URL}/portfolio`, lastmod: now, priority: 0.9 },
+  { loc: `${SITE_URL}/academy`, lastmod: now, priority: 0.9 },
+  ...COURSE_SLUGS.map((s) => ({ loc: `${SITE_URL}/courses/${s}`, lastmod: now, priority: 0.8 })),
   { loc: `${SITE_URL}/privacy`, lastmod: now, priority: 0.4 },
   { loc: `${SITE_URL}/terms`, lastmod: now, priority: 0.4 },
   ...posts.map((p) => ({
@@ -359,15 +371,15 @@ const llms = `# Wisnotech
 - [Terms of Service](${SITE_URL}/terms)
 
 ## Courses
-- [Wisnotech Academy](${SITE_URL}/#/academy): Practical AI, automation, content and software courses with pricing
-- [AI Fundamentals](${SITE_URL}/#/courses/ai-fundamentals): Beginner AI foundation
-- [Automation & Workflow Specialist](${SITE_URL}/#/courses/automation-workflow-specialist): No-code automation and AI agents
-- [AI Content Creation Pro](${SITE_URL}/#/courses/ai-content-creation-pro): Studio-grade AI content
-- [Prompt Engineering & AI Agents](${SITE_URL}/#/courses/prompt-engineering-ai-agents): Advanced prompting and agents
-- [No-Code & App Building](${SITE_URL}/#/courses/no-code-app-building): Build apps without code
-- [AI for Business Growth](${SITE_URL}/#/courses/ai-for-business-growth): Apply AI across a business
-- [Web Development Bootcamp](${SITE_URL}/#/courses/web-development-bootcamp): Front-end, React, deployment
-- [Full-Stack Software Engineering](${SITE_URL}/#/courses/full-stack-software-engineering): Full-stack + AI features
+- [Wisnotech Academy](${SITE_URL}/academy): Practical AI, automation, content and software courses with pricing
+- [AI Fundamentals](${SITE_URL}/courses/ai-fundamentals): Beginner AI foundation
+- [Automation & Workflow Specialist](${SITE_URL}/courses/automation-workflow-specialist): No-code automation and AI agents
+- [AI Content Creation Pro](${SITE_URL}/courses/ai-content-creation-pro): Studio-grade AI content
+- [Prompt Engineering & AI Agents](${SITE_URL}/courses/prompt-engineering-ai-agents): Advanced prompting and agents
+- [No-Code & App Building](${SITE_URL}/courses/no-code-app-building): Build apps without code
+- [AI for Business Growth](${SITE_URL}/courses/ai-for-business-growth): Apply AI across a business
+- [Web Development Bootcamp](${SITE_URL}/courses/web-development-bootcamp): Front-end, React, deployment
+- [Full-Stack Software Engineering](${SITE_URL}/courses/full-stack-software-engineering): Full-stack + AI features
 
 ## Blog
 ${posts

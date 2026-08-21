@@ -27,11 +27,16 @@
 // If the configured provider's key/endpoint is missing we return 503 and the
 // client falls back to the browser's built-in (robotic) voice.
 
+import { enforceRateLimit } from "./rate-limit.mjs";
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     res.status(405).json({ error: "Method not allowed" });
     return;
   }
+
+  // 20 TTS requests / minute per IP — generous for real use, blocks scraping loops.
+  if (!enforceRateLimit(req, res, { route: "tts", windowMs: 60_000, max: 20 })) return;
 
   let payload;
   try {
