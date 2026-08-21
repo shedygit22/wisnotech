@@ -170,6 +170,25 @@ async function synthesize(text: string): Promise<Blob | null> {
   return null;
 }
 
+/** Fast path for live voice calls: Piper first (~200ms locally), Gemini as fallback. */
+async function synthesizeFast(text: string): Promise<Blob | null> {
+  track("tts_request", { len: text.length });
+  if (piperSupported() && piperStatus() === "ready") {
+    const blob = await piperSpeak(text);
+    if (blob) {
+      track("tts_success", { provider: "piper" });
+      return blob;
+    }
+  }
+  const hosted = await fetchTts(text);
+  if (hosted) {
+    track("tts_success", { provider: "gemini" });
+    return hosted;
+  }
+  track("tts_fallback", { reason: "no_blob" });
+  return null;
+}
+
 /** Speak via the server TTS (Gemini — smooth, realistic), else Piper, else browser voices. */
 export async function speakText(text: string): Promise<void> {
   const clean = stripForSpeech(text);
@@ -374,13 +393,15 @@ export function useVoiceConversation(ask: VoiceAsk): UseVoiceConversation {
 
       // Pipeline: generate audio for each sentence as it arrives and play it
       // in order, starting the next sentence's audio while the previous plays.
+      // For live calls we use Piper first (local, ~200ms) so Wisne answers
+      // almost instantly; Gemini is the fallback if Piper isn't ready.
       let playing = Promise.resolve();
       const speakSentence = (sentence: string) => {
         const clean = stripForSpeech(sentence);
         if (!clean) return;
         statusRef.current = "speaking";
         setStatus("speaking");
-        const gen = synthesize(clean);
+        const gen = synthesizeFast(clean);
         playing = playing.then(async () => {
           if (!activeRef.current) return;
           const blob = await gen;

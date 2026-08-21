@@ -22,6 +22,7 @@ import { speakText, splitSentences, useVoice, useVoiceConversation } from "../li
 import { useAutoSpeech } from "../lib/useAutoSpeech";
 import { MicButton, SpeakButton, AutoSpeakToggle, VoiceCallButton } from "./VoiceControls";
 import { VoiceCallOverlay } from "./LiveVoiceCall";
+import { preloadPiper } from "../lib/piperTts";
 import { track } from "../lib/analytics";
 
 const STARTERS = [
@@ -127,6 +128,7 @@ export default function LlmStudio() {
 
   const startVoiceConversation = useCallback(() => {
     track("voice_start", { surface: "studio" });
+    void preloadPiper();
     voiceConversation.start();
   }, [voiceConversation]);
 
