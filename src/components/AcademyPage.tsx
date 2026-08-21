@@ -12,6 +12,7 @@ import {
   X,
 } from "lucide-react";
 import { PORTFOLIO_SAMPLES } from "../lib/portfolio";
+import Logo from "./Logo";
 
 // ──────────────────────────────────────────────────────────────
 // Central config — edit here, updates everywhere.
@@ -23,12 +24,84 @@ const ACADEMY = {
   cohortLabel: "AI VIDEO CREATION COHORT — 2026",
   seats: 40,
   deadline: "March 15, 2026",
-  priceUSD: 297,
-  priceNGN: 450000,
-  priceNote: "One-time payment · Lifetime access to recordings",
   ctaApply: "#pricing",
   ctaCurriculum: "#curriculum",
 } as const;
+
+const PRICING_TIERS = [
+  {
+    id: "basic",
+    name: "Basic",
+    tagline: "Start your AI video journey",
+    priceUSD: 149,
+    priceNGN: 260000,
+    cta: "Get Basic",
+    featured: false,
+    includesTools: false,
+    features: [
+      "Full cohort access (8 modules)",
+      "Live training sessions",
+      "Practical assignments",
+      "Community access",
+      "Session recordings — 6 months",
+      "Certificate of completion",
+    ],
+  },
+  {
+    id: "premium",
+    name: "Premium",
+    tagline: "Most popular for serious creators",
+    priceUSD: 249,
+    priceNGN: 435000,
+    cta: "Get Premium",
+    featured: true,
+    includesTools: false,
+    features: [
+      "Everything in Basic",
+      "Extended recordings — 12 months",
+      "Real-world portfolio projects (4)",
+      "Prompt frameworks & templates",
+      "Priority community support",
+      "Portfolio review & feedback",
+    ],
+  },
+  {
+    id: "advanced",
+    name: "Advanced",
+    tagline: "For creators going professional",
+    priceUSD: 399,
+    priceNGN: 700000,
+    cta: "Get Advanced",
+    featured: false,
+    includesTools: true,
+    features: [
+      "Everything in Premium",
+      "Complete AI tools suite included",
+      "Pro workflow templates & resources",
+      "Advanced project critiques",
+      "Commercial-ready project kit",
+      "5 premium UGC ad templates included",
+    ],
+  },
+  {
+    id: "oneonone",
+    name: "One-on-One",
+    tagline: "Direct mentorship to launch",
+    priceUSD: 699,
+    priceNGN: 1200000,
+    cta: "Apply for 1:1",
+    featured: false,
+    includesTools: true,
+    features: [
+      "Everything in Advanced",
+      "Complete tools suite included",
+      "3 × 1-on-1 mentoring sessions",
+      "Personal portfolio & pricing review",
+      "Direct founder feedback",
+      "Launch plan for your first paid work",
+    ],
+  },
+] as const;
 
 const INSTAGRAM_UGC = [
   {
@@ -200,9 +273,8 @@ export default function AcademyPage() {
         }`}
       >
         <div className="mx-auto flex h-[64px] max-w-[1160px] items-center justify-between px-5 sm:px-8">
-          <a href="/academy" className="flex items-center gap-2.5">
-            <span className="flex h-7 w-7 items-center justify-center rounded-[9px] bg-[#F5F3EE] text-[10px] font-extrabold tracking-[-0.04em] text-[#0A0A0A]">W</span>
-            <span className="text-[13px] font-semibold tracking-[0.14em] text-[#F5F3EE]">{ACADEMY.shortName}</span>
+          <a href="/academy" className="shrink-0" aria-label="Wisnotech Academy home">
+            <Logo />
           </a>
 
           <nav className="hidden items-center gap-1 lg:flex">
@@ -652,58 +724,68 @@ export default function AcademyPage() {
             </div>
           </div>
 
-          <div className="mx-auto mt-6 max-w-[520px] overflow-hidden rounded-[22px] border border-white/10 bg-[#141414] shadow-[0_32px_80px_-32px_rgba(0,0,0,0.7)]">
-            <div className="bg-[radial-gradient(70%_80%_at_50%_0%,rgba(255,77,18,0.14),transparent_70%)] p-7 sm:p-8">
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-white/40">AI Video Creator Cohort — {ACADEMY.cohort}</p>
-                  <h3 className="mt-2 text-[20px] font-semibold tracking-[-0.015em] text-[#F5F3EE]">Full Cohort Access</h3>
-                </div>
-                <span className="rounded-full border border-[#FF4D12]/30 bg-[#FF4D12]/10 px-3 py-1 text-[11px] font-semibold text-[#FF4D12]">Limited seats</span>
-              </div>
-
-              <div className="mt-6 flex items-baseline gap-3">
-                <span className="font-[800] tracking-[-0.04em] text-[#F5F3EE] text-[42px] leading-none">
-                  {currency === "USD" ? `$${ACADEMY.priceUSD}` : formatNaira(ACADEMY.priceNGN)}
-                </span>
-                <span className="text-xs font-medium tracking-[0.08em] text-white/35">ONE-TIME</span>
-              </div>
-              <p className="mt-1 text-xs text-white/40">{ACADEMY.priceNote} · {ACADEMY.seats} seats · Ends {ACADEMY.deadline}</p>
-
-              <ul className="mt-6 space-y-2.5 border-t border-white/10 pt-6">
-                {[
-                  "Full cohort access",
-                  "Complete AI video curriculum (8 modules)",
-                  "Live training sessions",
-                  "Practical assignments & real-world projects",
-                  "Prompt frameworks and templates",
-                  "AI video workflow resources",
-                  "Community access",
-                  "Session recordings (12 months)",
-                  "Certificate of completion",
-                ].map((f) => (
-                  <li key={f} className="flex gap-2.5 text-[13px] leading-[1.5] text-white/70">
-                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#FF4D12]" aria-hidden />
-                    {f}
-                  </li>
-                ))}
-              </ul>
-
-              <a
-                href={ACADEMY.ctaApply}
-                onClick={(e) => {
-                  e.preventDefault();
-                  const el = document.getElementById("contact");
-                  if (el) el.scrollIntoView({ behavior: "smooth" });
-                  else window.location.href = "/#contact";
-                }}
-                className="mt-7 flex w-full items-center justify-center gap-2 rounded-full bg-[#FF4D12] px-6 py-4 text-sm font-semibold text-white shadow-[0_16px_40px_-16px_rgba(255,77,18,0.6)] transition-colors hover:bg-[#E84510]"
+          {/* Tiered pricing — Basic / Premium / Advanced (tools) / One-on-One (tools + 1:1) */}
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {PRICING_TIERS.map((tier) => (
+              <div
+                key={tier.id}
+                className={`relative flex flex-col overflow-hidden rounded-[22px] border bg-[#141414] p-6 sm:p-7 ${
+                  tier.featured ? "border-[#FF4D12]/30 shadow-[0_24px_64px_-24px_rgba(255,77,18,0.45)]" : "border-white/10"
+                }`}
               >
-                Secure Your Spot <ArrowRight className="h-4 w-4" />
-              </a>
-              <p className="mt-2.5 text-center text-xs text-white/30">Secure checkout · Instant confirmation</p>
-            </div>
+                {tier.featured && (
+                  <span className="absolute right-4 top-4 rounded-full bg-[#FF4D12] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-white">Most Popular</span>
+                )}
+                {tier.includesTools && (
+                  <span className={`absolute left-4 top-4 rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] ${tier.featured ? "border-white/15 bg-white/10 text-white/80" : "border-[#FF4D12]/30 bg-[#FF4D12]/10 text-[#FF4D12]"}`}>
+                    Includes Tools
+                  </span>
+                )}
+                <div className={tier.includesTools ? "mt-8" : tier.featured ? "mt-8" : ""}>
+                  <h3 className="text-[18px] font-bold tracking-[-0.02em] text-[#F5F3EE]">{tier.name}</h3>
+                  <p className="mt-1 text-xs leading-[1.5] text-white/45">{tier.tagline}</p>
+                </div>
+
+                <div className="mt-5 flex items-baseline gap-2">
+                  <span className="font-[800] tracking-[-0.04em] text-[#F5F3EE] text-[34px] leading-none">
+                    {currency === "USD" ? `$${tier.priceUSD}` : formatNaira(tier.priceNGN)}
+                  </span>
+                  <span className="text-[10px] font-semibold tracking-[0.08em] text-white/30">ONE-TIME</span>
+                </div>
+
+                <ul className="mt-5 flex-1 space-y-2.5 border-t border-white/10 pt-5">
+                  {tier.features.map((f) => (
+                    <li key={f} className="flex gap-2.5 text-[12.5px] leading-[1.5] text-white/65">
+                      <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#FF4D12]" aria-hidden />
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+
+                <a
+                  href={ACADEMY.ctaApply}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const el = document.getElementById("contact");
+                    if (el) el.scrollIntoView({ behavior: "smooth" });
+                    else window.location.href = "/#contact";
+                  }}
+                  className={`mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full px-5 py-3.5 text-sm font-semibold transition-all ${
+                    tier.featured
+                      ? "bg-[#FF4D12] text-white shadow-[0_12px_32px_-16px_rgba(255,77,18,0.6)] hover:bg-[#E84510]"
+                      : tier.id === "oneonone"
+                        ? "bg-white text-[#0A0A0A] hover:bg-zinc-100"
+                        : "border border-white/15 bg-white/[0.04] text-white hover:border-white/25 hover:bg-white/[0.07]"
+                  }`}
+                >
+                  {tier.cta} <ArrowRight className="h-4 w-4" aria-hidden />
+                </a>
+              </div>
+            ))}
           </div>
+          <p className="mx-auto mt-6 max-w-2xl text-center text-xs leading-[1.6] text-white/30">
+            {ACADEMY.seats} seats per cohort · Ends {ACADEMY.deadline} · Tools included only with Advanced & One-on-One
+          </p>
 
           <div className="mx-auto mt-6 flex flex-wrap justify-center gap-3 text-[11px] font-medium uppercase tracking-[0.12em] text-white/25">
             <span className="inline-flex items-center gap-2"><Clock className="h-3.5 w-3.5" />6 weeks</span>
@@ -771,10 +853,7 @@ export default function AcademyPage() {
       <footer className="border-t border-white/10 bg-[#050505]">
         <div className="mx-auto flex max-w-[1160px] flex-col gap-8 px-5 py-10 sm:px-8 sm:flex-row sm:items-start sm:justify-between sm:py-12">
           <div className="max-w-sm">
-            <div className="flex items-center gap-2.5">
-              <span className="flex h-7 w-7 items-center justify-center rounded-[9px] bg-[#F5F3EE] text-[10px] font-extrabold text-[#0A0A0A]">W</span>
-              <span className="text-[13px] font-semibold tracking-[0.14em] text-[#F5F3EE]">{ACADEMY.shortName}</span>
-            </div>
+            <Logo />
             <p className="mt-3 text-sm leading-[1.6] text-white/40">Practical AI video education for the next generation of creators.</p>
           </div>
           <div className="flex gap-10 text-sm">
