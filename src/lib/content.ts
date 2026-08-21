@@ -4,7 +4,6 @@ export const NAV_LINKS = [
   { label: "Our Work", href: "/#work" },
   { label: "About", href: "/#about" },
   { label: "Contact", href: "/#contact" },
-  { label: "Cohort ₦ NEW", href: "/cohort.html" },
 ] as const;
 
 export const SERVICES = [
