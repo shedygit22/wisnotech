@@ -8,7 +8,6 @@ import { useAutoSpeech } from "../lib/useAutoSpeech";
 import { useChatSessions } from "../lib/chatStore";
 import { MicButton, SpeakButton, AutoSpeakToggle, VoiceCallButton } from "./VoiceControls";
 import { VoiceCallOverlay } from "./LiveVoiceCall";
-import { preloadPiper } from "../lib/piperTts";
 import { track } from "../lib/analytics";
 import {
   buildClientProfile,
@@ -227,7 +226,6 @@ export default function AiAssistant() {
   const startVoiceConversation = useCallback(() => {
     setOpen(true);
     track("voice_start", { surface: "assistant" });
-    void preloadPiper();
     voiceConversation.start();
   }, [voiceConversation]);
 

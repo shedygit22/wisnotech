@@ -170,25 +170,6 @@ async function synthesize(text: string): Promise<Blob | null> {
   return null;
 }
 
-/** Fast path for live voice calls: Piper first (~200ms locally), Gemini as fallback. */
-async function synthesizeFast(text: string): Promise<Blob | null> {
-  track("tts_request", { len: text.length });
-  if (piperSupported() && piperStatus() === "ready") {
-    const blob = await piperSpeak(text);
-    if (blob) {
-      track("tts_success", { provider: "piper" });
-      return blob;
-    }
-  }
-  const hosted = await fetchTts(text);
-  if (hosted) {
-    track("tts_success", { provider: "gemini" });
-    return hosted;
-  }
-  track("tts_fallback", { reason: "no_blob" });
-  return null;
-}
-
 /** Speak via the server TTS (Gemini — smooth, realistic), else Piper, else browser voices. */
 export async function speakText(text: string): Promise<void> {
   const clean = stripForSpeech(text);
@@ -290,20 +271,24 @@ export function useVoice(): UseVoice {
       const ctx = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
       ctxRef.current = ctx;
       const analyser = ctx.createAnalyser();
-      analyser.fftSize = 256;
-      analyser.smoothingTimeConstant = 0.45;
+      analyser.fftSize = 128;
+      analyser.smoothingTimeConstant = 0.5;
       ctx.createMediaStreamSource(stream).connect(analyser);
       analyserRef.current = analyser;
       const data = new Uint8Array(analyser.frequencyBinCount);
+      let lastUpdate = 0;
       const tick = () => {
         if (!analyserRef.current) return;
         analyserRef.current.getByteFrequencyData(data);
-        let sum = 0;
-        for (let i = 0; i < data.length; i++) sum += data[i];
-        const avg = sum / data.length / 255; // 0..1
-        // Boost a bit so quiet speech still moves the orb, then smooth
-        const boosted = Math.min(1, Math.pow(avg * 1.6, 0.85));
-        setEnergy((prev) => prev * 0.55 + boosted * 0.45);
+        const now = performance.now();
+        if (now - lastUpdate >= 90) {
+          lastUpdate = now;
+          let sum = 0;
+          for (let i = 0; i < data.length; i++) sum += data[i];
+          const avg = sum / data.length / 255;
+          const boosted = Math.min(1, Math.pow(avg * 1.5, 0.85));
+          setEnergy((prev) => prev * 0.6 + boosted * 0.4);
+        }
         rafRef.current = requestAnimationFrame(tick);
       };
       tick();
@@ -425,17 +410,22 @@ export function useVoiceConversation(ask: VoiceAsk): UseVoiceConversation {
   askRef.current = ask;
   const { supported, energy: micEnergy, startListening, stopListening } = useVoice();
 
-  // Synthetic AI energy while Wisne is speaking (drives the orb)
+  // Synthetic AI energy while Wisne is speaking (drives the orb) — throttled to ~12fps
   useEffect(() => {
     if (status !== "speaking") {
       setAiEnergy(0);
       return;
     }
     let raf = 0;
+    let last = 0;
     const tick = () => {
-      const t = Date.now() / 1000;
-      const v = 0.45 + Math.sin(t * 5.2) * 0.25 + Math.sin(t * 9.1) * 0.12 + Math.random() * 0.08;
-      setAiEnergy(Math.max(0, Math.min(1, v)));
+      const now = performance.now();
+      if (now - last >= 80) {
+        last = now;
+        const t = now / 1000;
+        const v = 0.45 + Math.sin(t * 5.2) * 0.25 + Math.sin(t * 9.1) * 0.12 + Math.random() * 0.08;
+        setAiEnergy(Math.max(0, Math.min(1, v)));
+      }
       raf = requestAnimationFrame(tick);
     };
     tick();
@@ -479,16 +469,15 @@ export function useVoiceConversation(ask: VoiceAsk): UseVoiceConversation {
       setStatus("thinking");
 
       // Pipeline: generate audio for each sentence as it arrives and play it
-      // in order, starting the next sentence's audio while the previous plays.
-      // For live calls we use Piper first (local, ~200ms) so Wisne answers
-      // almost instantly; Gemini is the fallback if Piper isn't ready.
+      // in order. Uses the smooth natural voice (Gemini) for live calls —
+      // no labels, just real-life quality.
       let playing = Promise.resolve();
       const speakSentence = (sentence: string) => {
         const clean = stripForSpeech(sentence);
         if (!clean) return;
         statusRef.current = "speaking";
         setStatus("speaking");
-        const gen = synthesizeFast(clean);
+        const gen = synthesize(clean);
         playing = playing.then(async () => {
           if (!activeRef.current) return;
           const blob = await gen;

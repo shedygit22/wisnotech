@@ -5,6 +5,6 @@ export const VOICE_STATUS_TEXT: Record<VoiceStatus, string> = {
   off: "Voice conversation ended",
   connecting: "Preparing Wisne's voice…",
   listening: "I'm listening",
-  thinking: "Analyzing…",
+  thinking: "Wisne is speaking",
   speaking: "Wisne is speaking",
 };

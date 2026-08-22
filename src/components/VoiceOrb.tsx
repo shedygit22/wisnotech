@@ -215,26 +215,13 @@ export function VoiceOrb({
         }
       }
 
-      // --- Thinking: rotating energy flow instead of a solid disc ---
+      // --- Thinking: same as speaking, just a subtle breathing (no heavy conic) ---
       if (isThinking) {
-        const spin = seconds * 0.6;
         const RR = R * 0.86;
-        const grad = ctx.createConicGradient(spin, cx, cy);
-        grad.addColorStop(0, css(cur.glow, 0));
-        grad.addColorStop(0.25, css(cur.accent, 0.65));
-        grad.addColorStop(0.5, css(cur.glow, 0.15));
-        grad.addColorStop(0.75, css(cur.accent, 0.4));
-        grad.addColorStop(1, css(cur.glow, 0));
-        ctx.strokeStyle = grad;
-        ctx.lineWidth = Math.max(3, R * 0.12);
-        ctx.beginPath();
-        ctx.arc(cx, cy, RR, 0, Math.PI * 2);
-        ctx.stroke();
-
-        ctx.strokeStyle = css(cur.accent, 0.35);
+        ctx.strokeStyle = css(cur.accent, 0.18 + L * 0.12);
         ctx.lineWidth = Math.max(2, R * 0.06);
         ctx.beginPath();
-        ctx.arc(cx, cy, RR * 0.7, seconds * 1.4, seconds * 1.4 + Math.PI * 1.2);
+        ctx.arc(cx, cy, RR, 0, Math.PI * 2);
         ctx.stroke();
       }
 
