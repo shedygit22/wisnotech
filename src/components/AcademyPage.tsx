@@ -32,73 +32,81 @@ const PRICING_TIERS = [
   {
     id: "basic",
     name: "Basic",
-    tagline: "Start your AI video journey",
-    priceUSD: 149,
-    priceNGN: 260000,
+    tagline: "Your entry point — no tools needed",
+    priceUSD: 199,
+    priceNGN: 350000,
     cta: "Get Basic",
     featured: false,
     includesTools: false,
+    badge: "Starter",
+    subNote: "Best for testing the waters",
     features: [
       "Full cohort access (8 modules)",
-      "Live training sessions",
+      "Live training sessions + recordings — 6 months",
       "Practical assignments",
       "Community access",
-      "Session recordings — 6 months",
       "Certificate of completion",
+      "Templates starter pack",
     ],
   },
   {
     id: "premium",
     name: "Premium",
-    tagline: "Most popular for serious creators",
-    priceUSD: 249,
-    priceNGN: 435000,
+    tagline: "Most chosen — without tools",
+    priceUSD: 349,
+    priceNGN: 610000,
     cta: "Get Premium",
     featured: true,
     includesTools: false,
+    badge: "Most Popular",
+    subNote: "Without tools — add them later",
     features: [
       "Everything in Basic",
       "Extended recordings — 12 months",
-      "Real-world portfolio projects (4)",
-      "Prompt frameworks & templates",
-      "Priority community support",
-      "Portfolio review & feedback",
+      "4 real-world portfolio projects",
+      "Full prompt frameworks & templates",
+      "Priority support & portfolio review",
+      "Project feedback from the studio",
     ],
   },
   {
     id: "advanced",
     name: "Advanced",
-    tagline: "For creators going professional",
-    priceUSD: 399,
-    priceNGN: 700000,
+    tagline: "Go pro — tools included",
+    priceUSD: 599,
+    priceNGN: 1050000,
     cta: "Get Advanced",
     featured: false,
     includesTools: true,
+    badge: "Best Value",
+    subNote: "Tools included — worth $299 alone",
     features: [
       "Everything in Premium",
-      "Complete AI tools suite included",
-      "Pro workflow templates & resources",
+      "Complete AI tools suite included ($299 value)",
+      "Pro workflow templates & commercial kit",
       "Advanced project critiques",
-      "Commercial-ready project kit",
       "5 premium UGC ad templates included",
+      "Monetization playbook + pricing guide",
     ],
   },
   {
     id: "oneonone",
     name: "One-on-One",
-    tagline: "Direct mentorship to launch",
-    priceUSD: 699,
-    priceNGN: 1200000,
+    tagline: "We build it with you",
+    priceUSD: 1199,
+    priceNGN: 2100000,
     cta: "Apply for 1:1",
     featured: false,
     includesTools: true,
+    badge: "Private",
+    subNote: "Tools + private mentorship",
     features: [
       "Everything in Advanced",
-      "Complete tools suite included",
-      "3 × 1-on-1 mentoring sessions",
-      "Personal portfolio & pricing review",
-      "Direct founder feedback",
-      "Launch plan for your first paid work",
+      "Tools suite included",
+      "3 × private 1-on-1 mentoring sessions",
+      "Personal portfolio, pricing & offer review",
+      "Direct founder feedback on your work",
+      "30-day launch plan for first paid work",
     ],
   },
 ] as const;
@@ -733,17 +741,24 @@ export default function AcademyPage() {
                   tier.featured ? "border-[#FF4D12]/30 shadow-[0_24px_64px_-24px_rgba(255,77,18,0.45)]" : "border-white/10"
                 }`}
               >
-                {tier.featured && (
-                  <span className="absolute right-4 top-4 rounded-full bg-[#FF4D12] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-white">Most Popular</span>
-                )}
+                <span
+                  className={`absolute right-4 top-4 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] ${
+                    tier.featured ? "bg-[#FF4D12] text-white" : tier.id === "advanced" ? "bg-white text-[#0A0A0A]" : "border border-white/15 bg-white/10 text-white/70"
+                  }`}
+                >
+                  {(tier as unknown as { badge: string }).badge}
+                </span>
                 {tier.includesTools && (
-                  <span className={`absolute left-4 top-4 rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] ${tier.featured ? "border-white/15 bg-white/10 text-white/80" : "border-[#FF4D12]/30 bg-[#FF4D12]/10 text-[#FF4D12]"}`}>
-                    Includes Tools
+                  <span className="absolute left-4 top-4 rounded-full border border-[#FF4D12]/25 bg-[#FF4D12]/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#FF4D12]">
+                    Tools Included
                   </span>
                 )}
-                <div className={tier.includesTools ? "mt-8" : tier.featured ? "mt-8" : ""}>
+                <div className="mt-8">
                   <h3 className="text-[18px] font-bold tracking-[-0.02em] text-[#F5F3EE]">{tier.name}</h3>
                   <p className="mt-1 text-xs leading-[1.5] text-white/45">{tier.tagline}</p>
+                  {(tier as unknown as { subNote: string }).subNote && (
+                    <p className="mt-1 text-[11px] italic leading-[1.4] text-white/30">{(tier as unknown as { subNote: string }).subNote}</p>
+                  )}
                 </div>
 
                 <div className="mt-5 flex items-baseline gap-2">
