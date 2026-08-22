@@ -3,8 +3,8 @@ export const NAV_LINKS = [
   { label: "Solutions", href: "/#solutions" },
   { label: "Our Work", href: "/#work" },
   { label: "About", href: "/#about" },
+  { label: "Training", href: "/training" },
   { label: "Contact", href: "/#contact" },
-  { label: "Cohort", href: "#/academy" },
 ] as const;
 
 export const SERVICES = [

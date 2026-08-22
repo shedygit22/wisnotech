@@ -339,6 +339,7 @@ const urls = [
   { loc: `${SITE_URL}/wino`, lastmod: now, priority: 0.9 },
   { loc: `${SITE_URL}/portfolio`, lastmod: now, priority: 0.9 },
   { loc: `${SITE_URL}/academy`, lastmod: now, priority: 0.9 },
+  { loc: `${SITE_URL}/training`, lastmod: now, priority: 0.9 },
   ...COURSE_SLUGS.map((s) => ({ loc: `${SITE_URL}/courses/${s}`, lastmod: now, priority: 0.8 })),
   { loc: `${SITE_URL}/privacy`, lastmod: now, priority: 0.4 },
   { loc: `${SITE_URL}/terms`, lastmod: now, priority: 0.4 },
@@ -380,6 +381,9 @@ const llms = `# Wisnotech
 - [AI for Business Growth](${SITE_URL}/courses/ai-for-business-growth): Apply AI across a business
 - [Web Development Bootcamp](${SITE_URL}/courses/web-development-bootcamp): Front-end, React, deployment
 - [Full-Stack Software Engineering](${SITE_URL}/courses/full-stack-software-engineering): Full-stack + AI features
+
+## Training
+- [Advanced Vibe Coding & Agentic AI Masterclass](${SITE_URL}/training): Build SaaS, web apps, mobile apps, AI agents and automations — vibe coding at the speed of ideas
 
 ## Blog
 ${posts
