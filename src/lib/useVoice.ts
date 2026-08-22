@@ -243,6 +243,8 @@ export function stopSpeaking(): void {
 export interface UseVoice {
   supported: boolean;
   listening: boolean;
+  /** 0..1 live mic energy (only while listening) */
+  energy: number;
   /** Starts mic capture; calls onTranscript with final text. No-op if already listening. */
   startListening: (onTranscript: (text: string) => void, onEnd?: () => void) => void;
   stopListening: () => void;
@@ -253,13 +255,69 @@ export function useVoice(): UseVoice {
   const recRef = useRef<SpeechRecognitionLike | null>(null);
   const listeningRef = useRef(false);
   const [listening, setListening] = useState(false);
+  const [energy, setEnergy] = useState(0);
   const supported = speechSupported();
+
+  // Live mic analyser for orb reactivity (only while listening)
+  const streamRef = useRef<MediaStream | null>(null);
+  const rafRef = useRef<number | null>(null);
+  const analyserRef = useRef<AnalyserNode | null>(null);
+  const ctxRef = useRef<AudioContext | null>(null);
+
+  const stopAnalyser = useCallback(() => {
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    rafRef.current = null;
+    analyserRef.current = null;
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((t) => t.stop());
+      streamRef.current = null;
+    }
+    if (ctxRef.current) {
+      try {
+        ctxRef.current.close();
+      } catch {}
+      ctxRef.current = null;
+    }
+    setEnergy(0);
+  }, []);
+
+  const startAnalyser = useCallback(async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
+      });
+      streamRef.current = stream;
+      const ctx = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
+      ctxRef.current = ctx;
+      const analyser = ctx.createAnalyser();
+      analyser.fftSize = 256;
+      analyser.smoothingTimeConstant = 0.45;
+      ctx.createMediaStreamSource(stream).connect(analyser);
+      analyserRef.current = analyser;
+      const data = new Uint8Array(analyser.frequencyBinCount);
+      const tick = () => {
+        if (!analyserRef.current) return;
+        analyserRef.current.getByteFrequencyData(data);
+        let sum = 0;
+        for (let i = 0; i < data.length; i++) sum += data[i];
+        const avg = sum / data.length / 255; // 0..1
+        // Boost a bit so quiet speech still moves the orb, then smooth
+        const boosted = Math.min(1, Math.pow(avg * 1.6, 0.85));
+        setEnergy((prev) => prev * 0.55 + boosted * 0.45);
+        rafRef.current = requestAnimationFrame(tick);
+      };
+      tick();
+    } catch {
+      setEnergy(0);
+    }
+  }, []);
 
   const stopListening = useCallback(() => {
     listeningRef.current = false;
     recRef.current?.stop();
     setListening(false);
-  }, []);
+    stopAnalyser();
+  }, [stopAnalyser]);
 
   const startListening = useCallback(
     (onTranscript: (text: string) => void, onEnd?: () => void) => {
@@ -286,14 +344,18 @@ export function useVoice(): UseVoice {
       const ended = () => {
         listeningRef.current = false;
         setListening(false);
+        stopAnalyser();
         if (!gotResult) onEnd?.();
       };
       rec.onend = ended;
       rec.onerror = () => {
         listeningRef.current = false;
         setListening(false);
+        stopAnalyser();
         onEnd?.();
       };
+      setListening(false); // reset before analyser starts
+      void startAnalyser();
       setListening(true);
       try {
         rec.start();
@@ -301,18 +363,19 @@ export function useVoice(): UseVoice {
         ended();
       }
     },
-    [supported]
+    [supported, startAnalyser, stopAnalyser]
   );
 
   useEffect(() => {
     return () => {
       recRef.current?.abort();
       listeningRef.current = false;
+      stopAnalyser();
       stopSpeaking();
     };
-  }, []);
+  }, [stopAnalyser]);
 
-  return { supported, listening, startListening, stopListening };
+  return { supported, listening, energy, startListening, stopListening };
 }
 
 export type ConversationStatus = "off" | "listening" | "thinking" | "speaking";
@@ -321,6 +384,10 @@ export interface UseVoiceConversation {
   supported: boolean;
   active: boolean;
   status: ConversationStatus;
+  /** 0..1 live mic energy (while listening) */
+  energy: number;
+  /** 0..1 synthetic AI energy (while speaking) */
+  aiEnergy: number;
   start: () => void;
   stop: () => void;
 }
@@ -351,11 +418,31 @@ export type VoiceAsk = (
 export function useVoiceConversation(ask: VoiceAsk): UseVoiceConversation {
   const [active, setActive] = useState(false);
   const [status, setStatus] = useState<ConversationStatus>("off");
+  const [aiEnergy, setAiEnergy] = useState(0);
   const activeRef = useRef(false);
   const statusRef = useRef<ConversationStatus>("off");
   const askRef = useRef<VoiceAsk>(ask);
   askRef.current = ask;
-  const { supported, startListening, stopListening } = useVoice();
+  const { supported, energy: micEnergy, startListening, stopListening } = useVoice();
+
+  // Synthetic AI energy while Wisne is speaking (drives the orb)
+  useEffect(() => {
+    if (status !== "speaking") {
+      setAiEnergy(0);
+      return;
+    }
+    let raf = 0;
+    const tick = () => {
+      const t = Date.now() / 1000;
+      const v = 0.45 + Math.sin(t * 5.2) * 0.25 + Math.sin(t * 9.1) * 0.12 + Math.random() * 0.08;
+      setAiEnergy(Math.max(0, Math.min(1, v)));
+      raf = requestAnimationFrame(tick);
+    };
+    tick();
+    return () => cancelAnimationFrame(raf);
+  }, [status]);
+
+  const energy = status === "listening" ? micEnergy : 0;
 
   const loop = useCallback(async () => {
     let quietRounds = 0;
@@ -447,5 +534,5 @@ export function useVoiceConversation(ask: VoiceAsk): UseVoiceConversation {
     };
   }, []);
 
-  return { supported, active, status, start, stop };
+  return { supported, active, status, energy, aiEnergy, start, stop };
 }

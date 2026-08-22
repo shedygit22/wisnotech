@@ -73,9 +73,12 @@ export function profileText(profile) {
   return `CURRENT CLIENT PROFILE:\n- ${parts.join("\n- ")}`;
 }
 
-export function systemPrompt(profile) {
+export function systemPrompt(profile, opts = {}) {
   const p = profileText(profile);
-  return `${SYSTEM_PROMPT}\n\n${BRAND_FACTS}\n\n${INDUSTRY_GUIDANCE}${p ? `\n\n${p}` : ""}`;
+  const voiceHint = opts.voice
+    ? "\n\nVOICE MODE: You are on a live voice call. Reply in 1-2 short sentences, very concise, conversational, no markdown, no lists unless the user asked. Be swift and natural — the user hears you, not reads you."
+    : "";
+  return `${SYSTEM_PROMPT}\n\n${BRAND_FACTS}\n\n${INDUSTRY_GUIDANCE}${p ? `\n\n${p}` : ""}${voiceHint}`;
 }
 
 async function callDeepSeek(messages, env) {
@@ -259,7 +262,7 @@ async function callNvidia(messages, env) {
 
 export async function runChat(payload, env) {
   const provider = (env.LLM_PROVIDER ?? "google").toLowerCase();
-  const messages = [{ role: "system", content: systemPrompt(payload?.profile) }, ...payload.messages];
+  const messages = [{ role: "system", content: systemPrompt(payload?.profile, { voice: !!payload?.voice }) }, ...payload.messages];
 
   if (provider === "google") {
     return callGoogle(messages, env);
@@ -277,7 +280,7 @@ export async function runChat(payload, env) {
  */
 export async function* runChatStream(payload, env) {
   const provider = (env.LLM_PROVIDER ?? "google").toLowerCase();
-  const messages = [{ role: "system", content: systemPrompt(payload?.profile) }, ...payload.messages];
+  const messages = [{ role: "system", content: systemPrompt(payload?.profile, { voice: !!payload?.voice }) }, ...payload.messages];
 
   if (provider === "google") {
     yield* callGoogleStream(messages, env);

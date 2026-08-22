@@ -167,6 +167,7 @@ export default function AiAssistant() {
       // In voice mode we also hand each complete sentence to `onSentence` so
       // TTS can start speaking it immediately while the reply keeps streaming.
       let sentenceBuffer = "";
+      const isVoice = !!onSentence;
       const reply = await askServerWithFallbackStream(
         question,
         stateRef.current,
@@ -181,7 +182,8 @@ export default function AiAssistant() {
             sentenceBuffer = remainder;
             for (const s of complete) onSentence(s);
           }
-        }
+        },
+        isVoice
       );
       if (onSentence) {
         const tail = sentenceBuffer.trim();
@@ -507,6 +509,8 @@ export default function AiAssistant() {
         {voiceConversation.active && voiceConversation.status !== "off" && (
           <VoiceCallOverlay
             status={voiceConversation.status}
+            energy={voiceConversation.energy}
+            aiEnergy={voiceConversation.aiEnergy}
             transcript={lastReply ?? undefined}
             bookingLink={BOOKING_URL}
             onStop={voiceConversation.stop}

@@ -39,12 +39,13 @@ export async function serverChat(
 export async function serverChatStream(
   history: { role: "user" | "assistant"; content: string }[],
   profile: ClientProfile | undefined,
-  onChunk: (text: string) => void
+  onChunk: (text: string) => void,
+  isVoice = false
 ): Promise<string> {
   const res = await fetch(endpoint(), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ messages: history, profile, stream: true }),
+    body: JSON.stringify({ messages: history, profile, stream: true, voice: isVoice }),
   });
 
   if (!res.ok || !res.body) {
@@ -131,13 +132,15 @@ export async function askServerWithFallbackStream(
   state: AssistState,
   history: { role: "user" | "assistant"; content: string }[],
   profile: ClientProfile | undefined,
-  onChunk: (text: string) => void
+  onChunk: (text: string) => void,
+  isVoice = false
 ): Promise<Reply> {
   try {
     const text = await serverChatStream(
       [...history, { role: "user", content: question }],
       profile,
-      onChunk
+      onChunk,
+      isVoice
     );
     track("chat_reply", { source: "gemini", streamed: true });
     return { text, href: undefined };

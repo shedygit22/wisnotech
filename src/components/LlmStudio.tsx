@@ -84,6 +84,7 @@ export default function LlmStudio() {
 
       // Stream the reply so it types out live, Gemini-style.
       let sentenceBuffer = "";
+      const isVoice = !!onSentence;
       const reply = await askServerWithFallbackStream(
         question,
         createInitialState(),
@@ -98,7 +99,8 @@ export default function LlmStudio() {
             sentenceBuffer = remainder;
             for (const s of complete) onSentence(s);
           }
-        }
+        },
+        isVoice
       );
       if (onSentence) {
         const tail = sentenceBuffer.trim();
@@ -352,6 +354,8 @@ export default function LlmStudio() {
         {voiceConversation.active && voiceConversation.status !== "off" && (
           <VoiceCallOverlay
             status={voiceConversation.status}
+            energy={voiceConversation.energy}
+            aiEnergy={voiceConversation.aiEnergy}
             transcript={lastReply ?? undefined}
             bookingLink={BOOKING_URL}
             onStop={voiceConversation.stop}
