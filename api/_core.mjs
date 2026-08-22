@@ -76,7 +76,7 @@ export function profileText(profile) {
 export function systemPrompt(profile, opts = {}) {
   const p = profileText(profile);
   const voiceHint = opts.voice
-    ? "\n\nVOICE MODE: You are on a live voice call. Reply in 1-2 short sentences, very concise, conversational, no markdown, no lists unless the user asked. Be swift and natural — the user hears you, not reads you."
+    ? "\n\nVOICE MODE: You are on a live voice call. Speak naturally and at the length needed to be truly helpful — use your full knowledge scope, no arbitrary sentence limit. Be conversational, thorough and engaging, as a knowledgeable human would speak. No markdown."
     : "";
   return `${SYSTEM_PROMPT}\n\n${BRAND_FACTS}\n\n${INDUSTRY_GUIDANCE}${p ? `\n\n${p}` : ""}${voiceHint}`;
 }
