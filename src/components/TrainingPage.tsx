@@ -102,6 +102,15 @@ export default function TrainingPage() {
     localStorage.setItem("wisnotech.currency", c);
   };
 
+  // Continuous looping showcase — auto-rotates every 4s
+  useEffect(() => {
+    const order: Array<typeof showcase> = ["saas", "mobile", "agent", "automation"];
+    const id = setInterval(() => {
+      setShowcase((prev) => order[(order.indexOf(prev) + 1) % order.length]);
+    }, 4000);
+    return () => clearInterval(id);
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#090909] text-[#F4F4F0] antialiased selection:bg-[#C8FF00]/30 selection:text-black">
       <style>{`@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap');`}</style>
@@ -167,14 +176,27 @@ export default function TrainingPage() {
             </div>
           </div>
 
-          {/* Interactive hero layers */}
-          <div className="relative">
-            <div className="relative overflow-hidden rounded-[22px] border border-white/10 bg-[#111111] p-2 shadow-[0_40px_80px_-32px_rgba(0,0,0,0.7)]">
+          {/* Interactive hero layers — continuous looping */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="relative"
+          >
+            <motion.div
+              animate={{ y: [0, -4, 0] }}
+              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+              className="relative overflow-hidden rounded-[22px] border border-white/10 bg-[#111111] p-2 shadow-[0_40px_80px_-32px_rgba(0,0,0,0.7)]"
+            >
               <div className="grid gap-2">
-                {/* Layer 1 — SaaS Dashboard */}
+                {/* Layer 1 — SaaS Dashboard with looping bars */}
                 <div className="relative overflow-hidden rounded-[14px] border border-white/10 bg-[#161616] p-4">
                   <div className="flex items-center justify-between">
-                    <span className="font-mono text-[10px] tracking-[0.14em] text-white/30">SYSTEM STATUS: READY</span><span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#C8FF00]" />
+                    <span className="font-mono text-[10px] tracking-[0.14em] text-white/30">SYSTEM STATUS: READY</span>
+                    <span className="relative flex h-1.5 w-1.5">
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#C8FF00] opacity-60" />
+                      <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#C8FF00]" />
+                    </span>
                   </div>
                   <div className="mt-3 grid grid-cols-3 gap-2">
                     {[
@@ -182,66 +204,117 @@ export default function TrainingPage() {
                       { k: "Active Users", v: "1,284", sub: "last 7d" },
                       { k: "Agent Tasks", v: "342", sub: "automated" },
                     ].map((s) => (
-                      <div key={s.k} className="rounded-xl border border-white/10 bg-white/[0.03] p-3">
+                      <motion.div
+                        key={s.k}
+                        className="rounded-xl border border-white/10 bg-white/[0.03] p-3"
+                        animate={{ scale: [1, 1.01, 1] }}
+                        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                      >
                         <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-white/30">{s.k}</p>
                         <p className="mt-1 text-sm font-semibold text-white">{s.v}</p>
                         <p className="text-[11px] text-[#C8FF00]">{s.sub}</p>
-                      </div>
+                      </motion.div>
                     ))}
                   </div>
                   <div className="mt-3 h-16 rounded-xl border border-white/10 bg-white/[0.02] p-3">
                     <div className="flex h-full items-end gap-1">
                       {[30, 55, 40, 70, 50, 85, 60, 90, 45].map((h, i) => (
-                        <div key={i} className="flex-1 rounded-sm bg-[#C8FF00]/80" style={{ height: `${h}%` }} />
+                        <motion.div
+                          key={i}
+                          className="flex-1 rounded-sm bg-[#C8FF00]/80"
+                          animate={{ height: [`${h}%`, `${Math.min(95, h + 22)}%`, `${h}%`] }}
+                          transition={{ duration: 2.2 + i * 0.15, repeat: Infinity, ease: "easeInOut", delay: i * 0.08 }}
+                          style={{ height: `${h}%` }}
+                        />
                       ))}
                     </div>
                   </div>
                 </div>
                 <div className="grid grid-cols-[1.1fr_0.9fr] gap-2">
-                  {/* Layer 2 — Mobile */}
+                  {/* Layer 2 — Mobile with continuous float */}
                   <div className="relative flex items-center justify-center overflow-hidden rounded-[14px] border border-white/10 bg-[#0F0F0F] p-4">
-                    <div className="relative h-[180px] w-[95px] rounded-[18px] border border-white/15 bg-[#1A1A1A] p-1.5 shadow-xl">
+                    <motion.div
+                      animate={{ y: [0, -6, 0], rotateY: [0, 4, 0] }}
+                      transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                      className="relative h-[180px] w-[95px] rounded-[18px] border border-white/15 bg-[#1A1A1A] p-1.5 shadow-xl"
+                      style={{ transformStyle: "preserve-3d" }}
+                    >
                       <div className="flex h-full flex-col rounded-[14px] bg-[#111111] p-2">
                         <div className="h-2 w-8 self-center rounded-full bg-white/10" />
                         <div className="mt-3 space-y-1.5">
-                          <div className="h-2 w-full rounded bg-white/15" />
-                          <div className="h-2 w-3/4 rounded bg-white/10" />
+                          <motion.div className="h-2 w-full rounded bg-white/15" animate={{ opacity: [0.6, 1, 0.6] }} transition={{ duration: 2, repeat: Infinity }} />
+                          <motion.div className="h-2 w-3/4 rounded bg-white/10" animate={{ opacity: [0.4, 0.8, 0.4] }} transition={{ duration: 2, repeat: Infinity, delay: 0.3 }} />
                         </div>
                         <div className="mt-3 grid grid-cols-2 gap-1.5">
-                          <div className="h-10 rounded-lg bg-[#C8FF00]/15" />
+                          <motion.div className="h-10 rounded-lg bg-[#C8FF00]/15" animate={{ scale: [1, 1.02, 1] }} transition={{ duration: 2.5, repeat: Infinity }} />
                           <div className="h-10 rounded-lg bg-white/[0.06]" />
                         </div>
                         <div className="mt-auto flex items-center justify-between border-t border-white/10 pt-2">
                           <Smartphone className="h-3 w-3 text-white/30" /><span className="font-mono text-[8px] text-white/30">AI APP</span>
                         </div>
                       </div>
-                    </div>
+                      <div className="pointer-events-none absolute inset-0 rounded-[18px] bg-gradient-to-tr from-white/10 via-transparent to-transparent opacity-60" />
+                    </motion.div>
+                    <motion.div
+                      className="absolute inset-0 rounded-[14px] bg-gradient-to-r from-transparent via-white/[0.04] to-transparent"
+                      animate={{ x: ["-100%", "100%"] }}
+                      transition={{ duration: 3.2, repeat: Infinity, ease: "linear", repeatDelay: 1.2 }}
+                      style={{ mixBlendMode: "overlay" as const }}
+                    />
                   </div>
-                  {/* Layer 3 & 4 — Agent + Code */}
+                  {/* Layer 3 & 4 — Agent + Code with looping signals */}
                   <div className="space-y-2">
                     <div className="rounded-[14px] border border-white/10 bg-[#0F0F0F] p-3">
                       <p className="font-mono text-[10px] tracking-[0.12em] text-white/30">AGENT WORKFLOW</p>
                       <div className="mt-2 space-y-1.5 font-mono text-[10px]">
-                        {["USER REQUEST →", "RESEARCH AGENT", "BUILD AGENT →", "TEST → DEPLOY"].map((t, i) => (
-                          <div key={t} className="flex items-center gap-2">
-                            <span className={`h-1 w-1 rounded-full ${i % 2 === 0 ? "bg-white/20" : "bg-[#C8FF00] animate-pulse"}`} />
-                            <span className={i === 3 ? "text-[#C8FF00]" : "text-white/60"}>{t}</span>
+                        {[
+                          { label: "USER REQUEST →", active: false },
+                          { label: "RESEARCH AGENT", active: true },
+                          { label: "BUILD AGENT →", active: true },
+                          { label: "TEST → DEPLOY", active: false },
+                        ].map((item, i) => (
+                          <div key={item.label} className="flex items-center gap-2">
+                            <span className="relative flex h-1.5 w-1.5">
+                              <span className={`absolute inline-flex h-full w-full rounded-full ${item.active ? "bg-[#C8FF00] opacity-60" : "bg-white/20"}`} style={item.active ? { animation: "ping 1.5s cubic-bezier(0,0,0.2,1) infinite" } as React.CSSProperties : undefined} />
+                              <span className={`relative inline-flex h-1.5 w-1.5 rounded-full ${item.active ? "bg-[#C8FF00]" : "bg-white/20"}`} />
+                            </span>
+                            <span className={item.label.includes("DEPLOY") || item.label.includes("BUILD") ? "text-[#C8FF00]" : "text-white/60"}>{item.label}</span>
+                            {item.active && (
+                              <motion.span
+                                className="ml-auto h-px w-6 bg-gradient-to-r from-[#C8FF00] to-transparent"
+                                animate={{ opacity: [0, 1, 0], x: [-6, 6, -6] }}
+                                transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut", delay: i * 0.3 }}
+                              />
+                            )}
                           </div>
                         ))}
                       </div>
                     </div>
                     <div className="rounded-[14px] border border-white/10 bg-[#0F0F0F] p-3 font-mono text-[10px] leading-[1.6]">
-                      <p className="text-white/30">&gt; initializing project</p>
-                      <p className="text-[#C8FF00]">✓ architecture generated</p>
-                      <p className="text-[#C8FF00]">✓ database connected</p>
-                      <p className="text-white/50">● PRODUCT LIVE</p>
+                      {[
+                        { text: "> initializing project", color: "text-white/30", delay: 0 },
+                        { text: "✓ architecture generated", color: "text-[#C8FF00]", delay: 0.6 },
+                        { text: "✓ database connected", color: "text-[#C8FF00]", delay: 1.2 },
+                        { text: "✓ API configured", color: "text-[#C8FF00]", delay: 1.8 },
+                        { text: "● PRODUCT LIVE", color: "text-white/90", delay: 2.4 },
+                      ].map((line) => (
+                        <motion.p
+                          key={line.text}
+                          initial={{ opacity: 0, x: -6 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ duration: 0.4, delay: line.delay, repeat: Infinity, repeatDelay: 4.5, repeatType: "reverse" as const }}
+                          className={line.color}
+                        >
+                          {line.text}
+                        </motion.p>
+                      ))}
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
             <p className="mt-3 text-center font-mono text-[11px] tracking-[0.08em] text-white/25">Idea → System → Product — interactive build environment</p>
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -252,9 +325,29 @@ export default function TrainingPage() {
             <h2 className="text-[28px] font-[800] tracking-[-0.04em] text-[#F4F4F0] sm:text-[34px]">You Don&apos;t Need to Do Everything Yourself Anymore.</h2>
             <p className="mx-auto mt-3 max-w-2xl text-[14px] leading-[1.7] text-white/50">Modern AI has changed how software is created. The new advantage is knowing how to direct intelligent systems, understand architecture, connect technologies and ship real products.</p>
           </div>
-          <div className="mx-auto mt-8 flex max-w-3xl flex-wrap items-center justify-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-4 py-3 font-mono text-[11px] tracking-[0.12em] text-white/40 sm:gap-3 sm:text-xs">
-            <span className="text-[#F4F4F0]">IDEA</span><span className="text-white/20">+</span><span className="text-[#C8FF00]">AI</span><span className="text-white/20">+</span><span>PRODUCT THINKING</span><span className="text-white/20">+</span><span>AUTOMATION</span><span className="text-white/20">=</span><span className="rounded-full bg-[#C8FF00] px-3 py-1 font-bold text-black">REAL SOFTWARE</span>
-          </div>
+          <motion.div
+            className="mx-auto mt-8 flex max-w-3xl flex-wrap items-center justify-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-4 py-3 font-mono text-[11px] tracking-[0.12em] text-white/40 sm:gap-3 sm:text-xs"
+            initial={{ opacity: 0, y: 8 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            <span className="text-[#F4F4F0]">IDEA</span>
+            <motion.span animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 2, repeat: Infinity }} className="text-white/20">+</motion.span>
+            <span className="text-[#C8FF00]">AI</span>
+            <motion.span animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 2, repeat: Infinity, delay: 0.3 }} className="text-white/20">+</motion.span>
+            <span>PRODUCT THINKING</span>
+            <motion.span animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 2, repeat: Infinity, delay: 0.6 }} className="text-white/20">+</motion.span>
+            <span>AUTOMATION</span>
+            <motion.span animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 2, repeat: Infinity, delay: 0.9 }} className="text-white/20">=</motion.span>
+            <motion.span
+              className="rounded-full bg-[#C8FF00] px-3 py-1 font-bold text-black"
+              animate={{ scale: [1, 1.03, 1], boxShadow: ["0 0 0px rgba(200,255,0,0)", "0 0 20px rgba(200,255,0,0.35)", "0 0 0px rgba(200,255,0,0)"] }}
+              transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+            >
+              REAL SOFTWARE
+            </motion.span>
+          </motion.div>
         </div>
       </section>
 
@@ -264,10 +357,19 @@ export default function TrainingPage() {
           <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.22em] text-[#C8FF00]">Curriculum</p>
           <h2 className="mt-3 max-w-xl text-[30px] font-[800] leading-[0.95] tracking-[-0.04em] text-[#F4F4F0] sm:text-[40px]">Learn the New Stack for Building With AI.</h2>
           <div className="mt-10 grid gap-[1px] overflow-hidden rounded-[20px] border border-white/10 bg-white/10 sm:grid-cols-2">
-            {CURRICULUM.map((m) => (
-              <div key={m.n} className="bg-[#111111] p-6 sm:p-7">
+            {CURRICULUM.map((m, idx) => (
+              <motion.div
+                key={m.n}
+                className="bg-[#111111] p-6 sm:p-7"
+                initial={{ opacity: 0, y: 8 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: idx * 0.04 }}
+                whileHover={{ backgroundColor: "rgba(255,255,255,0.02)" }}
+              >
                 <div className="flex items-center gap-3">
-                  <span className="font-mono text-xs tracking-[0.14em] text-[#C8FF00]">{m.n}</span><span className="h-px flex-1 bg-white/10" />
+                  <motion.span className="font-mono text-xs tracking-[0.14em] text-[#C8FF00]" animate={{ opacity: [0.6, 1, 0.6] }} transition={{ duration: 3, repeat: Infinity, delay: idx * 0.2 }}>{m.n}</motion.span>
+                  <motion.span className="h-px flex-1 bg-white/10" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2.5, repeat: Infinity, delay: idx * 0.15 }} />
                 </div>
                 <h3 className="mt-3 text-[16px] font-semibold tracking-[-0.015em] text-[#F4F4F0]">{m.title}</h3>
                 <p className="mt-2 text-[13px] leading-[1.6] text-white/50">{m.desc}</p>
@@ -276,7 +378,7 @@ export default function TrainingPage() {
                     <li key={b} className="flex gap-2 text-[12px] leading-[1.5] text-white/55"><Check className="mt-0.5 h-3 w-3 shrink-0 text-[#C8FF00]" />{b}</li>
                   ))}
                 </ul>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -287,12 +389,22 @@ export default function TrainingPage() {
         <div className="mx-auto max-w-[1160px] px-5 sm:px-8">
           <h2 className="text-[28px] font-[800] tracking-[-0.04em] text-[#F4F4F0] sm:text-[36px]">Don&apos;t Just Watch Tutorials. Ship Products.</h2>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            {PROJECTS.map((p) => (
-              <div key={p.title} className="rounded-[16px] border border-white/10 bg-[#111111] p-5">
-                <p.icon className="h-5 w-5 text-[#C8FF00]" aria-hidden />
+            {PROJECTS.map((p, idx) => (
+              <motion.div
+                key={p.title}
+                className="rounded-[16px] border border-white/10 bg-[#111111] p-5"
+                initial={{ opacity: 0, y: 8 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: idx * 0.05 }}
+                whileHover={{ y: -2, borderColor: "rgba(200,255,0,0.25)" }}
+              >
+                <motion.div animate={{ scale: [1, 1.08, 1] }} transition={{ duration: 3, repeat: Infinity, delay: idx * 0.3 }}>
+                  <p.icon className="h-5 w-5 text-[#C8FF00]" aria-hidden />
+                </motion.div>
                 <h3 className="mt-3 text-sm font-semibold tracking-[-0.01em] text-[#F4F4F0]">{p.title}</h3>
                 <p className="mt-2 text-xs leading-[1.6] text-white/50">{p.desc}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -309,36 +421,58 @@ export default function TrainingPage() {
             </div>
             <div className="p-6 sm:p-8">
               {showcase === "saas" && (
-                <div className="rounded-[14px] border border-white/10 bg-[#161616] p-4">
+                <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="rounded-[14px] border border-white/10 bg-[#161616] p-4">
                   <div className="flex items-center gap-2 border-b border-white/10 pb-3"><div className="h-2 w-2 rounded-full bg-red-400/60" /><div className="h-2 w-2 rounded-full bg-yellow-400/60" /><div className="h-2 w-2 rounded-full bg-green-400/60" /><span className="ml-2 font-mono text-[10px] text-white/30">saas.wisnotech.app — Dashboard</span></div>
                   <div className="mt-4 grid grid-cols-3 gap-3">
-                    <div className="rounded-xl bg-white/[0.04] p-4"><p className="font-mono text-[10px] text-white/30">MRR</p><p className="mt-1 font-semibold text-white">$18.4k</p></div>
-                    <div className="rounded-xl bg-white/[0.04] p-4"><p className="font-mono text-[10px] text-white/30">Users</p><p className="mt-1 font-semibold text-white">2,401</p></div>
-                    <div className="rounded-xl bg-[#C8FF00]/10 p-4"><p className="font-mono text-[10px] text-[#C8FF00]">AI Insights</p><p className="mt-1 text-xs text-white">3 opportunities found</p></div>
+                    <motion.div className="rounded-xl bg-white/[0.04] p-4" animate={{ scale: [1, 1.02, 1] }} transition={{ duration: 3, repeat: Infinity }}><p className="font-mono text-[10px] text-white/30">MRR</p><p className="mt-1 font-semibold text-white">$18.4k</p><motion.p className="text-[11px] text-[#C8FF00]" animate={{ opacity: [0.6, 1, 0.6] }} transition={{ duration: 2, repeat: Infinity }}>+12.4%</motion.p></motion.div>
+                    <motion.div className="rounded-xl bg-white/[0.04] p-4" animate={{ scale: [1, 1.02, 1] }} transition={{ duration: 3, repeat: Infinity, delay: 0.4 }}><p className="font-mono text-[10px] text-white/30">Users</p><p className="mt-1 font-semibold text-white">2,401</p><p className="text-[11px] text-white/40">last 7d</p></motion.div>
+                    <motion.div className="rounded-xl bg-[#C8FF00]/10 p-4" animate={{ scale: [1, 1.03, 1] }} transition={{ duration: 2.5, repeat: Infinity }}><p className="font-mono text-[10px] text-[#C8FF00]">AI Insights</p><p className="mt-1 text-xs text-white">3 opportunities found</p></motion.div>
                   </div>
-                </div>
+                  <div className="mt-3 flex h-10 items-end gap-1">
+                    {[30, 55, 40, 70, 50, 85, 60].map((h, i) => (
+                      <motion.div key={i} className="flex-1 rounded-sm bg-[#C8FF00]/70" animate={{ height: [`${h}%`, `${Math.min(95, h + 18)}%`, `${h}%`] }} transition={{ duration: 2 + i * 0.2, repeat: Infinity, ease: "easeInOut", delay: i * 0.12 }} style={{ height: `${h}%` }} />
+                    ))}
+                  </div>
+                </motion.div>
               )}
               {showcase === "mobile" && (
                 <div className="flex justify-center py-4">
-                  <div className="h-[320px] w-[160px] rounded-[24px] border border-white/15 bg-[#1A1A1A] p-2 shadow-2xl">
-                    <div className="flex h-full flex-col rounded-[18px] bg-[#0F0F0F] p-3"><div className="mx-auto h-1 w-8 rounded-full bg-white/20" /><p className="mt-4 text-center text-xs font-semibold text-white">AI Companion</p><div className="mt-3 flex-1 rounded-xl bg-white/[0.04] p-2"><p className="font-mono text-[10px] text-white/30">Today</p><div className="mt-2 h-2 w-full rounded bg-[#C8FF00]/30" /><div className="mt-1 h-2 w-2/3 rounded bg-white/10" /></div></div>
-                  </div>
+                  <motion.div
+                    className="h-[320px] w-[160px] rounded-[24px] border border-white/15 bg-[#1A1A1A] p-2 shadow-2xl"
+                    animate={{ y: [0, -6, 0], rotateY: [0, 3, 0] }}
+                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                    style={{ transformStyle: "preserve-3d" as const }}
+                  >
+                    <div className="flex h-full flex-col rounded-[18px] bg-[#0F0F0F] p-3"><div className="mx-auto h-1 w-8 rounded-full bg-white/20" /><p className="mt-4 text-center text-xs font-semibold text-white">AI Companion</p><div className="mt-3 flex-1 rounded-xl bg-white/[0.04] p-2"><p className="font-mono text-[10px] text-white/30">Today</p><motion.div className="mt-2 h-2 w-full rounded bg-[#C8FF00]/30" animate={{ opacity: [0.5, 1, 0.5] }} transition={{ duration: 1.8, repeat: Infinity }} /><motion.div className="mt-1 h-2 w-2/3 rounded bg-white/10" animate={{ width: ["66%", "85%", "66%"] }} transition={{ duration: 2.2, repeat: Infinity }} /></div></div>
+                  </motion.div>
                 </div>
               )}
               {showcase === "agent" && (
                 <div className="mx-auto max-w-md rounded-[14px] border border-white/10 bg-[#0F0F0F] p-6 font-mono text-xs">
                   {["USER REQUEST", "RESEARCH → ANALYZE", "CREATE → VERIFY", "DELIVER"].map((t, i) => (
-                    <div key={t} className="flex items-center gap-3 py-2">
-                      <span className={`h-2 w-2 rounded-full ${i === 2 ? "bg-[#C8FF00] animate-pulse" : "bg-white/20"}`} /><span className={i === 3 ? "text-[#C8FF00]" : "text-white/60"}>{t}</span>{i < 3 && <span className="ml-auto text-white/20">→</span>}
-                    </div>
+                    <motion.div key={t} className="flex items-center gap-3 py-2" initial={{ opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.15, duration: 0.3 }}>
+                      <span className="relative flex h-2 w-2">
+                        <motion.span className={`absolute inline-flex h-full w-full rounded-full ${i === 2 || i === 3 ? "bg-[#C8FF00]" : "bg-white/20"}`} animate={i === 2 || i === 3 ? { scale: [1, 1.6, 1], opacity: [0.7, 0, 0.7] } : {}} transition={{ duration: 1.6, repeat: Infinity }} />
+                        <span className={`relative inline-flex h-2 w-2 rounded-full ${i === 2 || i === 3 ? "bg-[#C8FF00]" : "bg-white/20"}`} />
+                      </span>
+                      <span className={i === 3 ? "text-[#C8FF00]" : "text-white/60"}>{t}</span>
+                      {i < 3 && <motion.span className="ml-auto text-[#C8FF00]/60" animate={{ x: [0, 4, 0], opacity: [0.4, 1, 0.4] }} transition={{ duration: 1.2, repeat: Infinity, delay: i * 0.2 }}>→</motion.span>}
+                    </motion.div>
                   ))}
                 </div>
               )}
               {showcase === "automation" && (
-                <div className="mx-auto flex max-w-lg items-center justify-between gap-2 rounded-[14px] border border-white/10 bg-[#0F0F0F] p-6">
+                <div className="mx-auto flex max-w-lg items-center justify-between gap-1 rounded-[14px] border border-white/10 bg-[#0F0F0F] p-6">
                   {["Form", "CRM", "AI", "Email", "DB"].map((n, i) => (
-                    <div key={n} className="flex items-center gap-2">
-                      <div className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 font-mono text-[10px] text-white/70">{n}</div>{i < 4 && <span className="h-px w-4 bg-[#C8FF00]/50" />}
+                    <div key={n} className="flex items-center gap-1 sm:gap-2">
+                      <motion.div className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 font-mono text-[10px] text-white/70" animate={i === 2 ? { scale: [1, 1.05, 1], borderColor: ["rgba(255,255,255,0.1)", "rgba(200,255,0,0.4)", "rgba(255,255,255,0.1)"] } : {}} transition={{ duration: 2, repeat: Infinity }}>
+                        {n}
+                      </motion.div>
+                      {i < 4 && (
+                        <span className="relative h-px w-4 overflow-hidden bg-white/10 sm:w-6">
+                          <motion.span className="absolute inset-y-0 left-0 w-6 bg-gradient-to-r from-transparent via-[#C8FF00] to-transparent" animate={{ x: ["-100%", "100%"] }} transition={{ duration: 1.4, repeat: Infinity, ease: "linear", delay: i * 0.3 }} />
+                        </span>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -348,29 +482,43 @@ export default function TrainingPage() {
         </div>
       </section>
 
-      {/* How it works */}
+      {/* How it works — continuous pipeline signal */}
       <section className="bg-[#090909] py-14 sm:py-20">
         <div className="mx-auto max-w-[1160px] px-5 sm:px-8">
           <h2 className="text-center text-[28px] font-[800] tracking-[-0.04em] text-[#F4F4F0] sm:text-[36px]">Learn. Build. Break Things. Fix Them. Ship.</h2>
-          <div className="relative mt-10 grid gap-[1px] overflow-hidden rounded-[20px] border border-white/10 bg-white/10 sm:grid-cols-5">
-            {[
-              { n: "01", t: "LEARN", d: "Understand principles and tools." },
-              { n: "02", t: "BUILD", d: "Create real products." },
-              { n: "03", t: "DEBUG", d: "Find and solve problems." },
-              { n: "04", t: "AUTOMATE", d: "Connect systems & agents." },
-              { n: "05", t: "SHIP", d: "Deploy to the real world." },
-            ].map((s) => (
-              <div key={s.n} className="bg-[#111111] p-6 text-center sm:p-7">
-                <span className="font-mono text-[11px] tracking-[0.18em] text-[#C8FF00]">{s.n}</span>
-                <p className="mt-2 font-mono text-sm font-bold tracking-[0.08em] text-[#F4F4F0]">{s.t}</p>
-                <p className="mt-1 text-xs leading-[1.5] text-white/45">{s.d}</p>
-              </div>
-            ))}
+          <div className="relative mt-10 overflow-hidden rounded-[20px] border border-white/10 bg-white/10">
+            <div className="absolute inset-x-0 top-0 h-px overflow-hidden">
+              <motion.div className="h-px w-1/3 bg-gradient-to-r from-transparent via-[#C8FF00] to-transparent" animate={{ x: ["-100%", "300%"] }} transition={{ duration: 3, repeat: Infinity, ease: "linear" }} />
+            </div>
+            <div className="grid gap-[1px] sm:grid-cols-5">
+              {[
+                { n: "01", t: "LEARN", d: "Understand principles and tools." },
+                { n: "02", t: "BUILD", d: "Create real products." },
+                { n: "03", t: "DEBUG", d: "Find and solve problems." },
+                { n: "04", t: "AUTOMATE", d: "Connect systems & agents." },
+                { n: "05", t: "SHIP", d: "Deploy to the real world." },
+              ].map((s, idx) => (
+                <motion.div
+                  key={s.n}
+                  className="bg-[#111111] p-6 text-center sm:p-7"
+                  initial={{ opacity: 0, y: 8 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: idx * 0.06 }}
+                >
+                  <motion.span className="font-mono text-[11px] tracking-[0.18em] text-[#C8FF00]" animate={{ opacity: [0.6, 1, 0.6] }} transition={{ duration: 2.5, repeat: Infinity, delay: idx * 0.3 }}>
+                    {s.n}
+                  </motion.span>
+                  <p className="mt-2 font-mono text-sm font-bold tracking-[0.08em] text-[#F4F4F0]">{s.t}</p>
+                  <p className="mt-1 text-xs leading-[1.5] text-white/45">{s.d}</p>
+                </motion.div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Cohort experience */}
+      {/* Cohort experience — continuous subtle pulse */}
       <section className="bg-[#090909] py-14 sm:py-20">
         <div className="mx-auto max-w-[1160px] px-5 sm:px-8">
           <h2 className="text-[24px] font-[700] tracking-[-0.03em] text-[#F4F4F0] sm:text-[28px]">An Environment Designed for Builders.</h2>
@@ -382,26 +530,45 @@ export default function TrainingPage() {
               { title: "Resources", desc: "Frameworks, templates, prompts and workflows you keep." },
               { title: "Community", desc: "Connect with other builders — accountability and help." },
               { title: "Support", desc: "Get unstuck fast with cohort support." },
-            ].map((c) => (
-              <div key={c.title} className="rounded-[16px] border border-white/10 bg-[#111111] p-6">
-                <h3 className="text-sm font-semibold text-[#F4F4F0]">{c.title}</h3>
+            ].map((c, idx) => (
+              <motion.div
+                key={c.title}
+                className="rounded-[16px] border border-white/10 bg-[#111111] p-6"
+                initial={{ opacity: 0, y: 8 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.05 }}
+                whileHover={{ y: -2, borderColor: "rgba(200,255,0,0.25)" }}
+              >
+                <motion.div className="h-1 w-8 rounded-full bg-[#C8FF00]/20" animate={{ width: ["32px", "40px", "32px"] }} transition={{ duration: 3, repeat: Infinity, delay: idx * 0.3 }} />
+                <h3 className="mt-3 text-sm font-semibold text-[#F4F4F0]">{c.title}</h3>
                 <p className="mt-2 text-xs leading-[1.6] text-white/50">{c.desc}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Resource vault */}
+      {/* Resource vault — continuous arrow drift */}
       <section className="bg-[#090909] py-14 sm:py-20">
         <div className="mx-auto max-w-[1160px] px-5 sm:px-8">
           <h2 className="text-[24px] font-[700] tracking-[-0.03em] text-[#F4F4F0] sm:text-[28px]">Don&apos;t Start From Zero.</h2>
           <div className="mt-6 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
-            {RESOURCES.map((r) => (
-              <div key={r} className="group flex items-center justify-between rounded-[12px] border border-white/10 bg-[#111111] px-4 py-3.5 transition-colors hover:border-[#C8FF00]/30 hover:bg-white/[0.03]">
+            {RESOURCES.map((r, idx) => (
+              <motion.div
+                key={r}
+                className="group flex items-center justify-between rounded-[12px] border border-white/10 bg-[#111111] px-4 py-3.5"
+                initial={{ opacity: 0, y: 6 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.04 }}
+                whileHover={{ borderColor: "rgba(200,255,0,0.3)", backgroundColor: "rgba(255,255,255,0.03)" }}
+              >
                 <span className="font-mono text-[11px] tracking-[0.06em] text-white/70">{r}</span>
-                <ArrowRight className="h-3.5 w-3.5 text-white/20 transition-colors group-hover:text-[#C8FF00]" />
-              </div>
+                <motion.span animate={{ x: [0, 3, 0] }} transition={{ duration: 2, repeat: Infinity, delay: idx * 0.15 }}>
+                  <ArrowRight className="h-3.5 w-3.5 text-white/20 group-hover:text-[#C8FF00]" />
+                </motion.span>
+              </motion.div>
             ))}
           </div>
         </div>
