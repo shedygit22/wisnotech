@@ -9,6 +9,8 @@
     { "source": "/academy", "destination": "/index.html" },
     { "source": "/academy/:path*", "destination": "/index.html" },
     { "source": "/courses/:path*", "destination": "/index.html" },
-    { "source": "/training", "destination": "/index.html" }
+    { "source": "/training", "destination": "/index.html" },
+    { "source": "/fae", "destination": "/index.html" },
+    { "source": "/fae/:path*", "destination": "/index.html" }
   ]
 }

@@ -340,6 +340,7 @@ const urls = [
   { loc: `${SITE_URL}/portfolio`, lastmod: now, priority: 0.9 },
   { loc: `${SITE_URL}/academy`, lastmod: now, priority: 0.9 },
   { loc: `${SITE_URL}/training`, lastmod: now, priority: 0.9 },
+  { loc: `${SITE_URL}/fae`, lastmod: now, priority: 0.9 },
   ...COURSE_SLUGS.map((s) => ({ loc: `${SITE_URL}/courses/${s}`, lastmod: now, priority: 0.8 })),
   { loc: `${SITE_URL}/privacy`, lastmod: now, priority: 0.4 },
   { loc: `${SITE_URL}/terms`, lastmod: now, priority: 0.4 },
@@ -384,6 +385,9 @@ const llms = `# Wisnotech
 
 ## Training
 - [Advanced Vibe Coding & Agentic AI Masterclass](${SITE_URL}/training): Build SaaS, web apps, mobile apps, AI agents and automations — vibe coding at the speed of ideas
+
+## Bootcamp
+- [Full-Stack AI Engineer Bootcamp](${SITE_URL}/fae): Become a Full-Stack AI Engineer in 3 months — AI automations, agents, web & mobile, SaaS — ₦300,000
 
 ## Blog
 ${posts
