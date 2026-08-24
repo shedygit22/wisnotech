@@ -6,7 +6,7 @@ interface LogoProps {
 
 export default function Logo({ className = "" }: LogoProps) {
   return (
-    <span className={`flex items-center gap-2 ${className}`}>
+    <span className={`flex items-center gap-2 text-white ${className}`}>
       <ImageWithFallback
         src="/assets/wisnotech-logo.png"
         alt="Wisnotech logo"
@@ -18,9 +18,7 @@ export default function Logo({ className = "" }: LogoProps) {
           </span>
         }
       />
-      <span className="text-[17px] font-semibold tracking-tight text-white">
-        WISNOTECH
-      </span>
+      <span className="text-[17px] font-semibold tracking-tight">WISNOTECH</span>
     </span>
   );
 }

@@ -67,7 +67,7 @@ export default function MasterclassPage() {
       {/* Nav */}
       <header className={`fixed inset-x-0 top-0 z-50 border-b transition-all duration-300 ${scrolled ? "border-black/[0.08] bg-white/90 backdrop-blur-xl" : "border-transparent bg-transparent"}`}>
         <div className="mx-auto flex h-[64px] max-w-[1160px] items-center justify-between px-5 sm:px-8">
-          <a href="/masterclass" className="shrink-0"><Logo /></a>
+          <a href="/masterclass" className="shrink-0"><Logo className="text-black" /></a>
           <nav className="hidden items-center gap-1 lg:flex">
             {[
               { label: "What You'll Learn", href: "#learn" },
@@ -79,7 +79,7 @@ export default function MasterclassPage() {
               <a key={l.label} href={l.href} className="rounded-full px-3.5 py-2 text-[13px] font-medium text-black/55 hover:bg-black/[0.06] hover:text-black">{l.label}</a>
             ))}
           </nav>
-          <a href="#pricing" className="hidden items-center gap-2 rounded-full bg-[#0A0A0A] px-5 py-2.5 text-[13px] font-semibold text-white hover:bg-black lg:inline-flex">Secure Early Bird Access <ArrowRight className="h-3.5 w-3.5" /></a>
+          <a href="https://paystack.shop/pay/tv9m8lungl" target="_blank" rel="noopener noreferrer" className="hidden items-center gap-2 rounded-full bg-[#0A0A0A] px-5 py-2.5 text-[13px] font-semibold text-white hover:bg-black lg:inline-flex">Secure Early Bird Access <ArrowRight className="h-3.5 w-3.5" /></a>
           <button type="button" onClick={() => setMobileNav((v) => !v)} className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-black/10 bg-white text-black/70 lg:hidden">
             {mobileNav ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
           </button>
@@ -97,7 +97,7 @@ export default function MasterclassPage() {
                 ].map((l) => (
                   <a key={l.label} href={l.href} onClick={() => setMobileNav(false)} className="rounded-xl px-3 py-3 text-[15px] font-medium text-black/70 hover:bg-black/[0.04]">{l.label}</a>
                 ))}
-                <a href="#pricing" onClick={() => setMobileNav(false)} className="mt-3 inline-flex items-center justify-center gap-2 rounded-full bg-[#0A0A0A] px-5 py-3.5 text-sm font-semibold text-white">Secure Early Bird Access <ArrowRight className="h-4 w-4" /></a>
+                <a href="https://paystack.shop/pay/tv9m8lungl" target="_blank" rel="noopener noreferrer" onClick={() => setMobileNav(false)} className="mt-3 inline-flex items-center justify-center gap-2 rounded-full bg-[#0A0A0A] px-5 py-3.5 text-sm font-semibold text-white">Secure Early Bird Access <ArrowRight className="h-4 w-4" /></a>
               </div>
             </motion.div>
           )}
@@ -114,7 +114,7 @@ export default function MasterclassPage() {
             <p className="mt-4 max-w-[48ch] text-[15px] leading-[1.6] text-black/60">Learn how to turn your ideas into real software, AI agents, SaaS products, mobile apps and automated systems using the new generation of AI-powered building tools.</p>
             <p className="mt-3 max-w-[52ch] text-[13px] leading-[1.6] text-black/50">A practical masterclass that teaches you how to think like a product builder, direct AI effectively, connect intelligent systems, solve problems and ship products into the real world.</p>
             <div className="mt-7 flex flex-wrap gap-3">
-              <a href="#pricing" className="inline-flex items-center gap-2 rounded-full bg-[#0A0A0A] px-7 py-3.5 text-sm font-semibold text-white shadow-[0_12px_32px_-12px_rgba(0,0,0,0.3)] hover:bg-black">Secure Your Early Bird Seat — {formatNaira(PRICING.early)} <ArrowRight className="h-4 w-4" /></a>
+              <a href="https://paystack.shop/pay/tv9m8lungl" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full bg-[#0A0A0A] px-7 py-3.5 text-sm font-semibold text-white shadow-[0_12px_32px_-12px_rgba(0,0,0,0.3)] hover:bg-black">Secure Your Early Bird Seat — {formatNaira(PRICING.early)} <ArrowRight className="h-4 w-4" /></a>
               <a href="#learn" className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white px-7 py-3.5 text-sm font-medium text-black hover:border-black/20">See What You&apos;ll Learn</a>
             </div>
             <div className="mt-5 flex flex-wrap items-center gap-3 border-t border-black/10 pt-4">
@@ -333,7 +333,7 @@ export default function MasterclassPage() {
                   <li key={f} className="flex gap-2.5 text-[13px] leading-[1.5] text-black/70"><Check className="mt-0.5 h-4 w-4 shrink-0 text-black" />{f}</li>
                 ))}
               </ul>
-              <a href="#contact" onClick={(e) => { e.preventDefault(); document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" }); }} className="mt-7 flex w-full items-center justify-center gap-2 rounded-full bg-[#0A0A0A] px-6 py-4 text-sm font-bold text-white hover:bg-black">Secure My Seat for {formatNaira(PRICING.early)} <ArrowRight className="h-4 w-4" /></a>
+              <a href="https://paystack.shop/pay/tv9m8lungl" target="_blank" rel="noopener noreferrer" className="mt-7 flex w-full items-center justify-center gap-2 rounded-full bg-[#0A0A0A] px-6 py-4 text-sm font-bold text-white hover:bg-black">Secure My Seat for {formatNaira(PRICING.early)} <ArrowRight className="h-4 w-4" /></a>
               <p className="mt-2 text-center text-xs font-bold text-emerald-600">Save {formatNaira(PRICING.save)}.</p>
             </div>
           </div>
@@ -429,14 +429,14 @@ export default function MasterclassPage() {
             <span className="text-xs font-bold">Early Bird {formatNaira(PRICING.early)}</span><span className="h-3 w-px bg-white/20" /><span className="text-xs text-white/40 line-through">Late {formatNaira(PRICING.late)}</span><span className="rounded-full bg-emerald-500 px-2 py-0.5 text-[10px] font-bold">Save {formatNaira(PRICING.save)}</span>
           </div>
           <p className="mt-2 text-xs font-bold text-emerald-400">Secure your seat now and save {formatNaira(PRICING.save)}.</p>
-          <a href="#pricing" className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-bold text-black hover:bg-zinc-100">Join the Masterclass for {formatNaira(PRICING.early)} <ArrowRight className="h-4 w-4" /></a>
+          <a href="https://paystack.shop/pay/tv9m8lungl" target="_blank" rel="noopener noreferrer" className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-bold text-black hover:bg-zinc-100">Join the Masterclass for {formatNaira(PRICING.early)} <ArrowRight className="h-4 w-4" /></a>
           <p className="mt-3 text-[11px] tracking-[0.06em] text-white/30">Early bird available for a limited registration period. Then {formatNaira(PRICING.late)}.</p>
         </div>
       </section>
 
       <footer className="border-t border-black/10 bg-white">
         <div className="mx-auto flex max-w-[1160px] flex-col gap-6 px-5 py-8 sm:px-8 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-2.5"><Logo /><span className="text-[11px] font-bold tracking-[0.12em] text-black/50">MASTERCLASS</span></div>
+          <div className="flex items-center gap-2.5"><Logo className="text-black" /><span className="text-[11px] font-bold tracking-[0.12em] text-black/50">MASTERCLASS</span></div>
           <div className="flex flex-wrap gap-6 text-xs font-medium text-black/60">
             <a href="#learn" className="hover:text-black">Learn</a><a href="#build" className="hover:text-black">Build</a><a href="#pricing" className="hover:text-black">Pricing</a><a href="/privacy" className="hover:text-black">Privacy</a>
           </div>
