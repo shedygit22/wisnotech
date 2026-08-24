@@ -32,11 +32,11 @@ const ACADEMY = {
 const PRICING_TIERS = [
   {
     id: "basic",
-    name: "Basic",
+    name: "Standard",
     tagline: "Your entry point — no tools needed",
-    priceUSD: 199,
-    priceNGN: 350000,
-    cta: "Get Basic",
+    priceUSD: 35,
+    priceNGN: 60000,
+    cta: "Get Started",
     featured: false,
     includesTools: false,
     badge: "Starter",
@@ -51,62 +51,22 @@ const PRICING_TIERS = [
     ],
   },
   {
-    id: "premium",
-    name: "Premium",
-    tagline: "Most chosen — without tools",
-    priceUSD: 349,
-    priceNGN: 610000,
-    cta: "Get Premium",
-    featured: true,
-    includesTools: false,
-    badge: "Most Popular",
-    subNote: "Without tools — add them later",
-    features: [
-      "Everything in Basic",
-      "Extended recordings — 12 months",
-      "4 real-world portfolio projects",
-      "Full prompt frameworks & templates",
-      "Priority support & portfolio review",
-      "Project feedback from the studio",
-    ],
-  },
-  {
-    id: "advanced",
-    name: "Advanced",
-    tagline: "Go pro — tools included",
-    priceUSD: 599,
-    priceNGN: 1050000,
-    cta: "Get Advanced",
-    featured: false,
-    includesTools: true,
-    badge: "Best Value",
-    subNote: "Tools included — worth $299 alone",
-    features: [
-      "Everything in Premium",
-      "Complete AI tools suite included ($299 value)",
-      "Pro workflow templates & commercial kit",
-      "Advanced project critiques",
-      "5 premium UGC ad templates included",
-      "Monetization playbook + pricing guide",
-    ],
-  },
-  {
     id: "oneonone",
     name: "One-on-One",
-    tagline: "We build it with you",
-    priceUSD: 1199,
-    priceNGN: 2100000,
+    tagline: "We build it with you — mentorship",
+    priceUSD: 149,
+    priceNGN: 250000,
     cta: "Apply for 1:1",
-    featured: false,
+    featured: true,
     includesTools: true,
-    badge: "Private",
+    badge: "Mentorship",
     subNote: "Tools + private mentorship",
     features: [
-      "Everything in Advanced",
-      "Tools suite included",
+      "Everything in Standard",
+      "Complete AI tools suite included ($299 value)",
       "3 × private 1-on-1 mentoring sessions",
       "Personal portfolio, pricing & offer review",
-      "Direct founder feedback on your work",
+      "Direct founder feedback",
       "30-day launch plan for first paid work",
     ],
   },
@@ -734,7 +694,7 @@ export default function AcademyPage() {
           </div>
 
           {/* Tiered pricing — Basic / Premium / Advanced (tools) / One-on-One (tools + 1:1) */}
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mx-auto mt-8 grid max-w-3xl gap-6 sm:grid-cols-2">
             {PRICING_TIERS.map((tier) => (
               <TiltCard key={tier.id} intensity={7} className="h-full">
                 <div
@@ -744,7 +704,7 @@ export default function AcademyPage() {
                 >
                 <span
                   className={`absolute right-4 top-4 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] ${
-                    tier.featured ? "bg-[#FF4D12] text-white" : tier.id === "advanced" ? "bg-white text-[#0A0A0A]" : "border border-white/15 bg-white/10 text-white/70"
+                    tier.featured ? "bg-[#FF4D12] text-white" : "border border-white/15 bg-white/10 text-white/70"
                   }`}
                 >
                   {(tier as unknown as { badge: string }).badge}
@@ -789,9 +749,7 @@ export default function AcademyPage() {
                   className={`mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full px-5 py-3.5 text-sm font-semibold transition-all ${
                     tier.featured
                       ? "bg-[#FF4D12] text-white shadow-[0_12px_32px_-16px_rgba(255,77,18,0.6)] hover:bg-[#E84510]"
-                      : tier.id === "oneonone"
-                        ? "bg-white text-[#0A0A0A] hover:bg-zinc-100"
-                        : "border border-white/15 bg-white/[0.04] text-white hover:border-white/25 hover:bg-white/[0.07]"
+                      : "border border-white/15 bg-white/[0.04] text-white hover:border-white/25 hover:bg-white/[0.07]"
                   }`}
                 >
                   {tier.cta} <ArrowRight className="h-4 w-4" aria-hidden />
