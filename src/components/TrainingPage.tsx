@@ -20,8 +20,8 @@ const TRAINING = {
   label: "ADVANCED VIBE CODING + AGENTIC AI COHORT",
   seats: 40,
   deadline: "March 15, 2026",
-  priceUSD: 499,
-  priceNGN: 850000,
+  priceUSD: 89,
+  priceNGN: 150000,
   cta: "#pricing",
 } as const;
 
@@ -628,7 +628,7 @@ export default function TrainingPage() {
                 <span className="text-[42px] font-[800] leading-none tracking-[-0.04em] text-[#F4F4F0]">{currency === "USD" ? `$${TRAINING.priceUSD}` : formatNaira(TRAINING.priceNGN)}</span>
                 <span className="font-mono text-xs tracking-[0.08em] text-white/35">ONE-TIME</span>
               </div>
-              <p className="mt-1 font-mono text-xs text-white/40">One-time · {TRAINING.seats} seats · Ends {TRAINING.deadline}</p>
+              <p className="mt-1 font-mono text-xs text-white/40">One-time · {TRAINING.seats} seats</p>
               <ul className="mt-6 space-y-2.5 border-t border-white/10 pt-6">
                 {[
                   "Complete masterclass curriculum (8 modules)",
