@@ -33,14 +33,14 @@ const PRICING_TIERS = [
   {
     id: "basic",
     name: "Standard",
-    tagline: "Your entry point — no tools needed",
+    tagline: "Your entry point — tools included",
     priceUSD: 35,
     priceNGN: 60000,
     cta: "Get Started",
     featured: false,
-    includesTools: false,
+    includesTools: true,
     badge: "Starter",
-    subNote: "Best for testing the waters",
+    subNote: "Tools included",
     features: [
       "Full cohort access (8 modules)",
       "Live training sessions + recordings — 6 months",
@@ -759,7 +759,7 @@ export default function AcademyPage() {
             ))}
           </div>
           <p className="mx-auto mt-6 max-w-2xl text-center text-xs leading-[1.6] text-white/30">
-            {ACADEMY.seats} seats per cohort · Ends {ACADEMY.deadline} · Tools included only with Advanced & One-on-One
+            {ACADEMY.seats} seats per cohort · Ends {ACADEMY.deadline} · Tools included
           </p>
 
           <div className="mx-auto mt-6 flex flex-wrap justify-center gap-3 text-[11px] font-medium uppercase tracking-[0.12em] text-white/25">
