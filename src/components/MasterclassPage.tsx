@@ -67,7 +67,7 @@ export default function MasterclassPage() {
       {/* Nav */}
       <header className={`fixed inset-x-0 top-0 z-50 border-b transition-all duration-300 ${scrolled ? "border-black/[0.08] bg-white/90 backdrop-blur-xl" : "border-transparent bg-transparent"}`}>
         <div className="mx-auto flex h-[64px] max-w-[1160px] items-center justify-between px-5 sm:px-8">
-          <a href="/masterclass" className="shrink-0"><Logo className="text-black" /></a>
+          <a href="/masterclass" className="shrink-0"><Logo className="text-black" invert /></a>
           <nav className="hidden items-center gap-1 lg:flex">
             {[
               { label: "What You'll Learn", href: "#learn" },
@@ -522,7 +522,7 @@ export default function MasterclassPage() {
 
       <footer className="border-t border-black/10 bg-white">
         <div className="mx-auto flex max-w-[1160px] flex-col gap-6 px-5 py-8 sm:px-8 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-2.5"><Logo className="text-black" /><span className="text-[11px] font-bold tracking-[0.12em] text-black/50">MASTERCLASS</span></div>
+          <div className="flex items-center gap-2.5"><Logo className="text-black" invert /><span className="text-[11px] font-bold tracking-[0.12em] text-black/50">MASTERCLASS</span></div>
           <div className="flex flex-wrap gap-6 text-xs font-medium text-black/60">
             <a href="#learn" className="hover:text-black">Learn</a><a href="#build" className="hover:text-black">Build</a><a href="#pricing" className="hover:text-black">Pricing</a><a href="/privacy" className="hover:text-black">Privacy</a>
           </div>
