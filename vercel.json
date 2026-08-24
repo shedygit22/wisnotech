@@ -13,6 +13,8 @@
     { "source": "/fae", "destination": "/index.html" },
     { "source": "/fae/:path*", "destination": "/index.html" },
     { "source": "/fifa", "destination": "/index.html" },
-    { "source": "/fifa/:path*", "destination": "/index.html" }
+    { "source": "/fifa/:path*", "destination": "/index.html" },
+    { "source": "/masterclass", "destination": "/index.html" },
+    { "source": "/masterclass/:path*", "destination": "/index.html" }
   ]
 }

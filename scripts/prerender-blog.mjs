@@ -342,6 +342,7 @@ const urls = [
   { loc: `${SITE_URL}/training`, lastmod: now, priority: 0.9 },
   { loc: `${SITE_URL}/fae`, lastmod: now, priority: 0.9 },
   { loc: `${SITE_URL}/fifa`, lastmod: now, priority: 0.9 },
+  { loc: `${SITE_URL}/masterclass`, lastmod: now, priority: 0.9 },
   ...COURSE_SLUGS.map((s) => ({ loc: `${SITE_URL}/courses/${s}`, lastmod: now, priority: 0.8 })),
   { loc: `${SITE_URL}/privacy`, lastmod: now, priority: 0.4 },
   { loc: `${SITE_URL}/terms`, lastmod: now, priority: 0.4 },
@@ -392,6 +393,9 @@ const llms = `# Wisnotech
 
 ## FIFA
 - [FIFA Ultimate Team](${SITE_URL}/fifa): Build your Ultimate Team — collect players, craft chemistry and own the game
+
+## Masterclass
+- [Agentic AI & Vibe Coding Masterclass](${SITE_URL}/masterclass): Stop watching AI build the future — start building with it — Early Bird ₦50,000 / Late ₦100,000
 
 ## Blog
 ${posts

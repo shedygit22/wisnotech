@@ -34,6 +34,7 @@ const NotFound = lazy(() => import("./components/NotFound"));
 const TrainingPage = lazy(() => import("./components/TrainingPage"));
 const FaePage = lazy(() => import("./components/FaePage"));
 const FifaPage = lazy(() => import("./components/FifaPage"));
+const MasterclassPage = lazy(() => import("./components/MasterclassPage"));
 
 function useHashRoute(): string {
   const [hash, setHash] = useState(() => window.location.hash);
@@ -178,8 +179,18 @@ export default function App() {
     );
   }
 
+  if (path === "/masterclass" || path.startsWith("/masterclass/")) {
+    return (
+      <ErrorBoundary>
+        <Suspense fallback={<PageFallback />}>
+          <MasterclassPage />
+        </Suspense>
+      </ErrorBoundary>
+    );
+  }
+
   // 404 — unknown path (keep homepage for "/" and hash navigations)
-  const knownPaths = ["/", "/wino", "/portfolio", "/blog", "/privacy", "/terms", "/academy", "/training", "/fae", "/fifa"];
+  const knownPaths = ["/", "/wino", "/portfolio", "/blog", "/privacy", "/terms", "/academy", "/training", "/fae", "/fifa", "/masterclass"];
   const isKnownPath =
     knownPaths.includes(path) ||
     knownPaths.some((p) => p !== "/" && path.startsWith(`${p}/`)) ||
