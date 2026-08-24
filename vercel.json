@@ -11,6 +11,8 @@
     { "source": "/courses/:path*", "destination": "/index.html" },
     { "source": "/training", "destination": "/index.html" },
     { "source": "/fae", "destination": "/index.html" },
-    { "source": "/fae/:path*", "destination": "/index.html" }
+    { "source": "/fae/:path*", "destination": "/index.html" },
+    { "source": "/fifa", "destination": "/index.html" },
+    { "source": "/fifa/:path*", "destination": "/index.html" }
   ]
 }
