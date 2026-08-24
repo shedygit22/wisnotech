@@ -1,5 +1,6 @@
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight, Bot, Braces, GitBranch, Workflow, Zap } from "lucide-react";
+import TiltCard from "./TiltCard";
 
 const TRUST_LINE = ["AI Solutions", "Custom Software", "Automation", "Digital Growth"];
 
@@ -14,23 +15,43 @@ const item = {
 };
 
 export default function Hero() {
+  const { scrollY } = useScroll();
+  const y1 = useTransform(scrollY, [0, 600], [0, 45]);
+  const y2 = useTransform(scrollY, [0, 600], [0, -30]);
+  const opacity = useTransform(scrollY, [0, 400], [1, 0.3]);
+
   return (
     <section id="home" className="relative overflow-hidden pb-20 pt-32 sm:pt-40">
-      {/* Ambient glow — restrained, technological */}
-      <div aria-hidden className="pointer-events-none absolute inset-0">
-        <div
+      {/* Ambient glow — now with scroll-linked parallax */}
+      <motion.div aria-hidden className="pointer-events-none absolute inset-0" style={{ opacity }}>
+        <motion.div
           className="absolute -left-40 top-0 h-[520px] w-[520px] rounded-full opacity-30 blur-3xl"
-          style={{ background: "radial-gradient(circle, rgba(59,123,255,0.28) 0%, transparent 65%)" }}
+          style={{ y: y1, background: "radial-gradient(circle, rgba(59,123,255,0.28) 0%, transparent 65%)" }}
         />
-        <div
+        <motion.div
           className="absolute -right-32 bottom-0 h-[480px] w-[480px] rounded-full opacity-20 blur-3xl"
-          style={{ background: "radial-gradient(circle, rgba(139,122,255,0.24) 0%, transparent 65%)" }}
+          style={{ y: y2, background: "radial-gradient(circle, rgba(139,122,255,0.24) 0%, transparent 65%)" }}
         />
         <div
           className="absolute left-1/2 top-0 h-px w-[min(920px,92%)] -translate-x-1/2"
           style={{ background: "linear-gradient(90deg, transparent, rgba(80,140,255,0.35), transparent)" }}
         />
-      </div>
+        {/* Subtle particle field — 12 dots drifting */}
+        <div className="absolute inset-0 overflow-hidden">
+          {Array.from({ length: 12 }).map((_, i) => (
+            <motion.span
+              key={i}
+              className="absolute h-1 w-1 rounded-full bg-white/20"
+              style={{
+                left: `${8 + i * 7.5}%`,
+                top: `${12 + (i % 3) * 22}%`,
+              }}
+              animate={{ y: [0, -10, 0], opacity: [0.2, 0.5, 0.2] }}
+              transition={{ duration: 4 + (i % 3), repeat: Infinity, ease: "easeInOut", delay: i * 0.3 }}
+            />
+          ))}
+        </div>
+      </motion.div>
 
       <div className="container-wide relative grid items-center gap-16 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
         <motion.div variants={container} initial="hidden" animate="show" className="max-w-2xl">
@@ -73,13 +94,14 @@ export default function Hero() {
           </motion.p>
         </motion.div>
 
-        {/* Premium technology visual — a live "system" panel */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.97 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-          className="relative mx-auto w-full max-w-[560px]"
-        >
+        {/* Premium technology visual — now with 3D tilt and parallax */}
+        <TiltCard intensity={8} className="relative mx-auto w-full max-w-[560px]">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.97 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            className="relative w-full"
+          >
           {/* Soft halo behind the panel */}
           <div
             aria-hidden
@@ -176,8 +198,9 @@ export default function Hero() {
               Automation that pays for itself
             </p>
           </motion.div>
-        </motion.div>
-      </div>
-    </section>
+          </motion.div>
+          </TiltCard>
+        </div>
+      </section>
   );
 }

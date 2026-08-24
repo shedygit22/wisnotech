@@ -272,6 +272,14 @@
   background: linear-gradient(to top, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.4));
 }
 
+/* Lenis + View Transitions — modern smooth stack */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+@supports (view-transition-name: root) {
+  ::view-transition-old(root), ::view-transition-new(root) { animation-duration: 0.35s; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { PORTFOLIO_SAMPLES } from "../lib/portfolio";
 import Logo from "./Logo";
+import TiltCard from "./TiltCard";
 
 // ──────────────────────────────────────────────────────────────
 // Central config — edit here, updates everywhere.
@@ -735,12 +736,12 @@ export default function AcademyPage() {
           {/* Tiered pricing — Basic / Premium / Advanced (tools) / One-on-One (tools + 1:1) */}
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {PRICING_TIERS.map((tier) => (
-              <div
-                key={tier.id}
-                className={`relative flex flex-col overflow-hidden rounded-[22px] border bg-[#141414] p-6 sm:p-7 ${
-                  tier.featured ? "border-[#FF4D12]/30 shadow-[0_24px_64px_-24px_rgba(255,77,18,0.45)]" : "border-white/10"
-                }`}
-              >
+              <TiltCard key={tier.id} intensity={7} className="h-full">
+                <div
+                  className={`relative flex h-full flex-col overflow-hidden rounded-[22px] border bg-[#141414] p-6 sm:p-7 ${
+                    tier.featured ? "border-[#FF4D12]/30 shadow-[0_24px_64px_-24px_rgba(255,77,18,0.45)]" : "border-white/10"
+                  }`}
+                >
                 <span
                   className={`absolute right-4 top-4 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] ${
                     tier.featured ? "bg-[#FF4D12] text-white" : tier.id === "advanced" ? "bg-white text-[#0A0A0A]" : "border border-white/15 bg-white/10 text-white/70"
@@ -795,7 +796,8 @@ export default function AcademyPage() {
                 >
                   {tier.cta} <ArrowRight className="h-4 w-4" aria-hidden />
                 </a>
-              </div>
+                </div>
+              </TiltCard>
             ))}
           </div>
           <p className="mx-auto mt-6 max-w-2xl text-center text-xs leading-[1.6] text-white/30">
