@@ -434,7 +434,7 @@ export default function MasterclassPage() {
                 <p className="mt-4 text-sm font-semibold text-white">Pay in USD</p>
                 <p className="mt-1 text-xs text-white/60">Secure payment via Selar</p>
                 <span className="mt-5 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-bold text-[#0A0A0A] transition-colors group-hover:bg-zinc-100">
-                  Pay $89 <ArrowRight className="h-4 w-4" />
+                  Pay $37.14 <ArrowRight className="h-4 w-4" />
                 </span>
               </div>
             </a>
