@@ -72,6 +72,7 @@ export default function MasterclassPage() {
             {[
               { label: "What You'll Learn", href: "#learn" },
               { label: "What You'll Build", href: "#build" },
+              { label: "Tools Included", href: "#tools" },
               { label: "Curriculum", href: "#curriculum" },
               { label: "Pricing", href: "#pricing" },
               { label: "FAQ", href: "#faq" },
@@ -91,6 +92,7 @@ export default function MasterclassPage() {
                 {[
                   { label: "What You'll Learn", href: "#learn" },
                   { label: "What You'll Build", href: "#build" },
+                  { label: "Tools Included", href: "#tools" },
                   { label: "Curriculum", href: "#curriculum" },
                   { label: "Pricing", href: "#pricing" },
                   { label: "FAQ", href: "#faq" },
@@ -252,6 +254,44 @@ export default function MasterclassPage() {
                 <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#0A0A0A] text-xs font-bold text-white">{p.n}</span>
                 <h3 className="mt-3 text-sm font-bold tracking-[-0.01em]">{p.title}</h3>
                 <p className="mt-1.5 text-xs leading-[1.6] text-black/55">{p.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Tools included */}
+      <section id="tools" className="scroll-mt-20 bg-[#F7F7F5] py-12 sm:py-16">
+        <div className="mx-auto max-w-[1160px] px-5 sm:px-8">
+          <div className="mx-auto max-w-2xl text-center">
+            <h2 className="text-[28px] font-[800] tracking-[-0.04em] sm:text-[34px]">Tools Included — Free to Use.</h2>
+            <p className="mt-2 text-sm leading-[1.6] text-black/60">You&apos;ll get hands-on with these powerful AI tools during the masterclass — and they&apos;re all free.</p>
+          </div>
+          <div className="mt-8 grid gap-6 sm:grid-cols-3">
+            {[
+              {
+                img: "/assets/antigravity.jpg",
+                name: "Antigravity",
+                desc: "A versatile AI agent framework for building intelligent systems that reason, plan and execute complex tasks autonomously.",
+              },
+              {
+                img: "/assets/hermes-agent.jpg",
+                name: "Hermes Agent",
+                desc: "A powerful AI assistant platform for creating conversational agents that can search, analyze, generate and interact with external tools.",
+              },
+              {
+                img: "/assets/open-code.jpg",
+                name: "Open Code",
+                desc: "An open-source AI coding assistant that helps you write, debug, and refactor code faster with intelligent suggestions and context-aware completions.",
+              },
+            ].map((t) => (
+              <div key={t.name} className="rounded-[20px] border border-black/10 bg-white p-6 shadow-[0_8px_32px_-8px_rgba(0,0,0,0.06)]">
+                <div className="aspect-square overflow-hidden rounded-[12px] bg-[#FCFCF9]">
+                  <img src={t.img} alt={t.name} className="h-full w-full object-cover" loading="lazy" />
+                </div>
+                <h3 className="mt-5 text-[16px] font-bold tracking-[-0.01em]">{t.name}</h3>
+                <p className="mt-2 text-[13px] leading-[1.6] text-black/60">{t.desc}</p>
+                <span className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-[11px] font-bold text-emerald-700">Free to use</span>
               </div>
             ))}
           </div>
