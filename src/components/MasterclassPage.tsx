@@ -396,6 +396,52 @@ export default function MasterclassPage() {
         </div>
       </section>
 
+      {/* Payment banners */}
+      <section className="bg-white py-12 sm:py-16">
+        <div className="mx-auto max-w-[1160px] px-5 sm:px-8">
+          <div className="mx-auto max-w-2xl text-center">
+            <h2 className="text-[28px] font-[800] tracking-[-0.04em] sm:text-[34px]">Choose Your Payment Method.</h2>
+            <p className="mt-2 text-sm leading-[1.6] text-black/60">Select the option that works best for your location.</p>
+          </div>
+          <div className="mx-auto mt-8 grid max-w-[800px] gap-6 sm:grid-cols-2">
+            <a
+              href="https://paystack.shop/pay/tv9m8lungl"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group relative overflow-hidden rounded-[20px] border-2 border-[#0A0A0A] bg-[#0D2136] p-8 text-center transition-all hover:shadow-[0_24px_64px_-16px_rgba(0,0,0,0.25)]"
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+              <div className="relative">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.12em] text-white/80">For Africa</span>
+                <img src="/assets/paystack-banner.png" alt="Paystack" className="mx-auto mt-4 h-16 w-auto object-contain" loading="lazy" />
+                <p className="mt-4 text-sm font-semibold text-white">Pay in Naira</p>
+                <p className="mt-1 text-xs text-white/60">Secure payment via Paystack</p>
+                <span className="mt-5 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-bold text-[#0A0A0A] transition-colors group-hover:bg-zinc-100">
+                  Pay {formatNaira(PRICING.early)} <ArrowRight className="h-4 w-4" />
+                </span>
+              </div>
+            </a>
+            <a
+              href="https://selar.com/58h5q98191"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group relative overflow-hidden rounded-[20px] border-2 border-[#0A0A0A] bg-[#5C1A4A] p-8 text-center transition-all hover:shadow-[0_24px_64px_-16px_rgba(0,0,0,0.25)]"
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+              <div className="relative">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.12em] text-white/80">International</span>
+                <img src="/assets/selar-banner.png" alt="Selar" className="mx-auto mt-4 h-16 w-auto object-contain" loading="lazy" />
+                <p className="mt-4 text-sm font-semibold text-white">Pay in USD</p>
+                <p className="mt-1 text-xs text-white/60">Secure payment via Selar</p>
+                <span className="mt-5 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-bold text-[#0A0A0A] transition-colors group-hover:bg-zinc-100">
+                  Pay $89 <ArrowRight className="h-4 w-4" />
+                </span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* Objection */}
       <section className="bg-white py-12 sm:py-16">
         <div className="mx-auto max-w-[760px] px-5 sm:px-8">
