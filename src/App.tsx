@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect, useState } from "react";
+import { PreviewProvider } from "./lib/cmsPreview";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import TrustStrip from "./components/TrustStrip";
@@ -76,63 +77,75 @@ export default function App() {
   if (path.startsWith("/blog/")) {
     const slug = path.slice("/blog/".length).split("/")[0];
     return (
-      <ErrorBoundary>
-        <Suspense fallback={<PageFallback />}>
-          <BlogPostPage slug={slug} />
-        </Suspense>
-      </ErrorBoundary>
+      <PreviewProvider>
+        <ErrorBoundary>
+          <Suspense fallback={<PageFallback />}>
+            <BlogPostPage slug={slug} />
+          </Suspense>
+        </ErrorBoundary>
+      </PreviewProvider>
     );
   }
 
   if (path === "/blog") {
     return (
-      <ErrorBoundary>
-        <Suspense fallback={<PageFallback />}>
-          <BlogPage />
-        </Suspense>
-      </ErrorBoundary>
+      <PreviewProvider>
+        <ErrorBoundary>
+          <Suspense fallback={<PageFallback />}>
+            <BlogPage />
+          </Suspense>
+        </ErrorBoundary>
+      </PreviewProvider>
     );
   }
 
   if (path === "/privacy") {
     return (
-      <ErrorBoundary>
-        <Suspense fallback={<PageFallback />}>
-          <LegalPage kind="privacy" />
-        </Suspense>
-      </ErrorBoundary>
+      <PreviewProvider>
+        <ErrorBoundary>
+          <Suspense fallback={<PageFallback />}>
+            <LegalPage kind="privacy" />
+          </Suspense>
+        </ErrorBoundary>
+      </PreviewProvider>
     );
   }
 
   if (path === "/terms") {
     return (
-      <ErrorBoundary>
-        <Suspense fallback={<PageFallback />}>
-          <LegalPage kind="terms" />
-        </Suspense>
-      </ErrorBoundary>
+      <PreviewProvider>
+        <ErrorBoundary>
+          <Suspense fallback={<PageFallback />}>
+            <LegalPage kind="terms" />
+          </Suspense>
+        </ErrorBoundary>
+      </PreviewProvider>
     );
   }
 
   /* WINO — dedicated AI video product page. */
   if (path === "/wino") {
     return (
-      <ErrorBoundary>
-        <Suspense fallback={<PageFallback />}>
-          <WinoPage />
-        </Suspense>
-      </ErrorBoundary>
+      <PreviewProvider>
+        <ErrorBoundary>
+          <Suspense fallback={<PageFallback />}>
+            <WinoPage />
+          </Suspense>
+        </ErrorBoundary>
+      </PreviewProvider>
     );
   }
 
   /* Client-converting AI video studio portfolio. */
   if (path === "/portfolio") {
     return (
-      <ErrorBoundary>
-        <Suspense fallback={<PageFallback />}>
-          <PortfolioPage />
-        </Suspense>
-      </ErrorBoundary>
+      <PreviewProvider>
+        <ErrorBoundary>
+          <Suspense fallback={<PageFallback />}>
+            <PortfolioPage />
+          </Suspense>
+        </ErrorBoundary>
+      </PreviewProvider>
     );
   }
 
@@ -143,61 +156,73 @@ export default function App() {
   const courseSlug = courseSlugFromPath || courseSlugFromHash;
   if (courseSlug) {
     return (
-      <ErrorBoundary>
-        <Suspense fallback={<PageFallback />}>
-          <CoursePage slug={courseSlug} />
-        </Suspense>
-      </ErrorBoundary>
+      <PreviewProvider>
+        <ErrorBoundary>
+          <Suspense fallback={<PageFallback />}>
+            <CoursePage slug={courseSlug} />
+          </Suspense>
+        </ErrorBoundary>
+      </PreviewProvider>
     );
   }
 
   if (path === "/academy" || path.startsWith("/academy/") || hash.startsWith("#/academy")) {
     return (
-      <ErrorBoundary>
-        <Suspense fallback={<PageFallback />}>
-          <AcademyPage />
-        </Suspense>
-      </ErrorBoundary>
+      <PreviewProvider>
+        <ErrorBoundary>
+          <Suspense fallback={<PageFallback />}>
+            <AcademyPage />
+          </Suspense>
+        </ErrorBoundary>
+      </PreviewProvider>
     );
   }
 
   if (path === "/training" || path.startsWith("/training/")) {
     return (
-      <ErrorBoundary>
-        <Suspense fallback={<PageFallback />}>
-          <TrainingPage />
-        </Suspense>
-      </ErrorBoundary>
+      <PreviewProvider>
+        <ErrorBoundary>
+          <Suspense fallback={<PageFallback />}>
+            <TrainingPage />
+          </Suspense>
+        </ErrorBoundary>
+      </PreviewProvider>
     );
   }
 
   if (path === "/fae" || path === "/fae/" || path.startsWith("/fae/")) {
     return (
-      <ErrorBoundary>
-        <Suspense fallback={<PageFallback />}>
-          <FaePage />
-        </Suspense>
-      </ErrorBoundary>
+      <PreviewProvider>
+        <ErrorBoundary>
+          <Suspense fallback={<PageFallback />}>
+            <FaePage />
+          </Suspense>
+        </ErrorBoundary>
+      </PreviewProvider>
     );
   }
 
   if (path === "/fifa" || path.startsWith("/fifa/")) {
     return (
-      <ErrorBoundary>
-        <Suspense fallback={<PageFallback />}>
-          <FifaPage />
-        </Suspense>
-      </ErrorBoundary>
+      <PreviewProvider>
+        <ErrorBoundary>
+          <Suspense fallback={<PageFallback />}>
+            <FifaPage />
+          </Suspense>
+        </ErrorBoundary>
+      </PreviewProvider>
     );
   }
 
   if (path === "/masterclass" || path.startsWith("/masterclass/")) {
     return (
-      <ErrorBoundary>
-        <Suspense fallback={<PageFallback />}>
-          <MasterclassPage />
-        </Suspense>
-      </ErrorBoundary>
+      <PreviewProvider>
+        <ErrorBoundary>
+          <Suspense fallback={<PageFallback />}>
+            <MasterclassPage />
+          </Suspense>
+        </ErrorBoundary>
+      </PreviewProvider>
     );
   }
 
@@ -210,15 +235,18 @@ export default function App() {
     path.startsWith("/courses/");
   if (path !== "/" && !isKnownPath) {
     return (
-      <ErrorBoundary>
-        <Suspense fallback={<PageFallback />}>
-          <NotFound />
-        </Suspense>
-      </ErrorBoundary>
+      <PreviewProvider>
+        <ErrorBoundary>
+          <Suspense fallback={<PageFallback />}>
+            <NotFound />
+          </Suspense>
+        </ErrorBoundary>
+      </PreviewProvider>
     );
   }
 
   return (
+    <PreviewProvider>
     <div className="min-h-screen bg-background text-white">
       <ErrorBoundary>
         <Navbar />
@@ -246,5 +274,6 @@ export default function App() {
       <AiAssistant />
       <Analytics />
     </div>
+    </PreviewProvider>
   );
 }

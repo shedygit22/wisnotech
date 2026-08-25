@@ -215,6 +215,22 @@ function DashboardPage({ pages, onEdit, loading }: { pages: PageData[]; onEdit: 
 
 function EditorPage({ page, setPage, onSave, saving, saveMsg, onMedia }: { page: PageData; setPage: (p: PageData) => void; onSave: () => void; saving: boolean; saveMsg: string; onMedia: () => void }) {
   const [activeTab, setActiveTab] = useState("content");
+  const [showPreview, setShowPreview] = useState(false);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+
+  // Send preview data to iframe whenever page changes
+  useEffect(() => {
+    if (!showPreview || !iframeRef.current) return;
+    const timer = setTimeout(() => {
+      try {
+        iframeRef.current?.contentWindow?.postMessage(
+          { type: "cms-preview", slug: page.slug, data: page },
+          "*"
+        );
+      } catch { /* iframe may not be loaded yet */ }
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [page, showPreview]);
 
   const updateField = (path: string, value: unknown) => {
     const keys = path.split(".");
@@ -288,25 +304,53 @@ function EditorPage({ page, setPage, onSave, saving, saveMsg, onMedia }: { page:
           {saveMsg && <span className={`text-xs font-medium ${saveMsg.includes("Error") ? "text-red-500" : "text-green-600"}`}>{saveMsg}</span>}
         </div>
         <div className="flex items-center gap-2">
+          <button onClick={() => setShowPreview(!showPreview)} className={`rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${showPreview ? "border-blue-300 bg-blue-50 text-blue-700" : "border-gray-200 text-gray-600 hover:bg-gray-50"}`}>
+            {showPreview ? "Hide Preview" : "Live Preview"}
+          </button>
           <button onClick={onMedia} className="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50">Media Library</button>
           <button onClick={onSave} disabled={saving} className="rounded-lg bg-blue-600 px-4 py-1.5 text-xs font-semibold text-white hover:bg-blue-700 disabled:opacity-50">{saving ? "Saving..." : "Save Changes"}</button>
         </div>
       </div>
 
-      {/* Tabs */}
-      <div className="flex gap-1 border-b border-gray-200 bg-white px-6">
-        {["content", "hero", "pricing", "faq", "settings"].map((tab) => (
-          <button key={tab} onClick={() => setActiveTab(tab)} className={`border-b-2 px-3 py-2.5 text-xs font-medium capitalize transition-colors ${activeTab === tab ? "border-blue-600 text-blue-600" : "border-transparent text-gray-500 hover:text-gray-700"}`}>{tab}</button>
-        ))}
-      </div>
+      <div className="flex flex-1 overflow-hidden">
+        {/* Editor panel */}
+        <div className={`flex flex-col ${showPreview ? "w-1/2" : "w-full"}`}>
+          {/* Tabs */}
+          <div className="flex gap-1 border-b border-gray-200 bg-white px-6">
+            {["content", "hero", "pricing", "faq", "settings"].map((tab) => (
+              <button key={tab} onClick={() => setActiveTab(tab)} className={`border-b-2 px-3 py-2.5 text-xs font-medium capitalize transition-colors ${activeTab === tab ? "border-blue-600 text-blue-600" : "border-transparent text-gray-500 hover:text-gray-700"}`}>{tab}</button>
+            ))}
+          </div>
 
-      {/* Editor body */}
-      <div className="flex-1 overflow-y-auto bg-gray-50 p-6">
-        {activeTab === "content" && <ContentTab page={page} updateField={updateField} updateArrayItem={updateArrayItem} addArrayItem={addArrayItem} removeArrayItem={removeArrayItem} />}
-        {activeTab === "hero" && <HeroTab page={page} updateField={updateField} />}
-        {activeTab === "pricing" && <PricingTab page={page} updateField={updateField} updateArrayItem={updateArrayItem} addArrayItem={addArrayItem} removeArrayItem={removeArrayItem} />}
-        {activeTab === "faq" && <FaqTab page={page} updateArrayItem={updateArrayItem} addArrayItem={addArrayItem} removeArrayItem={removeArrayItem} />}
-        {activeTab === "settings" && <PageSettingsTab page={page} />}
+          {/* Editor body */}
+          <div className="flex-1 overflow-y-auto bg-gray-50 p-6">
+            {activeTab === "content" && <ContentTab page={page} updateField={updateField} updateArrayItem={updateArrayItem} addArrayItem={addArrayItem} removeArrayItem={removeArrayItem} />}
+            {activeTab === "hero" && <HeroTab page={page} updateField={updateField} />}
+            {activeTab === "pricing" && <PricingTab page={page} updateField={updateField} updateArrayItem={updateArrayItem} addArrayItem={addArrayItem} removeArrayItem={removeArrayItem} />}
+            {activeTab === "faq" && <FaqTab page={page} updateArrayItem={updateArrayItem} addArrayItem={addArrayItem} removeArrayItem={removeArrayItem} />}
+            {activeTab === "settings" && <PageSettingsTab page={page} />}
+          </div>
+        </div>
+
+        {/* Preview panel */}
+        {showPreview && (
+          <div className="flex w-1/2 flex-col border-l border-gray-200 bg-white">
+            <div className="flex items-center justify-between border-b border-gray-200 px-4 py-2">
+              <span className="text-xs font-medium text-gray-500">Live Preview</span>
+              <span className="flex items-center gap-1.5 text-[11px] text-gray-400">
+                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-green-400" />
+                Auto-updates as you edit
+              </span>
+            </div>
+            <iframe
+              ref={iframeRef}
+              src={`/${page.slug}`}
+              className="h-full w-full border-0"
+              title="Page Preview"
+              sandbox="allow-scripts allow-same-origin"
+            />
+          </div>
+        )}
       </div>
     </div>
   );

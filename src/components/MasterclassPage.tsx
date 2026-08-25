@@ -1,16 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Check, ChevronDown, Menu, X } from "lucide-react";
 import Logo from "./Logo";
-import { getMasterclassContent } from "../lib/cms";
+import { getMasterclassContent, type MasterclassContent } from "../lib/cms";
+import { usePreview } from "../lib/cmsPreview";
 
-const cms = getMasterclassContent();
+const fallback = getMasterclassContent();
 
-const PRICING = cms?.pricing
-  ? { early: cms.pricing.earlyBird, late: cms.pricing.latePrice, save: cms.pricing.save, deadlineNote: cms.pricing.deadlineNote }
-  : { early: 50000, late: 100000, save: 50000, deadlineNote: "Limited early bird registration." };
-
-const MODULES = cms?.modules ?? [
+const FALLBACK_PRICING = { early: 50000, late: 100000, save: 50000, deadlineNote: "Limited early bird registration." };
+const FALLBACK_MODULES: MasterclassContent["modules"] = [
   { n: "01", title: "The New Era of AI-Powered Building", desc: "Understand how AI is changing software development and where opportunities are emerging.", bullets: ["The modern AI building ecosystem", "How vibe coding actually works", "Choosing the right AI tools", "Why product thinking beats blind prompting"] },
   { n: "02", title: "Turning Ideas Into Product Blueprints", desc: "Before building anything, you need to know what you're building.", bullets: ["Validate and structure an idea", "Break large ideas into features", "Define users and use cases", "Create a build roadmap"] },
   { n: "03", title: "Vibe Coding: Building With AI", desc: "Learn to use AI coding tools to create real applications — and fix them when they break.", bullets: ["Product prompting & iteration", "Understanding project structure", "Debugging and fixing features", "Scaling a project"] },
@@ -22,16 +20,14 @@ const MODULES = cms?.modules ?? [
   { n: "09", title: "APIs, Integrations & Connecting Systems", desc: "How modern products communicate.", bullets: ["AI, database & payments APIs", "External services & webhooks", "Your product ↔ AI ↔ DB ↔ automation"] },
   { n: "10", title: "Debugging, Deployment & Shipping", desc: "Building is only the beginning — ship it.", bullets: ["Debug AI-generated projects", "Test, improve & deploy", "Connect domains & go live — Build it. Fix it. Ship it."] },
 ];
-
-const PROJECTS = cms?.projects ?? [
+const FALLBACK_PROJECTS: MasterclassContent["projects"] = [
   { n: "01", title: "An AI-Powered SaaS Product", desc: "A functional web application with real product features — auth, dashboard, AI." },
   { n: "02", title: "An Autonomous AI Agent", desc: "A system that handles multi-step tasks, uses tools and delivers results." },
   { n: "03", title: "An AI Automation System", desc: "Connected tools and services that run a workflow automatically." },
   { n: "04", title: "An AI-Powered Mobile Application", desc: "A mobile app idea taken to a functional product." },
   { n: "05", title: "Your Own Product Idea", desc: "Your idea → your blueprint → your product → your launch." },
 ];
-
-const FAQS = cms?.faqs ?? [
+const FALLBACK_FAQS: MasterclassContent["faqs"] = [
   { q: "Do I need to know how to code?", a: "No prior professional programming experience is required. The masterclass is designed to help you understand how to build with modern AI tools. You should be prepared to learn, experiment, troubleshoot and work through technical challenges." },
   { q: "Is this for complete beginners?", a: "Yes. Beginners can join. The training builds from foundational concepts into more advanced product-building, AI agent, automation and deployment workflows." },
   { q: "Will I learn how to build SaaS products?", a: "Yes. The masterclass covers the process and systems involved in building modern AI-powered web products." },
@@ -52,6 +48,18 @@ export default function MasterclassPage() {
   const [mobileNav, setMobileNav] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [scrolled, setScrolled] = useState(false);
+  const preview = usePreview("masterclass");
+  const d = useMemo(() => {
+    const c = preview as MasterclassContent | null ?? fallback;
+    return {
+      pricing: c?.pricing ? { early: c.pricing.earlyBird, late: c.pricing.latePrice, save: c.pricing.save, deadlineNote: c.pricing.deadlineNote } : FALLBACK_PRICING,
+      modules: c?.modules ?? FALLBACK_MODULES,
+      projects: c?.projects ?? FALLBACK_PROJECTS,
+      faqs: c?.faqs ?? FALLBACK_FAQS,
+      tools: c?.tools ?? fallback?.tools ?? [],
+      paymentMethods: c?.paymentMethods ?? fallback?.paymentMethods ?? [],
+    };
+  }, [preview]);
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -116,13 +124,13 @@ export default function MasterclassPage() {
             <p className="mt-4 max-w-[48ch] text-[15px] leading-[1.6] text-black/60">Learn how to turn your ideas into real software, AI agents, SaaS products, mobile apps and automated systems using the new generation of AI-powered building tools.</p>
             <p className="mt-3 max-w-[52ch] text-[13px] leading-[1.6] text-black/50">A practical masterclass that teaches you how to think like a product builder, direct AI effectively, connect intelligent systems, solve problems and ship products into the real world.</p>
             <div className="mt-7 flex flex-wrap gap-3">
-              <a href="https://paystack.shop/pay/tv9m8lungl" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full bg-[#0A0A0A] px-7 py-3.5 text-sm font-semibold text-white shadow-[0_12px_32px_-12px_rgba(0,0,0,0.3)] hover:bg-black">Secure Your Early Bird Seat — {formatNaira(PRICING.early)} <ArrowRight className="h-4 w-4" /></a>
+              <a href="https://paystack.shop/pay/tv9m8lungl" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full bg-[#0A0A0A] px-7 py-3.5 text-sm font-semibold text-white shadow-[0_12px_32px_-12px_rgba(0,0,0,0.3)] hover:bg-black">Secure Your Early Bird Seat — {formatNaira(d.pricing.early)} <ArrowRight className="h-4 w-4" /></a>
               <a href="#learn" className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white px-7 py-3.5 text-sm font-medium text-black hover:border-black/20">See What You&apos;ll Learn</a>
             </div>
             <div className="mt-5 flex flex-wrap items-center gap-3 border-t border-black/10 pt-4">
-              <span className="rounded-full bg-[#0A0A0A] px-3 py-1 text-xs font-bold text-white">Early Bird: {formatNaira(PRICING.early)}</span>
-              <span className="rounded-full border border-black/10 bg-white px-3 py-1 text-xs font-medium text-black/60 line-through">Late: {formatNaira(PRICING.late)}</span>
-              <span className="rounded-full bg-emerald-500 px-3 py-1 text-xs font-bold text-white">Save {formatNaira(PRICING.save)}</span>
+              <span className="rounded-full bg-[#0A0A0A] px-3 py-1 text-xs font-bold text-white">Early Bird: {formatNaira(d.pricing.early)}</span>
+              <span className="rounded-full border border-black/10 bg-white px-3 py-1 text-xs font-medium text-black/60 line-through">Late: {formatNaira(d.pricing.late)}</span>
+              <span className="rounded-full bg-emerald-500 px-3 py-1 text-xs font-bold text-white">Save {formatNaira(d.pricing.save)}</span>
             </div>
             <p className="mt-2 text-[11px] font-medium tracking-[0.06em] text-black/40">Limited early bird registration.</p>
           </div>
@@ -227,7 +235,7 @@ export default function MasterclassPage() {
             <p className="mt-2 text-sm leading-[1.6] text-black/60">You&apos;ll move beyond tutorials and explore the practical workflow behind turning an idea into a working product.</p>
           </div>
           <div className="mt-8 grid gap-[1px] overflow-hidden rounded-[20px] border border-black/10 bg-black/10 sm:grid-cols-2">
-            {MODULES.map((m) => (
+            {d.modules.map((m) => (
               <div key={m.n} className="bg-white p-6 sm:p-7">
                 <div className="flex items-center gap-3"><span className="font-mono text-xs tracking-[0.14em] text-black/30">{m.n}</span><span className="h-px flex-1 bg-black/10" /></div>
                 <h3 className="mt-3 text-[15px] font-bold tracking-[-0.01em]">{m.title}</h3>
@@ -249,7 +257,7 @@ export default function MasterclassPage() {
           <h2 className="text-center text-[24px] font-[800] tracking-[-0.04em] sm:text-[30px]">You Won&apos;t Leave With Just Notes.</h2>
           <p className="mx-auto mt-2 max-w-xl text-center text-sm leading-[1.6] text-black/60">Practical projects designed to help you understand how real AI-powered products are created.</p>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            {PROJECTS.map((p) => (
+            {d.projects.map((p) => (
               <div key={p.title} className="rounded-[16px] border border-black/10 bg-[#FCFCF9] p-5">
                 <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#0A0A0A] text-xs font-bold text-white">{p.n}</span>
                 <h3 className="mt-3 text-sm font-bold tracking-[-0.01em]">{p.title}</h3>
@@ -364,7 +372,7 @@ export default function MasterclassPage() {
             </div>
             <div className="p-7 sm:p-8">
               <div className="flex items-baseline justify-center gap-2">
-                <span className="text-[44px] font-[900] tracking-[-0.04em]">{formatNaira(PRICING.early)}</span>
+                <span className="text-[44px] font-[900] tracking-[-0.04em]">{formatNaira(d.pricing.early)}</span>
                 <span className="text-xs font-bold tracking-[0.08em] text-black/30">EARLY BIRD</span>
               </div>
               <p className="mt-1 text-center text-xs font-medium text-black/50">Full access to the masterclass</p>
@@ -373,8 +381,8 @@ export default function MasterclassPage() {
                   <li key={f} className="flex gap-2.5 text-[13px] leading-[1.5] text-black/70"><Check className="mt-0.5 h-4 w-4 shrink-0 text-black" />{f}</li>
                 ))}
               </ul>
-              <a href="https://paystack.shop/pay/tv9m8lungl" target="_blank" rel="noopener noreferrer" className="mt-7 flex w-full items-center justify-center gap-2 rounded-full bg-[#0A0A0A] px-6 py-4 text-sm font-bold text-white hover:bg-black">Secure My Seat for {formatNaira(PRICING.early)} <ArrowRight className="h-4 w-4" /></a>
-              <p className="mt-2 text-center text-xs font-bold text-emerald-600">Save {formatNaira(PRICING.save)}.</p>
+              <a href="https://paystack.shop/pay/tv9m8lungl" target="_blank" rel="noopener noreferrer" className="mt-7 flex w-full items-center justify-center gap-2 rounded-full bg-[#0A0A0A] px-6 py-4 text-sm font-bold text-white hover:bg-black">Secure My Seat for {formatNaira(d.pricing.early)} <ArrowRight className="h-4 w-4" /></a>
+              <p className="mt-2 text-center text-xs font-bold text-emerald-600">Save {formatNaira(d.pricing.save)}.</p>
             </div>
           </div>
 
@@ -382,16 +390,16 @@ export default function MasterclassPage() {
             <div className="grid grid-cols-2 divide-x divide-black/10">
               <div className="bg-emerald-50 p-4 text-center">
                 <p className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-black/40">Early Bird</p>
-                <p className="mt-1 text-[20px] font-[800] tracking-[-0.02em]">{formatNaira(PRICING.early)}</p>
-                <p className="text-[11px] font-medium text-emerald-700">Lowest price · Save {formatNaira(PRICING.save)}</p>
+                <p className="mt-1 text-[20px] font-[800] tracking-[-0.02em]">{formatNaira(d.pricing.early)}</p>
+                <p className="text-[11px] font-medium text-emerald-700">Lowest price · Save {formatNaira(d.pricing.save)}</p>
               </div>
               <div className="bg-white p-4 text-center">
                 <p className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-black/40">Late Registration</p>
-                <p className="mt-1 text-[20px] font-[800] tracking-[-0.02em] text-black/60 line-through">{formatNaira(PRICING.late)}</p>
+                <p className="mt-1 text-[20px] font-[800] tracking-[-0.02em] text-black/60 line-through">{formatNaira(d.pricing.late)}</p>
                 <p className="text-[11px] text-black/40">Standard price</p>
               </div>
             </div>
-            <p className="bg-[#0A0A0A] px-4 py-3 text-center text-xs font-bold text-white">Once early bird closes, the price becomes {formatNaira(PRICING.late)}. Secure your seat now while early bird is available.</p>
+            <p className="bg-[#0A0A0A] px-4 py-3 text-center text-xs font-bold text-white">Once early bird closes, the price becomes {formatNaira(d.pricing.late)}. Secure your seat now while early bird is available.</p>
           </div>
         </div>
       </section>
@@ -417,7 +425,7 @@ export default function MasterclassPage() {
                 <p className="mt-4 text-sm font-semibold text-white">Pay in Naira</p>
                 <p className="mt-1 text-xs text-white/60">Secure payment via Paystack</p>
                 <span className="mt-5 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-bold text-[#0A0A0A] transition-colors group-hover:bg-zinc-100">
-                  Pay {formatNaira(PRICING.early)} <ArrowRight className="h-4 w-4" />
+                  Pay {formatNaira(d.pricing.early)} <ArrowRight className="h-4 w-4" />
                 </span>
               </div>
             </a>
@@ -485,7 +493,7 @@ export default function MasterclassPage() {
         <div className="mx-auto max-w-[760px] px-5 sm:px-8">
           <h2 className="text-[28px] font-[800] tracking-[-0.04em] sm:text-[34px]">Questions, Answered.</h2>
           <div className="mt-8 divide-y divide-black/10 overflow-hidden rounded-[16px] border border-black/10 bg-white">
-            {FAQS.map((f, i) => (
+            {d.faqs.map((f, i) => (
               <div key={f.q}>
                 <button type="button" onClick={() => setOpenFaq(openFaq === i ? null : i)} className="flex w-full items-center justify-between gap-4 px-5 py-5 text-left sm:px-6" aria-expanded={openFaq === i}>
                   <span className="text-[14px] font-semibold leading-[1.4] tracking-[-0.01em] sm:text-[15px]">{f.q}</span>
@@ -512,11 +520,11 @@ export default function MasterclassPage() {
           <p className="mt-6 text-sm font-bold tracking-[0.02em]">The question is no longer “Can I build this?”</p>
           <p className="text-[20px] font-[800] tracking-[-0.03em]">“What am I going to build?”</p>
           <div className="mx-auto mt-6 flex max-w-[420px] items-center justify-center gap-4 rounded-full border border-white/10 bg-white/[0.04] px-4 py-3">
-            <span className="text-xs font-bold">Early Bird {formatNaira(PRICING.early)}</span><span className="h-3 w-px bg-white/20" /><span className="text-xs text-white/40 line-through">Late {formatNaira(PRICING.late)}</span><span className="rounded-full bg-emerald-500 px-2 py-0.5 text-[10px] font-bold">Save {formatNaira(PRICING.save)}</span>
+            <span className="text-xs font-bold">Early Bird {formatNaira(d.pricing.early)}</span><span className="h-3 w-px bg-white/20" /><span className="text-xs text-white/40 line-through">Late {formatNaira(d.pricing.late)}</span><span className="rounded-full bg-emerald-500 px-2 py-0.5 text-[10px] font-bold">Save {formatNaira(d.pricing.save)}</span>
           </div>
-          <p className="mt-2 text-xs font-bold text-emerald-400">Secure your seat now and save {formatNaira(PRICING.save)}.</p>
-          <a href="https://paystack.shop/pay/tv9m8lungl" target="_blank" rel="noopener noreferrer" className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-bold text-black hover:bg-zinc-100">Join the Masterclass for {formatNaira(PRICING.early)} <ArrowRight className="h-4 w-4" /></a>
-          <p className="mt-3 text-[11px] tracking-[0.06em] text-white/30">Early bird available for a limited registration period. Then {formatNaira(PRICING.late)}.</p>
+          <p className="mt-2 text-xs font-bold text-emerald-400">Secure your seat now and save {formatNaira(d.pricing.save)}.</p>
+          <a href="https://paystack.shop/pay/tv9m8lungl" target="_blank" rel="noopener noreferrer" className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-bold text-black hover:bg-zinc-100">Join the Masterclass for {formatNaira(d.pricing.early)} <ArrowRight className="h-4 w-4" /></a>
+          <p className="mt-3 text-[11px] tracking-[0.06em] text-white/30">Early bird available for a limited registration period. Then {formatNaira(d.pricing.late)}.</p>
         </div>
       </section>
 
