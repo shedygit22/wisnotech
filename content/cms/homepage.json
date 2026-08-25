@@ -1,0 +1,46 @@
+{
+  "title": "Homepage",
+  "hero": {
+    "headline": "We Build AI-Powered Products.",
+    "subheadline": "Wisnotech is an AI agency that builds software, AI agents, SaaS products, mobile apps and automated systems."
+  },
+  "nav": [
+    {
+      "label": "Services",
+      "href": "#services"
+    },
+    {
+      "label": "Solutions",
+      "href": "#solutions"
+    },
+    {
+      "label": "Our Work",
+      "href": "#work"
+    },
+    {
+      "label": "About",
+      "href": "#about"
+    },
+    {
+      "label": "Training",
+      "href": "/training"
+    },
+    {
+      "label": "Academy",
+      "href": "/academy"
+    },
+    {
+      "label": "Masterclass",
+      "href": "/masterclass"
+    },
+    {
+      "label": "Contact",
+      "href": "#contact"
+    }
+  ],
+  "services": [],
+  "solutions": [],
+  "images": {},
+  "_createdAt": "2026-08-25T16:40:52.346Z",
+  "_updatedAt": "2026-08-25T16:40:52.346Z"
+}

@@ -1,0 +1,19 @@
+{
+  "title": "Portfolio",
+  "hero": {
+    "headline": "Our Work Speaks for Itself.",
+    "subheadline": "Explore the products, applications and systems we've built — from SaaS dashboards to AI agents and mobile apps."
+  },
+  "audiences": [],
+  "services": [],
+  "pricing": [],
+  "process": [],
+  "whyWisnotech": [],
+  "ecosystem": [],
+  "faqs": [],
+  "images": {
+    "og": "/assets/portfolio-og.jpg"
+  },
+  "_createdAt": "2026-08-25T16:40:52.345Z",
+  "_updatedAt": "2026-08-25T16:40:52.345Z"
+}

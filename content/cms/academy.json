@@ -1,0 +1,123 @@
+{
+  "title": "Academy",
+  "hero": {
+    "headline": "Build Real Products With AI.",
+    "subheadline": "A structured learning program that takes you from idea to deployment — teaching you how to think like a builder, use AI effectively and ship real products."
+  },
+  "curriculum": [
+    {
+      "n": "01",
+      "title": "The AI Building Landscape",
+      "desc": "Understand the new ecosystem.",
+      "bullets": [
+        "How modern products are built",
+        "The role of AI in building",
+        "Choosing your path"
+      ]
+    },
+    {
+      "n": "02",
+      "title": "Product Thinking",
+      "desc": "Before code, think product.",
+      "bullets": [
+        "Idea validation",
+        "User needs & use cases",
+        "Feature scoping"
+      ]
+    },
+    {
+      "n": "03",
+      "title": "Building With AI",
+      "desc": "The core skill.",
+      "bullets": [
+        "Product prompting",
+        "Iterating with AI",
+        "Debugging AI output"
+      ]
+    },
+    {
+      "n": "04",
+      "title": "Web Applications",
+      "desc": "Build real products.",
+      "bullets": [
+        "SaaS fundamentals",
+        "Auth, dashboards, APIs",
+        "Deployment"
+      ]
+    },
+    {
+      "n": "05",
+      "title": "AI Applications",
+      "desc": "Integrate intelligence.",
+      "bullets": [
+        "AI chat & assistants",
+        "Content generation",
+        "Analysis tools"
+      ]
+    },
+    {
+      "n": "06",
+      "title": "Agentic AI",
+      "desc": "Build autonomous systems.",
+      "bullets": [
+        "Agent design",
+        "Tool use & memory",
+        "Multi-step workflows"
+      ]
+    },
+    {
+      "n": "07",
+      "title": "Automation",
+      "desc": "Connect & automate.",
+      "bullets": [
+        "APIs & webhooks",
+        "Workflow automation",
+        "Notifications"
+      ]
+    },
+    {
+      "n": "08",
+      "title": "Ship & Improve",
+      "desc": "Launch and iterate.",
+      "bullets": [
+        "Debugging",
+        "Deployment",
+        "Domain & hosting"
+      ]
+    }
+  ],
+  "pricing": {
+    "tiers": [
+      {
+        "name": "Standard",
+        "price": 60000,
+        "currency": "NGN",
+        "usdPrice": 40,
+        "features": [
+          "Full curriculum",
+          "Hands-on projects",
+          "Community access",
+          "Session recordings",
+          "Certificate"
+        ]
+      },
+      {
+        "name": "One-on-One",
+        "price": 250000,
+        "currency": "NGN",
+        "usdPrice": 160,
+        "features": [
+          "Everything in Standard",
+          "Personal mentorship",
+          "Custom project guidance",
+          "Weekly 1-on-1 sessions",
+          "Priority support"
+        ]
+      }
+    ]
+  },
+  "faqs": [],
+  "images": {},
+  "_createdAt": "2026-08-25T16:40:52.338Z",
+  "_updatedAt": "2026-08-25T16:40:52.338Z"
+}

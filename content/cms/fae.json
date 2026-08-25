@@ -1,0 +1,20 @@
+{
+  "title": "FAE Bootcamp",
+  "hero": {
+    "headline": "Full-Stack AI Engineering Bootcamp.",
+    "subheadline": "An intensive bootcamp designed to transform beginners into skilled AI engineers who can build, deploy and ship real products."
+  },
+  "curriculum": [],
+  "pricing": {
+    "price": 300000,
+    "currency": "NGN",
+    "usdPrice": 195
+  },
+  "builds": [],
+  "faqs": [],
+  "images": {
+    "flyer": "/assets/fae-flyer.jpg"
+  },
+  "_createdAt": "2026-08-25T16:40:52.344Z",
+  "_updatedAt": "2026-08-25T16:40:52.344Z"
+}

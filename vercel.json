@@ -1,5 +1,7 @@
 {
   "rewrites": [
+    { "source": "/admin", "destination": "/index.html" },
+    { "source": "/admin/:path*", "destination": "/index.html" },
     { "source": "/wino", "destination": "/index.html" },
     { "source": "/portfolio", "destination": "/index.html" },
     { "source": "/blog", "destination": "/index.html" },

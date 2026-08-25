@@ -35,6 +35,7 @@ const TrainingPage = lazy(() => import("./components/TrainingPage"));
 const FaePage = lazy(() => import("./components/FaePage"));
 const FifaPage = lazy(() => import("./components/FifaPage"));
 const MasterclassPage = lazy(() => import("./components/MasterclassPage"));
+const AdminApp = lazy(() => import("./components/admin/AdminApp"));
 
 function useHashRoute(): string {
   const [hash, setHash] = useState(() => window.location.hash);
@@ -59,6 +60,17 @@ function usePathRoute(): string {
 export default function App() {
   const hash = useHashRoute();
   const path = usePathRoute();
+
+  /* Admin CMS panel */
+  if (path.startsWith("/admin")) {
+    return (
+      <ErrorBoundary>
+        <Suspense fallback={<PageFallback />}>
+          <AdminApp />
+        </Suspense>
+      </ErrorBoundary>
+    );
+  }
 
   /* SEO-friendly real URLs for the blog. */
   if (path.startsWith("/blog/")) {
@@ -190,7 +202,7 @@ export default function App() {
   }
 
   // 404 — unknown path (keep homepage for "/" and hash navigations)
-  const knownPaths = ["/", "/wino", "/portfolio", "/blog", "/privacy", "/terms", "/academy", "/training", "/fae", "/fifa", "/masterclass"];
+  const knownPaths = ["/", "/wino", "/portfolio", "/blog", "/privacy", "/terms", "/academy", "/training", "/fae", "/fifa", "/masterclass", "/admin"];
   const isKnownPath =
     knownPaths.includes(path) ||
     knownPaths.some((p) => p !== "/" && path.startsWith(`${p}/`)) ||

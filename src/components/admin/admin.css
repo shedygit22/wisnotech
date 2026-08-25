@@ -1,0 +1,27 @@
+/* CMS Admin styles */
+.field {
+  @apply w-full rounded-lg border border-gray-200 px-3 py-2 text-sm outline-none transition-colors;
+}
+.field:focus {
+  @apply border-blue-400 ring-2 ring-blue-100;
+}
+
+/* Override for textarea fields */
+textarea.field {
+  @apply resize-y;
+}
+
+/* Scrollbar styling for admin */
+.admin-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.admin-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.admin-scroll::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
+}
+.admin-scroll::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
