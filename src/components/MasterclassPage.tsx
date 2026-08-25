@@ -2,15 +2,15 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Check, ChevronDown, Menu, X } from "lucide-react";
 import Logo from "./Logo";
+import { getMasterclassContent } from "../lib/cms";
 
-const PRICING = {
-  early: 50000,
-  late: 100000,
-  save: 50000,
-  deadlineNote: "Limited early bird registration.",
-} as const;
+const cms = getMasterclassContent();
 
-const MODULES = [
+const PRICING = cms?.pricing
+  ? { early: cms.pricing.earlyBird, late: cms.pricing.latePrice, save: cms.pricing.save, deadlineNote: cms.pricing.deadlineNote }
+  : { early: 50000, late: 100000, save: 50000, deadlineNote: "Limited early bird registration." };
+
+const MODULES = cms?.modules ?? [
   { n: "01", title: "The New Era of AI-Powered Building", desc: "Understand how AI is changing software development and where opportunities are emerging.", bullets: ["The modern AI building ecosystem", "How vibe coding actually works", "Choosing the right AI tools", "Why product thinking beats blind prompting"] },
   { n: "02", title: "Turning Ideas Into Product Blueprints", desc: "Before building anything, you need to know what you're building.", bullets: ["Validate and structure an idea", "Break large ideas into features", "Define users and use cases", "Create a build roadmap"] },
   { n: "03", title: "Vibe Coding: Building With AI", desc: "Learn to use AI coding tools to create real applications — and fix them when they break.", bullets: ["Product prompting & iteration", "Understanding project structure", "Debugging and fixing features", "Scaling a project"] },
@@ -21,17 +21,17 @@ const MODULES = [
   { n: "08", title: "Building Mobile Applications With AI", desc: "From idea to functional mobile app with AI-accelerated workflows.", bullets: ["App planning & user flows", "Interface & core features", "Testing & iteration"] },
   { n: "09", title: "APIs, Integrations & Connecting Systems", desc: "How modern products communicate.", bullets: ["AI, database & payments APIs", "External services & webhooks", "Your product ↔ AI ↔ DB ↔ automation"] },
   { n: "10", title: "Debugging, Deployment & Shipping", desc: "Building is only the beginning — ship it.", bullets: ["Debug AI-generated projects", "Test, improve & deploy", "Connect domains & go live — Build it. Fix it. Ship it."] },
-] as const;
+];
 
-const PROJECTS = [
+const PROJECTS = cms?.projects ?? [
   { n: "01", title: "An AI-Powered SaaS Product", desc: "A functional web application with real product features — auth, dashboard, AI." },
   { n: "02", title: "An Autonomous AI Agent", desc: "A system that handles multi-step tasks, uses tools and delivers results." },
   { n: "03", title: "An AI Automation System", desc: "Connected tools and services that run a workflow automatically." },
   { n: "04", title: "An AI-Powered Mobile Application", desc: "A mobile app idea taken to a functional product." },
   { n: "05", title: "Your Own Product Idea", desc: "Your idea → your blueprint → your product → your launch." },
-] as const;
+];
 
-const FAQS = [
+const FAQS = cms?.faqs ?? [
   { q: "Do I need to know how to code?", a: "No prior professional programming experience is required. The masterclass is designed to help you understand how to build with modern AI tools. You should be prepared to learn, experiment, troubleshoot and work through technical challenges." },
   { q: "Is this for complete beginners?", a: "Yes. Beginners can join. The training builds from foundational concepts into more advanced product-building, AI agent, automation and deployment workflows." },
   { q: "Will I learn how to build SaaS products?", a: "Yes. The masterclass covers the process and systems involved in building modern AI-powered web products." },
@@ -42,7 +42,7 @@ const FAQS = [
   { q: "Will the sessions be recorded?", a: "Yes. You will have access to all sessions." },
   { q: "How long is the masterclass?", a: "1 week intensive." },
   { q: "What happens after I register?", a: "After successful registration, you'll receive onboarding information and instructions for accessing the masterclass." },
-] as const;
+];
 
 function formatNaira(n: number) {
   return "₦" + n.toLocaleString("en-NG");
