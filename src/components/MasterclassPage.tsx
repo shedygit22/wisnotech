@@ -377,7 +377,7 @@ export default function MasterclassPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1, duration: 0.8 }}
-          className="absolute bottom-6 left-1/2 z-20 -translate-x-1/2 text-white/40 transition-colors hover:text-white"
+          className="absolute bottom-28 left-1/2 z-20 -translate-x-1/2 text-white/40 transition-colors hover:text-white sm:bottom-32"
         >
           <motion.span
             animate={{ y: [0, 6, 0] }}
@@ -388,6 +388,34 @@ export default function MasterclassPage() {
             <ArrowDown className="h-4 w-4" aria-hidden />
           </motion.span>
         </motion.a>
+
+        {/* Thumbnail carousel — sliding strip of video samples */}
+        <div className="absolute bottom-0 left-0 right-0 z-10 overflow-hidden border-t border-white/10 bg-[#080808]/80 backdrop-blur-md">
+          <div className="animate-marquee flex w-max items-center gap-3 py-3 px-4">
+            {[...CINEMATIC_VIDEOS, ...CINEMATIC_VIDEOS].map((v, i) => (
+              <div
+                key={`${v.id}-${i}`}
+                className="group relative h-16 w-28 shrink-0 overflow-hidden rounded-lg border border-white/10 bg-black transition-all duration-300 hover:border-white/30 hover:scale-105 sm:h-20 sm:w-36"
+              >
+                <video
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  preload="metadata"
+                  poster={v.poster}
+                  className="h-full w-full object-cover opacity-80 transition-opacity duration-300 group-hover:opacity-100"
+                >
+                  <source src={v.src} type="video/mp4" />
+                </video>
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                <span className="absolute bottom-1.5 left-2 text-[9px] font-semibold uppercase tracking-[0.1em] text-white/70 sm:text-[10px]">
+                  {v.title.length > 18 ? v.title.slice(0, 18) + "…" : v.title}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
 
       <main>
