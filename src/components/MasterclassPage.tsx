@@ -124,7 +124,7 @@ export default function MasterclassPage() {
             <p className="mt-4 max-w-[48ch] text-[15px] leading-[1.6] text-black/60">Learn how to turn your ideas into real software, AI agents, SaaS products, mobile apps and automated systems using the new generation of AI-powered building tools.</p>
             <p className="mt-3 max-w-[52ch] text-[13px] leading-[1.6] text-black/50">A practical masterclass that teaches you how to think like a product builder, direct AI effectively, connect intelligent systems, solve problems and ship products into the real world.</p>
             <div className="mt-7 flex flex-wrap gap-3">
-              <a href="https://paystack.shop/pay/96toe5qx8t" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full bg-[#0A0A0A] px-7 py-3.5 text-sm font-semibold text-white shadow-[0_12px_32px_-12px_rgba(0,0,0,0.3)] hover:bg-black">Secure Your Early Bird Seat — {formatNaira(d.pricing.early)} <ArrowRight className="h-4 w-4" /></a>
+              <a href="https://paystack.shop/pay/96toe5qx8t" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full bg-[#0A0A0A] px-7 py-3.5 text-sm font-semibold text-white shadow-[0_12px_32px_-12px_rgba(0,0,0,0.3)] hover:bg-black">Secure Your Early Bird Seat — {formatNaira(100000)} <ArrowRight className="h-4 w-4" /></a>
               <a href="#learn" className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white px-7 py-3.5 text-sm font-medium text-black hover:border-black/20">See What You&apos;ll Learn</a>
             </div>
             <div className="mt-5 flex flex-wrap items-center gap-3 border-t border-black/10 pt-4">
@@ -441,7 +441,7 @@ export default function MasterclassPage() {
                   <li key={f} className="flex gap-2.5 text-[13px] leading-[1.5] text-black/70"><Check className="mt-0.5 h-4 w-4 shrink-0 text-black" />{f}</li>
                 ))}
               </ul>
-              <a href="https://paystack.shop/pay/96toe5qx8t" target="_blank" rel="noopener noreferrer" className="mt-7 flex w-full items-center justify-center gap-2 rounded-full bg-[#0A0A0A] px-6 py-4 text-sm font-bold text-white hover:bg-black">Secure My Seat for {formatNaira(d.pricing.early)} <ArrowRight className="h-4 w-4" /></a>
+              <a href="https://paystack.shop/pay/96toe5qx8t" target="_blank" rel="noopener noreferrer" className="mt-7 flex w-full items-center justify-center gap-2 rounded-full bg-[#0A0A0A] px-6 py-4 text-sm font-bold text-white hover:bg-black">Secure My Seat for {formatNaira(100000)} <ArrowRight className="h-4 w-4" /></a>
               <p className="mt-2 text-center text-xs font-bold text-emerald-600">Save {formatNaira(d.pricing.save)}.</p>
             </div>
           </div>
@@ -485,7 +485,7 @@ export default function MasterclassPage() {
                 <p className="mt-4 text-sm font-semibold text-white">Pay in Naira</p>
                 <p className="mt-1 text-xs text-white/60">Secure payment via Paystack</p>
                 <span className="mt-5 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-bold text-[#0A0A0A] transition-colors group-hover:bg-zinc-100">
-                  Pay {formatNaira(d.pricing.early)} <ArrowRight className="h-4 w-4" />
+                  Pay {formatNaira(100000)} <ArrowRight className="h-4 w-4" />
                 </span>
               </div>
             </a>
@@ -502,7 +502,7 @@ export default function MasterclassPage() {
                 <p className="mt-4 text-sm font-semibold text-white">Pay in USD</p>
                 <p className="mt-1 text-xs text-white/60">Secure payment via Selar</p>
                 <span className="mt-5 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-bold text-[#0A0A0A] transition-colors group-hover:bg-zinc-100">
-                  Pay $37.14 <ArrowRight className="h-4 w-4" />
+                  Pay $74.28 <ArrowRight className="h-4 w-4" />
                 </span>
               </div>
             </a>
@@ -583,7 +583,7 @@ export default function MasterclassPage() {
             <span className="text-xs font-bold">Early Bird {formatNaira(d.pricing.early)}</span><span className="h-3 w-px bg-white/20" /><span className="text-xs text-white/40 line-through">Late {formatNaira(d.pricing.late)}</span><span className="rounded-full bg-emerald-500 px-2 py-0.5 text-[10px] font-bold">Save {formatNaira(d.pricing.save)}</span>
           </div>
           <p className="mt-2 text-xs font-bold text-emerald-400">Secure your seat now and save {formatNaira(d.pricing.save)}.</p>
-          <a href="https://paystack.shop/pay/96toe5qx8t" target="_blank" rel="noopener noreferrer" className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-bold text-black hover:bg-zinc-100">Join the Masterclass for {formatNaira(d.pricing.early)} <ArrowRight className="h-4 w-4" /></a>
+          <a href="https://paystack.shop/pay/96toe5qx8t" target="_blank" rel="noopener noreferrer" className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-bold text-black hover:bg-zinc-100">Join the Masterclass for {formatNaira(100000)} <ArrowRight className="h-4 w-4" /></a>
           <p className="mt-3 text-[11px] tracking-[0.06em] text-white/30">Early bird available for a limited registration period. Then {formatNaira(d.pricing.late)}.</p>
         </div>
       </section>

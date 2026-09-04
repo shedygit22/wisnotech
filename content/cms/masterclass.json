@@ -168,7 +168,7 @@
       "url": "https://paystack.shop/pay/96toe5qx8t",
       "image": "/assets/paystack-banner.png",
       "currency": "NGN",
-      "price": 50000
+      "price": 100000
     },
     {
       "label": "International",
@@ -176,7 +176,7 @@
       "url": "https://selar.com/1zbx702773",
       "image": "/assets/selar-banner.png",
       "currency": "USD",
-      "price": 37.14
+      "price": 74.28
     }
   ],
   "faqs": [
