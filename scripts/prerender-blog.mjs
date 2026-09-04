@@ -395,7 +395,7 @@ const llms = `# Wisnotech
 - [FIFA Ultimate Team](${SITE_URL}/fifa): Build your Ultimate Team — collect players, craft chemistry and own the game
 
 ## Masterclass
-- [Agentic AI & Vibe Coding Masterclass](${SITE_URL}/masterclass): Stop watching AI build the future — start building with it — Early Bird ₦50,000 / Late ₦100,000
+- [Agentic AI & Vibe Coding Masterclass](${SITE_URL}/masterclass): Stop watching AI build the future — start building with it — Early Bird ₦100,000 / Late ₦150,000
 
 ## Blog
 ${posts
