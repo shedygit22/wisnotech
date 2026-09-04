@@ -49,8 +49,8 @@ const pages = {
       { n: "05", title: "Your Own Product Idea", desc: "Your idea → your blueprint → your product → your launch." },
     ],
     paymentMethods: [
-      { label: "For Africa", provider: "Paystack", url: "https://paystack.shop/pay/tv9m8lungl", image: "/assets/paystack-banner.png", currency: "NGN", price: 50000 },
-      { label: "International", provider: "Selar", url: "https://selar.com/58h5q98191", image: "/assets/selar-banner.png", currency: "USD", price: 37.14 },
+      { label: "For Africa", provider: "Paystack", url: "https://paystack.shop/pay/96toe5qx8t", image: "/assets/paystack-banner.png", currency: "NGN", price: 50000 },
+      { label: "International", provider: "Selar", url: "https://selar.com/1zbx702773", image: "/assets/selar-banner.png", currency: "USD", price: 37.14 },
     ],
     faqs: [
       { q: "Do I need to know how to code?", a: "No prior professional programming experience is required. The masterclass is designed to help you understand how to build with modern AI tools. You should be prepared to learn, experiment, troubleshoot and work through technical challenges." },

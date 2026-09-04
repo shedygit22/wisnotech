@@ -165,7 +165,7 @@
     {
       "label": "For Africa",
       "provider": "Paystack",
-      "url": "https://paystack.shop/pay/tv9m8lungl",
+      "url": "https://paystack.shop/pay/96toe5qx8t",
       "image": "/assets/paystack-banner.png",
       "currency": "NGN",
       "price": 50000
@@ -173,7 +173,7 @@
     {
       "label": "International",
       "provider": "Selar",
-      "url": "https://selar.com/58h5q98191",
+      "url": "https://selar.com/1zbx702773",
       "image": "/assets/selar-banner.png",
       "currency": "USD",
       "price": 37.14
