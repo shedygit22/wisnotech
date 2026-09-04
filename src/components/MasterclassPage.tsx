@@ -5,6 +5,8 @@ import {
   ArrowDown,
   Briefcase,
   Check,
+  ChevronLeft,
+  ChevronRight,
   Clapperboard,
   Code2,
   Menu,
@@ -45,7 +47,21 @@ const AUDIENCES = [
 ];
 
 const PUBLISHED_VIDEOS = PORTFOLIO_SAMPLES.filter((s) => s.type === "video" && s.published);
-const HERO_VIDEO = PUBLISHED_VIDEOS[0];
+
+// Hero slider — best cinematic samples
+const HERO_SLIDES = [
+  { src: "/portfolio/videos/dune-trailer.mp4", poster: "/portfolio/thumbs/dune-trailer.jpg", label: "A Desert Epic" },
+  { src: "/wino/videos/seedance-demo.mp4", poster: "/wino/thumbs/seedance-demo.jpg", label: "The Wide Frame" },
+  { src: "/portfolio/videos/web-demo.mp4", poster: "/portfolio/thumbs/web-demo.jpg", label: "Cinema Without Cameras" },
+  { src: "/wino/videos/johnwick-character.mp4", poster: "/wino/thumbs/johnwick-character.jpg", label: "Unbroken" },
+];
+
+// Cinematic / film / character videos for the Hollywood section (no UGC)
+const CINEMATIC_VIDEOS = PORTFOLIO_SAMPLES.filter(
+  (s) => s.type === "video" && s.published && ["cinematic", "film", "character"].includes(s.category)
+);
+
+// Showcase videos for the "Watch what you'll learn to make" section
 const SHOWCASE_VIDEOS = PUBLISHED_VIDEOS.slice(2, 8);
 
 const fadeUp = {
@@ -71,9 +87,27 @@ const NAV_LINKS = [
 
 export default function MasterclassPage() {
   const [mobileNav, setMobileNav] = useState(false);
+  const [slideIndex, setSlideIndex] = useState(0);
+  const [slideProgress, setSlideProgress] = useState(0);
   const preview = usePreview("masterclass");
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 30, mass: 0.4 });
+  const slideTotal = HERO_SLIDES.length;
+
+  const goSlide = (next: number) => {
+    setSlideIndex(((next % slideTotal) + slideTotal) % slideTotal);
+    setSlideProgress(0);
+  };
+
+  const onSlideTime = (e: React.SyntheticEvent<HTMLVideoElement>) => {
+    const el = e.currentTarget;
+    if (el.dataset.slide !== String(slideIndex)) return;
+    setSlideProgress(el.duration ? el.currentTime / el.duration : 0);
+  };
+
+  const onSlideEnded = (e: React.SyntheticEvent<HTMLVideoElement>) => {
+    if (e.currentTarget.dataset.slide === String(slideIndex)) goSlide(slideIndex + 1);
+  };
 
   const d = useMemo(() => {
     const c = (preview as MasterclassContent | null) ?? fallback;
@@ -185,30 +219,86 @@ export default function MasterclassPage() {
       </header>
 
       {/* ═══════════════════════════════════════════════════════════
-          HERO
+          HERO — Video Slider
       ═══════════════════════════════════════════════════════════ */}
       <section id="overview" className="relative overflow-hidden pt-36 pb-24 sm:pt-40">
-        <div aria-hidden className="absolute inset-0 opacity-30">
-          {HERO_VIDEO && (
-            <video
+        {/* Background video slider */}
+        <div aria-hidden className="absolute inset-0 opacity-45">
+          <AnimatePresence initial={false}>
+            <motion.video
+              key={slideIndex}
+              data-slide={slideIndex}
               autoPlay
-              loop
               muted
               playsInline
-              preload="metadata"
-              poster={HERO_VIDEO.poster}
+              preload="auto"
+              src={HERO_SLIDES[slideIndex].src}
+              poster={HERO_SLIDES[slideIndex].poster}
+              onTimeUpdate={onSlideTime}
+              onEnded={onSlideEnded}
+              initial={{ opacity: 0, scale: 1.04 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ opacity: { duration: 0.9, ease: "easeInOut" }, scale: { duration: 6, ease: "linear" } }}
               className="absolute inset-0 h-full w-full object-cover"
-            >
-              <source src={HERO_VIDEO.src} type="video/mp4" />
-            </video>
-          )}
+            />
+          </AnimatePresence>
         </div>
-        <div aria-hidden className="absolute inset-0 bg-[#080808]/60" />
+        <div aria-hidden className="absolute inset-0 bg-[#080808]/50" />
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0"
           style={{ background: "radial-gradient(ellipse 60% 50% at 50% 35%, transparent 0%, rgba(8,8,8,0.55) 70%, #080808 100%)" }}
         />
+
+        {/* Slider controls — bottom right */}
+        <div className="absolute bottom-5 right-4 z-20 flex flex-col items-end gap-2.5 sm:bottom-8 sm:right-8">
+          <div className="flex items-center gap-2 rounded-full border border-white/10 bg-black/40 px-2 py-1.5 backdrop-blur">
+            <button
+              type="button"
+              onClick={() => goSlide(slideIndex - 1)}
+              aria-label="Previous clip"
+              className="flex h-8 w-8 items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/10 hover:text-white"
+            >
+              <ChevronLeft className="h-4 w-4" aria-hidden />
+            </button>
+            <div className="flex items-center gap-1.5" role="tablist" aria-label="Hero clips">
+              {HERO_SLIDES.map((s, i) => (
+                <button
+                  key={s.src}
+                  type="button"
+                  role="tab"
+                  aria-selected={i === slideIndex}
+                  aria-label={s.label}
+                  onClick={() => goSlide(i)}
+                  className={`h-1.5 rounded-full transition-all duration-300 ${
+                    i === slideIndex ? "w-5 bg-white" : "w-1.5 bg-white/35 hover:bg-white/60"
+                  }`}
+                />
+              ))}
+            </div>
+            <button
+              type="button"
+              onClick={() => goSlide(slideIndex + 1)}
+              aria-label="Next clip"
+              className="flex h-8 w-8 items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/10 hover:text-white"
+            >
+              <ChevronRight className="h-4 w-4" aria-hidden />
+            </button>
+          </div>
+          <div className="flex items-center gap-2.5">
+            <p className="text-xs text-white/70">
+              {HERO_SLIDES[slideIndex].label}
+              <span className="text-white/40"> · {slideIndex + 1}/{slideTotal}</span>
+            </p>
+            <div className="h-0.5 w-20 overflow-hidden rounded-full bg-white/15">
+              <div
+                className="h-full rounded-full bg-neon transition-[width] duration-200"
+                style={{ width: `${Math.min(100, Math.max(0, slideProgress * 100))}%` }}
+              />
+            </div>
+          </div>
+        </div>
 
         <div className="container-wide relative z-10 mx-auto max-w-3xl text-center">
           <motion.div {...fadeUp}>
@@ -385,6 +475,37 @@ export default function MasterclassPage() {
               <p><strong>What if creative capability becomes more important than production infrastructure?</strong></p>
               <p>What if a small team of exceptional AI filmmakers can achieve visual results that previously required much larger teams? What if one creator can operate across concept development, storyboarding, visual development, character creation, environment design, shot generation and post-production?</p>
               <p><strong>That's the opportunity we're preparing you for.</strong></p>
+            </div>
+
+            {/* Cinematic video grid — action films, characters, no UGC */}
+            <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {CINEMATIC_VIDEOS.map((v) => (
+                <motion.div key={v.id} {...fadeUp} className="card group overflow-hidden p-0">
+                  <div className="relative aspect-[4/3] overflow-hidden bg-black">
+                    <video
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      preload="metadata"
+                      poster={v.poster}
+                      className="h-full w-full object-cover transition duration-700 group-hover:scale-[1.02]"
+                    >
+                      <source src={v.src} type="video/mp4" />
+                    </video>
+                    <span className="absolute left-3 top-3 rounded-full border border-white/15 bg-black/45 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-white/90 backdrop-blur">
+                      {v.category}
+                    </span>
+                    <span className="absolute bottom-3 left-3 rounded-full bg-white px-2.5 py-1 text-[10px] font-semibold text-[#080808]">
+                      Play
+                    </span>
+                  </div>
+                  <div className="p-5">
+                    <p className="text-sm font-semibold tracking-tight text-white">{v.title}</p>
+                    <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-muted">{v.description.slice(0, 110)}</p>
+                  </div>
+                </motion.div>
+              ))}
             </div>
           </div>
         </section>
